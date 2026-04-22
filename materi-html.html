@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Masterclass — Belajar HTML Lengkap</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sun: #FF6B35;
+  --sky: #0066FF;
+  --lime: #A8E63D;
+  --cream: #FFF8F0;
+  --white: #FFFFFF;
+  --ink: #1A1A2E;
+  --ink2: #3D3D5C;
+  --muted: #7B7B9E;
+  --border: #E8E0D8;
+  --card: #FFFFFF;
+  --code-bg: #F0EDE8;
+  --correct: #2ECC71;
+  --wrong: #E74C3C;
+  --shadow: 0 4px 24px rgba(26,26,46,0.08);
+  --shadow-lg: 0 12px 48px rgba(26,26,46,0.14);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--sun); border-radius: 3px; }
+
+/* ===== TOPBAR ===== */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255,248,240,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 60px;
+}
+.topbar-brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 1.2rem;
+  color: var(--ink);
+  display: flex; align-items: center; gap: 8px;
+}
+.topbar-brand span { color: var(--sun); }
+.topbar-progress {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.8rem; color: var(--muted); font-weight: 500;
+}
+.progress-bar-wrap {
+  width: 140px; height: 6px;
+  background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--sun), #FF9F1C);
+  border-radius: 3px; transition: width 0.5s ease;
+  width: 0%;
+}
+.menu-toggle {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  width: 32px; height: 32px;
+  flex-direction: column; justify-content: center; gap: 5px;
+}
+.menu-toggle span {
+  display: block; height: 2px; background: var(--ink);
+  border-radius: 2px; transition: 0.3s;
+}
+
+/* ===== LAYOUT ===== */
+.layout {
+  display: flex;
+  padding-top: 60px;
+  min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 280px;
+  min-height: calc(100vh - 60px);
+  background: var(--white);
+  border-right: 2px solid var(--border);
+  position: sticky; top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+
+.sidebar-header {
+  padding: 20px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-header h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  font-size: 0.88rem; font-weight: 400;
+  color: var(--ink2);
+  text-decoration: none;
+  position: relative;
+}
+.nav-item:hover { background: var(--cream); color: var(--ink); }
+.nav-item.active {
+  border-left-color: var(--sun);
+  background: #FFF3EC;
+  color: var(--sun); font-weight: 600;
+}
+.nav-item .nav-icon {
+  width: 26px; height: 26px;
+  background: var(--cream); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; flex-shrink: 0;
+  transition: background 0.2s;
+}
+.nav-item.active .nav-icon { background: #FFE8D9; }
+.nav-item .nav-check {
+  margin-left: auto;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; color: transparent;
+  flex-shrink: 0;
+}
+.nav-item.done .nav-check {
+  background: var(--correct); color: white;
+}
+.nav-section-label {
+  padding: 14px 20px 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+/* ===== MAIN ===== */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 48px;
+  max-width: 900px;
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+  border-radius: 20px;
+  padding: 56px 48px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,107,53,0.2); color: var(--sun);
+  border: 1px solid rgba(255,107,53,0.3);
+  border-radius: 100px; padding: 4px 12px;
+  font-size: 0.75rem; font-weight: 600;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800; color: white;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.hero h1 .highlight { color: var(--sun); }
+.hero p {
+  color: rgba(255,255,255,0.65);
+  font-size: 1rem; max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.hero-stats {
+  display: flex; gap: 24px; flex-wrap: wrap;
+}
+.hero-stat {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 12px 18px;
+  text-align: center;
+}
+.hero-stat .num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem; font-weight: 800;
+  color: var(--lime);
+}
+.hero-stat .lbl {
+  font-size: 0.72rem; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.hero-html-badge {
+  position: absolute; right: 40px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Syne', sans-serif;
+  font-size: 6rem; font-weight: 800;
+  color: rgba(255,255,255,0.04);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -4px;
+}
+
+/* ===== CONTENT SECTION ===== */
+.content-section { display: none; }
+.content-section.active { display: block; animation: fadeIn 0.35s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.section-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  margin-bottom: 28px;
+}
+.section-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--sun), #FF9F1C);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+}
+.section-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem; font-weight: 800;
+  color: var(--ink); line-height: 1.2;
+}
+.section-header p {
+  color: var(--muted); font-size: 0.9rem;
+  margin-top: 4px; line-height: 1.5;
+}
+
+/* ===== CONTENT CARDS ===== */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: var(--shadow-lg); }
+.card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ink); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card h3::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 18px;
+  background: var(--sun);
+  border-radius: 2px;
+}
+.card p {
+  color: var(--ink2); line-height: 1.75; font-size: 0.93rem;
+}
+.card ul, .card ol {
+  color: var(--ink2); line-height: 1.85; font-size: 0.93rem;
+  padding-left: 20px;
+}
+.card li { margin-bottom: 4px; }
+
+.info-box {
+  background: #EEF6FF;
+  border: 1.5px solid #C3DEFF;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.info-box .icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.info-box p { color: #1A4A7A; font-size: 0.88rem; line-height: 1.65; }
+
+.tip-box {
+  background: #FFFBEA;
+  border: 1.5px solid #FFE566;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.tip-box p { color: #6B5000; font-size: 0.88rem; line-height: 1.65; }
+
+/* ===== CODE BLOCK ===== */
+.code-wrap {
+  margin: 16px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+}
+.code-header {
+  background: #E8E3DC;
+  padding: 8px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.5px;
+}
+.code-header .dots { display: flex; gap: 5px; }
+.code-header .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.dot-r { background: #FF5F57; }
+.dot-y { background: #FFBD2E; }
+.dot-g { background: #28C940; }
+.copy-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 5px; padding: 3px 10px;
+  font-size: 0.72rem; cursor: pointer; color: var(--muted);
+  transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.copy-btn:hover { background: var(--sun); color: white; border-color: var(--sun); }
+pre {
+  background: #FAF7F4;
+  padding: 18px 20px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.tag { color: #E85D04; }
+.attr { color: #0066FF; }
+.val { color: #2ECC71; font-style: italic; }
+.cmt { color: var(--muted); font-style: italic; }
+.kw { color: #9B59B6; }
+
+/* ===== PREVIEW BOX ===== */
+.preview-wrap {
+  margin: 16px 0;
+  border: 1.5px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.preview-header {
+  background: #E8F4FF;
+  padding: 8px 16px;
+  font-size: 0.75rem; font-weight: 600;
+  color: #0066FF; display: flex; align-items: center; gap: 6px;
+}
+.preview-body {
+  background: white;
+  padding: 20px 24px;
+  font-size: 0.9rem; line-height: 1.7;
+}
+
+/* ===== TAGS TABLE ===== */
+.tags-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.tags-table th {
+  background: var(--ink); color: white;
+  padding: 10px 14px; text-align: left;
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 0.8rem;
+}
+.tags-table th:first-child { border-radius: 8px 0 0 0; }
+.tags-table th:last-child { border-radius: 0 8px 0 0; }
+.tags-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink2);
+}
+.tags-table tr:last-child td { border-bottom: none; }
+.tags-table tr:nth-child(even) td { background: var(--cream); }
+.tags-table code {
+  background: var(--code-bg);
+  padding: 2px 7px; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem; color: var(--sun);
+}
+
+/* ===== QUIZ ===== */
+.quiz-section {
+  background: linear-gradient(135deg, #FFF3EC, #FFF8F0);
+  border: 2px solid #FFD4B8;
+  border-radius: 20px;
+  padding: 32px;
+  margin-top: 32px;
+}
+.quiz-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem; font-weight: 800;
+  color: var(--ink); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 10px;
+}
+.quiz-subtitle { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; }
+
+.quiz-question-block { margin-bottom: 28px; }
+.quiz-q {
+  font-weight: 600; font-size: 0.95rem;
+  color: var(--ink); margin-bottom: 12px;
+  line-height: 1.5;
+}
+.quiz-q span {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px;
+  background: var(--sun); color: white;
+  border-radius: 50%; font-size: 0.72rem;
+  margin-right: 8px; flex-shrink: 0; font-weight: 700;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 10px; padding: 11px 16px;
+  cursor: pointer; font-size: 0.88rem;
+  color: var(--ink2); transition: all 0.2s;
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'DM Sans', sans-serif;
+}
+.quiz-opt:hover { border-color: var(--sky); color: var(--sky); background: #EEF6FF; }
+.quiz-opt.selected { border-color: var(--sky); background: #EEF6FF; color: var(--sky); font-weight: 600; }
+.quiz-opt.correct { border-color: var(--correct); background: #E9FBF0; color: #1A7A40; font-weight: 600; }
+.quiz-opt.wrong { border-color: var(--wrong); background: #FDECEC; color: #7A1A1A; }
+.quiz-opt.disabled { pointer-events: none; }
+.quiz-opt .opt-letter {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+}
+.quiz-feedback {
+  margin-top: 10px; padding: 10px 14px;
+  border-radius: 8px; font-size: 0.84rem;
+  display: none; font-weight: 500;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.ok { background: #E9FBF0; color: #1A7A40; border: 1px solid #A8EFC0; }
+.quiz-feedback.no { background: #FDECEC; color: #7A1A1A; border: 1px solid #F5AAAA; }
+
+.quiz-submit-btn, .next-btn, .section-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px;
+  border-radius: 100px; border: none; cursor: pointer;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.88rem; transition: all 0.25s;
+}
+.quiz-submit-btn {
+  background: var(--sun); color: white;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+  margin-top: 8px;
+}
+.quiz-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,107,53,0.4); }
+.quiz-submit-btn:disabled { opacity: 0.5; pointer-events: none; }
+
+.quiz-result {
+  background: white; border: 2px solid var(--border);
+  border-radius: 14px; padding: 24px;
+  text-align: center; display: none; margin-top: 20px;
+}
+.quiz-result.show { display: block; }
+.quiz-result .score {
+  font-family: 'Syne', sans-serif;
+  font-size: 3rem; font-weight: 800;
+  color: var(--sun);
+}
+.quiz-result .score-label { color: var(--muted); font-size: 0.85rem; margin-bottom: 12px; }
+.quiz-result .result-msg { font-weight: 600; color: var(--ink); margin-bottom: 16px; }
+.retry-btn {
+  background: none; border: 2px solid var(--sun); color: var(--sun);
+  border-radius: 100px; padding: 8px 20px;
+  cursor: pointer; font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 0.85rem; transition: all 0.2s;
+}
+.retry-btn:hover { background: var(--sun); color: white; }
+
+/* ===== CHALLENGE ===== */
+.challenge-section {
+  background: linear-gradient(135deg, #F0FFFE, #E6FFFD);
+  border: 2px solid #A8E6E2;
+  border-radius: 20px; padding: 32px;
+  margin-top: 20px;
+}
+.challenge-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem; font-weight: 800;
+  color: #0D5E5A; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 10px;
+}
+.challenge-desc { color: #2A7A76; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6; }
+.challenge-task {
+  background: white; border: 1.5px solid #B8E6E3;
+  border-radius: 12px; padding: 16px 20px; margin-bottom: 14px;
+}
+.challenge-task h4 {
+  font-weight: 700; font-size: 0.88rem;
+  color: #0D5E5A; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.challenge-task p { font-size: 0.85rem; color: #3A6E6C; line-height: 1.6; }
+.challenge-editor {
+  background: #1A1A2E;
+  border-radius: 12px; overflow: hidden;
+  margin: 16px 0;
+}
+.editor-header {
+  background: #0F0F1F; padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.75rem; color: rgba(255,255,255,0.5);
+}
+.editor-header .dots { display: flex; gap: 5px; }
+.run-btn {
+  background: var(--lime); color: #1A1A2E;
+  border: none; border-radius: 6px;
+  padding: 5px 14px; font-weight: 700;
+  font-size: 0.75rem; cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  transition: all 0.2s;
+}
+.run-btn:hover { background: #95D632; transform: scale(1.02); }
+.code-editor {
+  width: 100%; min-height: 160px;
+  background: #1A1A2E; color: #E8E8FF;
+  border: none; outline: none; resize: vertical;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem; line-height: 1.7;
+  tab-size: 2;
+}
+.editor-preview {
+  background: white;
+  border-top: 2px solid rgba(255,255,255,0.1);
+  min-height: 80px; padding: 16px 20px;
+  font-size: 0.88rem; line-height: 1.65;
+}
+.editor-preview-label {
+  background: #12122A; padding: 6px 16px;
+  font-size: 0.7rem; color: rgba(255,255,255,0.4);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* ===== NAV BUTTONS ===== */
+.nav-buttons {
+  display: flex; gap: 12px; margin-top: 36px;
+  padding-top: 24px; border-top: 1.5px solid var(--border);
+}
+.nav-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: 100px;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.85rem; cursor: pointer; transition: all 0.25s;
+  text-decoration: none;
+}
+.nav-btn-prev {
+  background: white; color: var(--ink);
+  border: 2px solid var(--border);
+}
+.nav-btn-prev:hover { border-color: var(--ink); }
+.nav-btn-next {
+  background: var(--ink); color: white;
+  border: 2px solid var(--ink);
+  box-shadow: 0 4px 14px rgba(26,26,46,0.2);
+}
+.nav-btn-next:hover { background: var(--sun); border-color: var(--sun); transform: translateX(3px); }
+
+/* ===== ATTRIBUTE TABLE ===== */
+.attr-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px; margin-top: 12px;
+}
+.attr-item {
+  background: var(--cream); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+}
+.attr-item code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; color: var(--sun);
+  font-weight: 600; display: block; margin-bottom: 4px;
+}
+.attr-item span { font-size: 0.78rem; color: var(--muted); }
+
+/* ===== BADGE ===== */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 10px; border-radius: 100px;
+  font-size: 0.72rem; font-weight: 600;
+  margin-left: 8px;
+}
+.badge-easy { background: #E9FBF0; color: #1A7A40; }
+.badge-med { background: #FFF6CC; color: #7A5A00; }
+.badge-hard { background: #FDECEC; color: #7A1A1A; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; top: 60px; left: 0; z-index: 99; height: calc(100vh - 60px); transform: translateX(-100%); }
+  .sidebar.open { display: block; transform: translateX(0); }
+  .main { padding: 24px 20px; }
+  .hero { padding: 36px 24px; }
+  .hero-html-badge { display: none; }
+  .hero-stats { gap: 12px; }
+  .menu-toggle { display: flex; }
+  .quiz-section, .challenge-section { padding: 20px; }
+  .layout { flex-direction: column; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 98; }
+  .overlay.show { display: block; }
+}
+@media (max-width: 600px) {
+  .topbar-progress { display: none; }
+  .hero h1 { font-size: 1.6rem; }
+  .section-header h2 { font-size: 1.3rem; }
+  .nav-buttons { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-brand">&#60;<span>HTML</span>/&#62; Masterclass</div>
+  <div class="topbar-progress">
+    <span id="progressText">0 / 10 materi</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header"><h3>📚 Daftar Materi</h3></div>
+  <div class="nav-section-label">Pendahuluan</div>
+  <a class="nav-item active" onclick="showSection(0)" href="#">
+    <div class="nav-icon">🏠</div> Beranda
+    <div class="nav-check" id="check-0">✓</div>
+  </a>
+  <a class="nav-item" onclick="showSection(1)" href="#">
+    <div class="nav-icon">📖</div> Pengenalan HTML
+    <div class="nav-check" id="check-1">✓</div>
+  </a>
+  <div class="nav-section-label">Dasar-Dasar</div>
+  <a class="nav-item" onclick="showSection(2)" href="#">
+    <div class="nav-icon">🏗️</div> Struktur Dokumen
+    <div class="nav-check" id="check-2">✓</div>
+  </a>
+  <a class="nav-item" onclick="showSection(3)" href="#">
+    <div class="nav-icon">🔤</div> Teks & Heading
+    <div class="nav-check" id="check-3">✓</div>
+  </a>
+  <a class="nav-item" onclick="showSection(4)" href="#">
+    <div class="nav-icon">🔗</div> Link & Gambar
+    <div class="nav-check" id="check-4">✓</div>
+  </a>
+  <div class="nav-section-label">Elemen Lanjutan</div>
+  <a class="nav-item" onclick="showSection(5)" href="#">
+    <div class="nav-icon">📋</div> List & Tabel
+    <div class="nav-check" id="check-5">✓</div>
+  </a>
+  <a class="nav-item" onclick="showSection(6)" href="#">
+    <div class="nav-icon">📝</div> Form & Input
+    <div class="nav-check" id="check-6">✓</div>
+  </a>
+  <a class="nav-item" onclick="showSection(7)" href="#">
+    <div class="nav-icon">🧱</div> Div, Span & Semantik
+    <div class="nav-check" id="check-7">✓</div>
+  </a>
+  <div class="nav-section-label">Multimedia & Lainnya</div>
+  <a class="nav-item" onclick="showSection(8)" href="#">
+    <div class="nav-icon">🎬</div> Multimedia & Embed
+    <div class="nav-check" id="check-8">✓</div>
+  </a>
+  <a class="nav-item" onclick="showSection(9)" href="#">
+    <div class="nav-icon">🔖</div> Meta, Head & Atribut
+    <div class="nav-check" id="check-9">✓</div>
+  </a>
+  <div class="nav-buttons" style="padding: 10px 10px 10px 20px;">
+    <a href="materi-css.html">
+      <button class="nav-btn nav-btn-next" onclick="">Lanjut Belajar CSS →</button>
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main" id="mainContent">
+
+<!-- SECTION 0: HOME -->
+<div class="content-section active" id="section-0">
+  <div class="hero">
+    <div class="hero-tag">🎓 Panduan Lengkap</div>
+    <h1>Kuasai <span class="highlight">HTML</span><br>dari Nol sampai Mahir</h1>
+    <p>Pelajari semua aspek HTML secara mendalam — mulai dari struktur dasar, elemen-elemen penting, hingga HTML5 semantik modern. Lengkap dengan contoh kode, kuis interaktif, dan tantangan praktikum.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">10</div><div class="lbl">Topik</div></div>
+      <div class="hero-stat"><div class="num">50+</div><div class="lbl">Contoh Kode</div></div>
+      <div class="hero-stat"><div class="num">40+</div><div class="lbl">Soal Kuis</div></div>
+      <div class="hero-stat"><div class="num">10</div><div class="lbl">Praktikum</div></div>
+    </div>
+    <div class="hero-html-badge">&lt;HTML&gt;</div>
+  </div>
+
+  <div class="card">
+    <h3>Apa yang akan kamu pelajari?</h3>
+    <ul>
+      <li>📌 <strong>Pengenalan HTML</strong> — sejarah, cara kerja, dan peran HTML di web</li>
+      <li>📌 <strong>Struktur Dokumen</strong> — DOCTYPE, html, head, body</li>
+      <li>📌 <strong>Teks & Heading</strong> — tag heading, paragraf, formatting teks</li>
+      <li>📌 <strong>Link & Gambar</strong> — anchor, img, path relatif vs absolut</li>
+      <li>📌 <strong>List & Tabel</strong> — ul, ol, dl, table, tr, td, th</li>
+      <li>📌 <strong>Form & Input</strong> — form, berbagai jenis input, validasi</li>
+      <li>📌 <strong>Div, Span & Semantik</strong> — layout, HTML5 semantic tags</li>
+      <li>📌 <strong>Multimedia & Embed</strong> — audio, video, iframe, canvas</li>
+      <li>📌 <strong>Meta, Head & Atribut Global</strong> — SEO, charset, viewport</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Cara Menggunakan Platform Ini</h3>
+    <p>Navigasi materi menggunakan menu di sisi kiri. Setiap topik berisi:</p>
+    <div class="attr-grid" style="margin-top:14px">
+      <div class="attr-item"><code>📖 Teori</code><span>Penjelasan konsep lengkap</span></div>
+      <div class="attr-item"><code>💻 Kode</code><span>Contoh kode siap pakai</span></div>
+      <div class="attr-item"><code>👁️ Preview</code><span>Hasil render browser</span></div>
+      <div class="attr-item"><code>🧠 Kuis</code><span>Tes pemahaman kamu</span></div>
+      <div class="attr-item"><code>🛠️ Praktikum</code><span>Tantangan coding langsung</span></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-next" onclick="showSection(1)">Mulai Belajar →</button>
+  </div>
+</div>
+
+<!-- SECTION 1: PENGENALAN HTML -->
+<div class="content-section" id="section-1">
+  <div class="section-header">
+    <div class="section-icon">📖</div>
+    <div>
+      <h2>Pengenalan HTML</h2>
+      <p>Apa itu HTML, sejarahnya, dan bagaimana cara kerjanya</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Apa itu HTML?</h3>
+    <p><strong>HTML (HyperText Markup Language)</strong> adalah bahasa standar untuk membuat dan menyusun konten di web. HTML bukan bahasa pemrograman — ia adalah bahasa <em>markup</em> yang menggunakan <strong>tag</strong> untuk mendeskripsikan struktur halaman web.</p>
+    <div class="info-box">
+      <div class="icon">💡</div>
+      <p>Setiap halaman web yang kamu buka di browser dibuat dengan HTML. HTML mendefinisikan <em>struktur</em> konten, CSS mengatur <em>tampilan</em>, dan JavaScript menambahkan <em>interaktivitas</em>.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Sejarah Singkat HTML</h3>
+    <table class="tags-table" style="margin-top:8px">
+      <tr><th>Tahun</th><th>Versi</th><th>Keterangan</th></tr>
+      <tr><td>1991</td><td>HTML 1.0</td><td>Diciptakan Tim Berners-Lee di CERN</td></tr>
+      <tr><td>1995</td><td>HTML 2.0</td><td>Standar pertama oleh IETF</td></tr>
+      <tr><td>1997</td><td>HTML 3.2 & 4.0</td><td>Dukungan CSS & JavaScript</td></tr>
+      <tr><td>2000</td><td>XHTML 1.0</td><td>HTML berbasis XML yang lebih ketat</td></tr>
+      <tr><td>2014</td><td>HTML5</td><td>Standar modern dengan fitur multimedia & semantik</td></tr>
+      <tr><td>Living</td><td>HTML Living Standard</td><td>Dikelola WHATWG, terus berkembang</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Anatomi Tag HTML</h3>
+    <p>Elemen HTML terdiri dari <strong>opening tag</strong>, <strong>konten</strong>, dan <strong>closing tag</strong>:</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Anatomi Elemen HTML</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Struktur dasar elemen HTML --&gt;</span>
+
+<span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="val">"intro"</span><span class="tag">&gt;</span>Ini adalah paragraf.<span class="tag">&lt;/p&gt;</span>
+<span class="cmt"> ↑                    ↑             ↑</span>
+<span class="cmt"> Opening tag          Konten        Closing tag</span>
+
+<span class="cmt">&lt;!-- Elemen self-closing (tidak butuh closing tag) --&gt;</span>
+<span class="tag">&lt;br&gt;</span>      <span class="cmt">&lt;!-- line break --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"foto.jpg"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"text"</span><span class="tag">&gt;</span></pre>
+    </div>
+    <div class="tip-box">
+      <div class="icon">⚡</div>
+      <p><strong>Tips:</strong> Dalam HTML5, tag self-closing tidak perlu slash di akhir (<code>&lt;br&gt;</code> bukan <code>&lt;br /&gt;</code>), meski keduanya valid.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Cara Kerja Browser</h3>
+    <p>Ketika kamu membuka halaman web, browser melakukan proses berikut:</p>
+    <ol>
+      <li>Mengunduh file HTML dari server</li>
+      <li>Mem-<em>parsing</em> HTML menjadi <strong>DOM (Document Object Model)</strong></li>
+      <li>Mengunduh CSS dan menerapkan gaya</li>
+      <li>Menjalankan JavaScript</li>
+      <li>Merender halaman yang sudah jadi ke layar</li>
+    </ol>
+  </div>
+
+  <!-- QUIZ 1 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — Pengenalan HTML</div>
+    <div class="quiz-subtitle">Uji pemahaman kamu tentang dasar-dasar HTML</div>
+    <div id="quiz-1-container"></div>
+    <div class="quiz-result" id="quiz-1-result">
+      <div class="score" id="quiz-1-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-1-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(1)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 1 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #1 <span class="badge badge-easy">Mudah</span></div>
+    <div class="challenge-desc">Buat kode HTML pertamamu! Ketik dan jalankan langsung di editor di bawah ini.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Buat elemen paragraf yang berisi teks <strong>"Halo, saya sedang belajar HTML!"</strong> menggunakan tag &lt;p&gt;. Tambahkan juga komentar HTML di atasnya.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-1.html</span>
+        <button class="run-btn" onclick="runCode('editor-1','preview-1')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-1" spellcheck="false">&lt;!-- Komentar HTML: ini tidak ditampilkan di browser --&gt;
+&lt;p&gt;Halo, saya sedang belajar HTML!&lt;/p&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-1"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(0)">← Beranda</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(2)">Struktur Dokumen →</button>
+  </div>
+</div>
+
+<!-- SECTION 2: STRUKTUR DOKUMEN -->
+<div class="content-section" id="section-2">
+  <div class="section-header">
+    <div class="section-icon">🏗️</div>
+    <div>
+      <h2>Struktur Dokumen HTML</h2>
+      <p>Kerangka dasar yang wajib ada di setiap halaman HTML</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Kerangka Dasar HTML5</h3>
+    <p>Setiap dokumen HTML yang valid harus memiliki struktur berikut:</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>index.html</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="val">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Judul Halaman Web<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>Halo Dunia!<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Ini adalah halaman HTML pertama saya.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Penjelasan Setiap Bagian</h3>
+    <table class="tags-table">
+      <tr><th>Tag</th><th>Fungsi</th></tr>
+      <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Deklarasi tipe dokumen — memberitahu browser ini adalah HTML5</td></tr>
+      <tr><td><code>&lt;html&gt;</code></td><td>Elemen root (akar) dari seluruh halaman HTML</td></tr>
+      <tr><td><code>lang="id"</code></td><td>Atribut bahasa — penting untuk aksesibilitas & SEO</td></tr>
+      <tr><td><code>&lt;head&gt;</code></td><td>Berisi metadata — tidak ditampilkan langsung di halaman</td></tr>
+      <tr><td><code>&lt;meta charset&gt;</code></td><td>Menentukan encoding karakter (UTF-8 mendukung semua karakter)</td></tr>
+      <tr><td><code>&lt;meta viewport&gt;</code></td><td>Membuat halaman responsif di perangkat mobile</td></tr>
+      <tr><td><code>&lt;title&gt;</code></td><td>Judul yang muncul di tab browser dan hasil pencarian</td></tr>
+      <tr><td><code>&lt;body&gt;</code></td><td>Semua konten yang ditampilkan di halaman berada di sini</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Isi Tag &lt;head&gt;</h3>
+    <p>Tag head bisa berisi berbagai elemen penting:</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Contoh lengkap &lt;head&gt;</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;head&gt;</span>
+  <span class="cmt">&lt;!-- Encoding karakter --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Responsif di mobile --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Judul halaman --&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Nama Website Saya<span class="tag">&lt;/title&gt;</span>
+
+  <span class="cmt">&lt;!-- Deskripsi untuk SEO --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"description"</span> <span class="attr">content</span>=<span class="val">"Deskripsi halaman ini"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Link ke file CSS --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"style.css"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- CSS langsung (internal) --&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+    <span class="kw">body</span> { <span class="attr">font-family</span>: <span class="val">Arial</span>; }
+  <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+    </div>
+  </div>
+
+  <!-- QUIZ 2 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — Struktur Dokumen</div>
+    <div class="quiz-subtitle">Seberapa paham kamu tentang struktur HTML?</div>
+    <div id="quiz-2-container"></div>
+    <div class="quiz-result" id="quiz-2-result">
+      <div class="score" id="quiz-2-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-2-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(2)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 2 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #2 <span class="badge badge-easy">Mudah</span></div>
+    <div class="challenge-desc">Buat struktur HTML lengkap dengan semua bagian yang diperlukan.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Lengkapi struktur HTML di bawah ini dengan menambahkan tag <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;title&gt;</code>, dan <code>&lt;body&gt;</code> yang benar. Isi body dengan heading dan paragraf perkenalanmu.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-2.html</span>
+        <button class="run-btn" onclick="runCode('editor-2','preview-2')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-2" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang="id"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Halaman Perkenalan Saya&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Halo! Nama saya [Isi Namamu]&lt;/h1&gt;
+  &lt;p&gt;Saya sedang belajar HTML di HTML Masterclass.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-2"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(1)">← Pengenalan HTML</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(3)">Teks & Heading →</button>
+  </div>
+</div>
+
+<!-- SECTION 3: TEKS & HEADING -->
+<div class="content-section" id="section-3">
+  <div class="section-header">
+    <div class="section-icon">🔤</div>
+    <div>
+      <h2>Teks & Heading</h2>
+      <p>Tag untuk judul, paragraf, dan formatting teks</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Tag Heading (H1-H6)</h3>
+    <p>HTML memiliki 6 level heading. <strong>H1 adalah yang terbesar dan paling penting</strong> — digunakan sebagai judul utama halaman. H2-H6 untuk sub-judul dan sub-sub-judul.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Heading H1 - H6</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;h1&gt;</span>Heading 1 — Judul Utama<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;h2&gt;</span>Heading 2 — Sub Judul<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;h3&gt;</span>Heading 3 — Sub Sub Judul<span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;h4&gt;</span>Heading 4<span class="tag">&lt;/h4&gt;</span>
+<span class="tag">&lt;h5&gt;</span>Heading 5<span class="tag">&lt;/h5&gt;</span>
+<span class="tag">&lt;h6&gt;</span>Heading 6 — Paling kecil<span class="tag">&lt;/h6&gt;</span></pre>
+    </div>
+    <div class="preview-wrap">
+      <div class="preview-header">👁️ Preview Browser</div>
+      <div class="preview-body">
+        <h1 style="margin:4px 0;font-size:2em">Heading 1</h1>
+        <h2 style="margin:4px 0;font-size:1.5em">Heading 2</h2>
+        <h3 style="margin:4px 0;font-size:1.17em">Heading 3</h3>
+        <h4 style="margin:4px 0;font-size:1em">Heading 4</h4>
+        <h5 style="margin:4px 0;font-size:0.83em">Heading 5</h5>
+        <h6 style="margin:4px 0;font-size:0.67em">Heading 6</h6>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Paragraf & Teks Dasar</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Paragraf & Line Break</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Paragraf --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Ini adalah paragraf pertama. Teks di sini mengalir
+secara otomatis dan bisa panjang.<span class="tag">&lt;/p&gt;</span>
+
+<span class="tag">&lt;p&gt;</span>Ini paragraf kedua. Setiap &lt;p&gt; otomatis dimulai
+di baris baru dengan jarak.<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">&lt;!-- Line break: pindah baris tanpa paragraf baru --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Baris pertama<span class="tag">&lt;br&gt;</span>
+Baris kedua (masih 1 paragraf)<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">&lt;!-- Garis horizontal --&gt;</span>
+<span class="tag">&lt;hr&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Formatting Teks</h3>
+    <table class="tags-table">
+      <tr><th>Tag</th><th>Tampilan</th><th>Kegunaan</th></tr>
+      <tr><td><code>&lt;strong&gt;</code></td><td><strong>Teks tebal</strong></td><td>Teks penting/tebal (semantik)</td></tr>
+      <tr><td><code>&lt;b&gt;</code></td><td><b>Teks tebal</b></td><td>Hanya styling tebal</td></tr>
+      <tr><td><code>&lt;em&gt;</code></td><td><em>Teks miring</em></td><td>Penekanan/miring (semantik)</td></tr>
+      <tr><td><code>&lt;i&gt;</code></td><td><i>Teks miring</i></td><td>Hanya styling miring</td></tr>
+      <tr><td><code>&lt;u&gt;</code></td><td><u>Garis bawah</u></td><td>Underline</td></tr>
+      <tr><td><code>&lt;s&gt;</code></td><td><s>Dicoret</s></td><td>Teks yang sudah tidak relevan</td></tr>
+      <tr><td><code>&lt;mark&gt;</code></td><td><mark>Highlight</mark></td><td>Menandai teks</td></tr>
+      <tr><td><code>&lt;small&gt;</code></td><td><small>Kecil</small></td><td>Teks lebih kecil</td></tr>
+      <tr><td><code>&lt;sup&gt;</code></td><td>x<sup>2</sup></td><td>Superscript</td></tr>
+      <tr><td><code>&lt;sub&gt;</code></td><td>H<sub>2</sub>O</td><td>Subscript</td></tr>
+      <tr><td><code>&lt;code&gt;</code></td><td><code>kode</code></td><td>Inline code</td></tr>
+      <tr><td><code>&lt;pre&gt;</code></td><td>Preformatted</td><td>Menjaga spasi & enter</td></tr>
+      <tr><td><code>&lt;blockquote&gt;</code></td><td>Kutipan panjang</td><td>Quote dari sumber lain</td></tr>
+    </table>
+    <div class="code-wrap" style="margin-top:16px">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Contoh Formatting</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;p&gt;</span>Ini teks <span class="tag">&lt;strong&gt;</span>tebal<span class="tag">&lt;/strong&gt;</span>, <span class="tag">&lt;em&gt;</span>miring<span class="tag">&lt;/em&gt;</span>, dan <span class="tag">&lt;mark&gt;</span>highlight<span class="tag">&lt;/mark&gt;</span>.<span class="tag">&lt;/p&gt;</span>
+
+<span class="tag">&lt;p&gt;</span>Rumus: E = mc<span class="tag">&lt;sup&gt;</span>2<span class="tag">&lt;/sup&gt;</span> | Air: H<span class="tag">&lt;sub&gt;</span>2<span class="tag">&lt;/sub&gt;</span>O<span class="tag">&lt;/p&gt;</span>
+
+<span class="tag">&lt;blockquote&gt;</span>
+  "Pendidikan adalah senjata paling ampuh 
+   yang bisa kamu gunakan untuk mengubah dunia."
+  <span class="tag">&lt;cite&gt;</span>— Nelson Mandela<span class="tag">&lt;/cite&gt;</span>
+<span class="tag">&lt;/blockquote&gt;</span>
+
+<span class="tag">&lt;p&gt;</span>Gunakan perintah <span class="tag">&lt;code&gt;</span>git commit -m "pesan"<span class="tag">&lt;/code&gt;</span>.<span class="tag">&lt;/p&gt;</span></pre>
+    </div>
+  </div>
+
+  <!-- QUIZ 3 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — Teks & Heading</div>
+    <div class="quiz-subtitle">Test pengetahuan tentang tag teks HTML</div>
+    <div id="quiz-3-container"></div>
+    <div class="quiz-result" id="quiz-3-result">
+      <div class="score" id="quiz-3-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-3-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(3)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 3 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #3 <span class="badge badge-med">Menengah</span></div>
+    <div class="challenge-desc">Buat halaman artikel sederhana dengan berbagai jenis formatting teks.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Buat konten artikel yang menggunakan minimal: <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;mark&gt;</code>, <code>&lt;blockquote&gt;</code>, dan <code>&lt;hr&gt;</code>.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-3.html</span>
+        <button class="run-btn" onclick="runCode('editor-3','preview-3')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-3" spellcheck="false">&lt;h1&gt;Manfaat Belajar HTML&lt;/h1&gt;
+&lt;p&gt;HTML adalah &lt;strong&gt;fondasi utama&lt;/strong&gt; pembuatan website. Dengan belajar HTML, kamu bisa &lt;em&gt;memahami struktur web&lt;/em&gt; secara mendalam.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Kenapa HTML Penting?&lt;/h2&gt;
+&lt;p&gt;Menguasai HTML membuatmu bisa &lt;mark&gt;membuat halaman web sendiri&lt;/mark&gt; tanpa bergantung pada tools lain.&lt;/p&gt;
+&lt;blockquote&gt;"HTML adalah bahasa ibu dari setiap website di dunia."&lt;/blockquote&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-3"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(2)">← Struktur Dokumen</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(4)">Link & Gambar →</button>
+  </div>
+</div>
+
+<!-- SECTION 4: LINK & GAMBAR -->
+<div class="content-section" id="section-4">
+  <div class="section-header">
+    <div class="section-icon">🔗</div>
+    <div>
+      <h2>Link & Gambar</h2>
+      <p>Navigasi antar halaman dan menampilkan gambar</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Tag Anchor — Membuat Link</h3>
+    <p>Tag <code>&lt;a&gt;</code> digunakan untuk membuat hyperlink ke halaman lain, file, atau bagian dalam halaman.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Berbagai jenis link</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Link ke website eksternal --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"https://www.google.com"</span> <span class="attr">target</span>=<span class="val">"_blank"</span><span class="tag">&gt;</span>Buka Google<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Link ke halaman lain (relatif) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"tentang.html"</span><span class="tag">&gt;</span>Tentang Kami<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"folder/kontak.html"</span><span class="tag">&gt;</span>Kontak<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Link ke bagian di halaman yang sama (anchor) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"#section-2"</span><span class="tag">&gt;</span>Lompat ke Bagian 2<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;h2</span> <span class="attr">id</span>=<span class="val">"section-2"</span><span class="tag">&gt;</span>Ini Bagian 2<span class="tag">&lt;/h2&gt;</span>
+
+<span class="cmt">&lt;!-- Link email --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"mailto:email@contoh.com"</span><span class="tag">&gt;</span>Kirim Email<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Link telepon --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"tel:+6281234567890"</span><span class="tag">&gt;</span>Hubungi Kami<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Link unduh file --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"dokumen.pdf"</span> <span class="attr">download</span><span class="tag">&gt;</span>Unduh PDF<span class="tag">&lt;/a&gt;</span></pre>
+    </div>
+    <div class="attr-grid">
+      <div class="attr-item"><code>href</code><span>URL tujuan link</span></div>
+      <div class="attr-item"><code>target="_blank"</code><span>Buka di tab baru</span></div>
+      <div class="attr-item"><code>target="_self"</code><span>Buka di tab yang sama (default)</span></div>
+      <div class="attr-item"><code>download</code><span>Unduh file daripada buka</span></div>
+      <div class="attr-item"><code>title</code><span>Tooltip saat hover</span></div>
+      <div class="attr-item"><code>rel="noopener"</code><span>Keamanan untuk _blank</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Tag Gambar — &lt;img&gt;</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Menampilkan gambar</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Gambar dari file lokal --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"gambar/foto.jpg"</span> <span class="attr">alt</span>=<span class="val">"Deskripsi gambar"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- Gambar dari internet --&gt;</span>
+<span class="tag">&lt;img</span> 
+  <span class="attr">src</span>=<span class="val">"https://picsum.photos/400/200"</span>
+  <span class="attr">alt</span>=<span class="val">"Foto acak"</span>
+  <span class="attr">width</span>=<span class="val">"400"</span>
+  <span class="attr">height</span>=<span class="val">"200"</span>
+  <span class="attr">loading</span>=<span class="val">"lazy"</span>
+<span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- Gambar sebagai link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"halaman.html"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"logo.png"</span> <span class="attr">alt</span>=<span class="val">"Logo"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Figure dengan caption --&gt;</span>
+<span class="tag">&lt;figure&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"gunung.jpg"</span> <span class="attr">alt</span>=<span class="val">"Pemandangan gunung"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;figcaption&gt;</span>Pemandangan Gunung Bromo saat fajar<span class="tag">&lt;/figcaption&gt;</span>
+<span class="tag">&lt;/figure&gt;</span></pre>
+    </div>
+    <div class="info-box">
+      <div class="icon">⚠️</div>
+      <p><strong>Atribut <code>alt</code> sangat penting!</strong> Alt text mendeskripsikan gambar untuk screen reader (aksesibilitas) dan ditampilkan jika gambar gagal dimuat. Selalu gunakan alt text yang deskriptif.</p>
+    </div>
+  </div>
+
+  <!-- QUIZ 4 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — Link & Gambar</div>
+    <div class="quiz-subtitle">Test pemahamanmu tentang anchor dan gambar</div>
+    <div id="quiz-4-container"></div>
+    <div class="quiz-result" id="quiz-4-result">
+      <div class="score" id="quiz-4-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-4-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(4)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 4 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #4 <span class="badge badge-med">Menengah</span></div>
+    <div class="challenge-desc">Buat menu navigasi sederhana dengan link dan gambar.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Buat halaman dengan: (1) gambar dari URL eksternal, (2) figcaption, (3) link ke Google yang buka di tab baru, (4) link email.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-4.html</span>
+        <button class="run-btn" onclick="runCode('editor-4','preview-4')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-4" spellcheck="false">&lt;h1&gt;Galeri & Navigasi&lt;/h1&gt;
+
+&lt;figure&gt;
+  &lt;img src="https://picsum.photos/300/150" alt="Foto acak indah" width="300"&gt;
+  &lt;figcaption&gt;Foto dari Picsum Photos&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;
+  &lt;a href="https://www.google.com" target="_blank"&gt;Buka Google (tab baru)&lt;/a&gt; |
+  &lt;a href="mailto:saya@email.com"&gt;Kirim Email&lt;/a&gt;
+&lt;/p&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-4"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(3)">← Teks & Heading</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(5)">List & Tabel →</button>
+  </div>
+</div>
+
+<!-- SECTION 5: LIST & TABEL -->
+<div class="content-section" id="section-5">
+  <div class="section-header">
+    <div class="section-icon">📋</div>
+    <div>
+      <h2>List & Tabel</h2>
+      <p>Membuat daftar dan tabel data terstruktur</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Jenis-Jenis List</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Unordered, Ordered, dan Definition List</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Unordered List (bullet points) --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>HTML<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>CSS<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>JavaScript<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cmt">&lt;!-- Ordered List (bernomor) --&gt;</span>
+<span class="tag">&lt;ol&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Buka editor teks<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Tulis kode HTML<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Simpan sebagai .html<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Buka di browser<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="cmt">&lt;!-- Ordered List dengan tipe berbeda --&gt;</span>
+<span class="tag">&lt;ol</span> <span class="attr">type</span>=<span class="val">"A"</span><span class="tag">&gt;</span>  <span class="cmt">&lt;!-- A, B, C --&gt;</span>
+<span class="tag">&lt;ol</span> <span class="attr">type</span>=<span class="val">"i"</span><span class="tag">&gt;</span>  <span class="cmt">&lt;!-- i, ii, iii --&gt;</span>
+<span class="tag">&lt;ol</span> <span class="attr">start</span>=<span class="val">"5"</span><span class="tag">&gt;</span> <span class="cmt">&lt;!-- mulai dari 5 --&gt;</span>
+
+<span class="cmt">&lt;!-- Nested List (list di dalam list) --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Frontend
+    <span class="tag">&lt;ul&gt;</span>
+      <span class="tag">&lt;li&gt;</span>HTML<span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;li&gt;</span>CSS<span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+  <span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Backend<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cmt">&lt;!-- Definition List --&gt;</span>
+<span class="tag">&lt;dl&gt;</span>
+  <span class="tag">&lt;dt&gt;</span>HTML<span class="tag">&lt;/dt&gt;</span>
+  <span class="tag">&lt;dd&gt;</span>HyperText Markup Language<span class="tag">&lt;/dd&gt;</span>
+  <span class="tag">&lt;dt&gt;</span>CSS<span class="tag">&lt;/dt&gt;</span>
+  <span class="tag">&lt;dd&gt;</span>Cascading Style Sheets<span class="tag">&lt;/dd&gt;</span>
+<span class="tag">&lt;/dl&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Membuat Tabel HTML</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Tabel lengkap dengan thead, tbody, tfoot</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;table</span> <span class="attr">border</span>=<span class="val">"1"</span><span class="tag">&gt;</span>
+  <span class="cmt">&lt;!-- Caption / judul tabel --&gt;</span>
+  <span class="tag">&lt;caption&gt;</span>Data Nilai Siswa<span class="tag">&lt;/caption&gt;</span>
+
+  <span class="cmt">&lt;!-- Header tabel --&gt;</span>
+  <span class="tag">&lt;thead&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;th&gt;</span>Nama<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;th&gt;</span>Matematika<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;th&gt;</span>Bahasa<span class="tag">&lt;/th&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/thead&gt;</span>
+
+  <span class="cmt">&lt;!-- Isi tabel --&gt;</span>
+  <span class="tag">&lt;tbody&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>Andi<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>90<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>85<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>Budi<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td</span> <span class="attr">colspan</span>=<span class="val">"2"</span><span class="tag">&gt;</span>Tidak Hadir<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tbody&gt;</span>
+
+  <span class="cmt">&lt;!-- Footer tabel --&gt;</span>
+  <span class="tag">&lt;tfoot&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>Rata-rata<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>90<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>85<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tfoot&gt;</span>
+<span class="tag">&lt;/table&gt;</span></pre>
+    </div>
+    <div class="attr-grid">
+      <div class="attr-item"><code>colspan="2"</code><span>Gabung 2 kolom ke kanan</span></div>
+      <div class="attr-item"><code>rowspan="3"</code><span>Gabung 3 baris ke bawah</span></div>
+      <div class="attr-item"><code>&lt;th&gt;</code><span>Header cell (tebal & tengah)</span></div>
+      <div class="attr-item"><code>&lt;td&gt;</code><span>Data cell biasa</span></div>
+    </div>
+  </div>
+
+  <!-- QUIZ 5 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — List & Tabel</div>
+    <div class="quiz-subtitle">Uji pemahamanmu tentang list dan tabel HTML</div>
+    <div id="quiz-5-container"></div>
+    <div class="quiz-result" id="quiz-5-result">
+      <div class="score" id="quiz-5-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-5-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(5)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 5 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #5 <span class="badge badge-med">Menengah</span></div>
+    <div class="challenge-desc">Buat tabel jadwal pelajaran lengkap dengan colspan dan rowspan.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Buat tabel jadwal 3 hari (Senin, Selasa, Rabu) dengan minimal 3 mata pelajaran. Gunakan <code>colspan</code> untuk menggabungkan kolom "Istirahat".</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-5.html</span>
+        <button class="run-btn" onclick="runCode('editor-5','preview-5')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-5" spellcheck="false">&lt;h2&gt;Jadwal Pelajaran&lt;/h2&gt;
+&lt;table border="1" cellpadding="8"&gt;
+  &lt;caption&gt;Jadwal Pelajaran Minggu Ini&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Hari&lt;/th&gt;
+      &lt;th&gt;07.00-08.00&lt;/th&gt;
+      &lt;th&gt;08.00-09.00&lt;/th&gt;
+      &lt;th&gt;09.00-09.30&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Senin&lt;/td&gt;
+      &lt;td&gt;Matematika&lt;/td&gt;
+      &lt;td&gt;Bahasa Indonesia&lt;/td&gt;
+      &lt;td rowspan="3" style="text-align:center"&gt;☕ Istirahat&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Selasa&lt;/td&gt;
+      &lt;td&gt;IPA&lt;/td&gt;
+      &lt;td&gt;IPS&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Rabu&lt;/td&gt;
+      &lt;td colspan="2" style="text-align:center"&gt;Olahraga (2 jam)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-5"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(4)">← Link & Gambar</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(6)">Form & Input →</button>
+  </div>
+</div>
+
+<!-- SECTION 6: FORM & INPUT -->
+<div class="content-section" id="section-6">
+  <div class="section-header">
+    <div class="section-icon">📝</div>
+    <div>
+      <h2>Form & Input</h2>
+      <p>Mengumpulkan data dari pengguna</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Struktur Dasar Form</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Form lengkap</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="val">"/kirim"</span> <span class="attr">method</span>=<span class="val">"POST"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Text input --&gt;</span>
+  <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="val">"nama"</span><span class="tag">&gt;</span>Nama Lengkap:<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"text"</span> <span class="attr">id</span>=<span class="val">"nama"</span> <span class="attr">name</span>=<span class="val">"nama"</span> 
+         <span class="attr">placeholder</span>=<span class="val">"Masukkan nama"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Email --&gt;</span>
+  <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="val">"email"</span><span class="tag">&gt;</span>Email:<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"email"</span> <span class="attr">id</span>=<span class="val">"email"</span> <span class="attr">name</span>=<span class="val">"email"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Password --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"password"</span> <span class="attr">name</span>=<span class="val">"sandi"</span> <span class="attr">minlength</span>=<span class="val">"8"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Textarea --&gt;</span>
+  <span class="tag">&lt;textarea</span> <span class="attr">name</span>=<span class="val">"pesan"</span> <span class="attr">rows</span>=<span class="val">"4"</span> <span class="attr">cols</span>=<span class="val">"40"</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+
+  <span class="cmt">&lt;!-- Select dropdown --&gt;</span>
+  <span class="tag">&lt;select</span> <span class="attr">name</span>=<span class="val">"kota"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">""</span><span class="tag">&gt;</span>Pilih kota<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"medan"</span><span class="tag">&gt;</span>Medan<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"jakarta"</span><span class="tag">&gt;</span>Jakarta<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;/select&gt;</span>
+
+  <span class="cmt">&lt;!-- Radio buttons --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"radio"</span> <span class="attr">name</span>=<span class="val">"jk"</span> <span class="attr">value</span>=<span class="val">"L"</span><span class="tag">&gt;</span> Laki-laki
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"radio"</span> <span class="attr">name</span>=<span class="val">"jk"</span> <span class="attr">value</span>=<span class="val">"P"</span><span class="tag">&gt;</span> Perempuan
+
+  <span class="cmt">&lt;!-- Checkbox --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"checkbox"</span> <span class="attr">name</span>=<span class="val">"setuju"</span> <span class="attr">required</span><span class="tag">&gt;</span> Saya setuju
+
+  <span class="cmt">&lt;!-- Submit button --&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>Kirim<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Semua Jenis Input HTML5</h3>
+    <table class="tags-table">
+      <tr><th>type=""</th><th>Kegunaan</th></tr>
+      <tr><td><code>text</code></td><td>Input teks biasa</td></tr>
+      <tr><td><code>email</code></td><td>Input email (validasi otomatis)</td></tr>
+      <tr><td><code>password</code></td><td>Input sandi (tersamarkan)</td></tr>
+      <tr><td><code>number</code></td><td>Angka saja</td></tr>
+      <tr><td><code>tel</code></td><td>Nomor telepon</td></tr>
+      <tr><td><code>url</code></td><td>URL/website</td></tr>
+      <tr><td><code>date</code></td><td>Tanggal (date picker)</td></tr>
+      <tr><td><code>time</code></td><td>Waktu</td></tr>
+      <tr><td><code>datetime-local</code></td><td>Tanggal & waktu</td></tr>
+      <tr><td><code>range</code></td><td>Slider angka</td></tr>
+      <tr><td><code>color</code></td><td>Color picker</td></tr>
+      <tr><td><code>file</code></td><td>Upload file</td></tr>
+      <tr><td><code>checkbox</code></td><td>Kotak centang</td></tr>
+      <tr><td><code>radio</code></td><td>Pilihan eksklusif</td></tr>
+      <tr><td><code>hidden</code></td><td>Data tersembunyi</td></tr>
+      <tr><td><code>submit</code></td><td>Tombol kirim</td></tr>
+      <tr><td><code>reset</code></td><td>Tombol reset form</td></tr>
+      <tr><td><code>search</code></td><td>Kotak pencarian</td></tr>
+    </table>
+  </div>
+
+  <!-- QUIZ 6 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — Form & Input</div>
+    <div class="quiz-subtitle">Uji pengetahuanmu tentang form HTML</div>
+    <div id="quiz-6-container"></div>
+    <div class="quiz-result" id="quiz-6-result">
+      <div class="score" id="quiz-6-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-6-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(6)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 6 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #6 <span class="badge badge-hard">Sulit</span></div>
+    <div class="challenge-desc">Buat formulir pendaftaran yang lengkap dan valid.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Buat form pendaftaran kursus dengan field: nama, email, tanggal lahir, jenis kelamin (radio), kursus pilihan (select), catatan (textarea), upload foto (file), dan checkbox persetujuan. Semua field wajib diisi.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-6.html</span>
+        <button class="run-btn" onclick="runCode('editor-6','preview-6')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-6" spellcheck="false">&lt;h2&gt;Form Pendaftaran Kursus&lt;/h2&gt;
+&lt;form&gt;
+  &lt;p&gt;
+    &lt;label for="nama"&gt;Nama Lengkap:&lt;/label&gt;&lt;br&gt;
+    &lt;input type="text" id="nama" name="nama" placeholder="Nama lengkap" required&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label for="email"&gt;Email:&lt;/label&gt;&lt;br&gt;
+    &lt;input type="email" id="email" name="email" placeholder="email@contoh.com" required&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;Jenis Kelamin:&lt;/label&gt;&lt;br&gt;
+    &lt;input type="radio" name="jk" value="L"&gt; Laki-laki
+    &lt;input type="radio" name="jk" value="P"&gt; Perempuan
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label for="kursus"&gt;Pilih Kursus:&lt;/label&gt;&lt;br&gt;
+    &lt;select id="kursus" name="kursus"&gt;
+      &lt;option value=""&gt;-- Pilih kursus --&lt;/option&gt;
+      &lt;option value="html"&gt;HTML & CSS&lt;/option&gt;
+      &lt;option value="js"&gt;JavaScript&lt;/option&gt;
+      &lt;option value="python"&gt;Python&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;input type="checkbox" name="setuju" required&gt;
+    Saya menyetujui syarat dan ketentuan
+  &lt;/p&gt;
+  &lt;button type="submit"&gt;Daftar Sekarang&lt;/button&gt;
+&lt;/form&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-6"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(5)">← List & Tabel</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(7)">Div, Span & Semantik →</button>
+  </div>
+</div>
+
+<!-- SECTION 7: DIV, SPAN & SEMANTIK -->
+<div class="content-section" id="section-7">
+  <div class="section-header">
+    <div class="section-icon">🧱</div>
+    <div>
+      <h2>Div, Span & HTML Semantik</h2>
+      <p>Struktur layout dan elemen semantik HTML5</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Div vs Span</h3>
+    <p><code>&lt;div&gt;</code> adalah elemen <strong>block-level</strong> — selalu mulai di baris baru. <code>&lt;span&gt;</code> adalah elemen <strong>inline</strong> — mengalir dalam teks.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Div dan Span</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- DIV: container block-level --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"container"</span> <span class="attr">id</span>=<span class="val">"main"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"header"</span><span class="tag">&gt;</span>Header<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"content"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Paragraf biasa dengan <span class="tag">&lt;span</span> <span class="attr">style</span>=<span class="val">"color:red"</span><span class="tag">&gt;</span>teks merah<span class="tag">&lt;/span&gt;</span> di dalamnya.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"footer"</span><span class="tag">&gt;</span>Footer<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- SPAN: inline container --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Harga: <span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="val">"harga"</span><span class="tag">&gt;</span>Rp 50.000<span class="tag">&lt;/span&gt;</span> per item<span class="tag">&lt;/p&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>HTML5 Semantic Elements</h3>
+    <p>Elemen semantik memberikan <strong>makna</strong> pada konten — membantu browser, mesin pencari, dan screen reader memahami struktur halaman.</p>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Layout semantik HTML5</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;body&gt;</span>
+  <span class="cmt">&lt;!-- Header halaman --&gt;</span>
+  <span class="tag">&lt;header&gt;</span>
+    <span class="tag">&lt;nav&gt;</span>
+      <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"/"</span><span class="tag">&gt;</span>Beranda<span class="tag">&lt;/a&gt;</span>
+      <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"/tentang"</span><span class="tag">&gt;</span>Tentang<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;/nav&gt;</span>
+  <span class="tag">&lt;/header&gt;</span>
+
+  <span class="cmt">&lt;!-- Konten utama --&gt;</span>
+  <span class="tag">&lt;main&gt;</span>
+    <span class="tag">&lt;article&gt;</span>
+      <span class="tag">&lt;header&gt;</span>
+        <span class="tag">&lt;h1&gt;</span>Judul Artikel<span class="tag">&lt;/h1&gt;</span>
+        <span class="tag">&lt;time</span> <span class="attr">datetime</span>=<span class="val">"2025-01-15"</span><span class="tag">&gt;</span>15 Januari 2025<span class="tag">&lt;/time&gt;</span>
+      <span class="tag">&lt;/header&gt;</span>
+      <span class="tag">&lt;section&gt;</span>
+        <span class="tag">&lt;h2&gt;</span>Bagian 1<span class="tag">&lt;/h2&gt;</span>
+        <span class="tag">&lt;p&gt;</span>Isi artikel...<span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;/section&gt;</span>
+    <span class="tag">&lt;/article&gt;</span>
+
+    <span class="cmt">&lt;!-- Konten sampingan --&gt;</span>
+    <span class="tag">&lt;aside&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Artikel Terkait<span class="tag">&lt;/h3&gt;</span>
+    <span class="tag">&lt;/aside&gt;</span>
+  <span class="tag">&lt;/main&gt;</span>
+
+  <span class="cmt">&lt;!-- Footer --&gt;</span>
+  <span class="tag">&lt;footer&gt;</span>
+    <span class="tag">&lt;p&gt;</span>&amp;copy; 2025 Website Saya<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/footer&gt;</span>
+<span class="tag">&lt;/body&gt;</span></pre>
+    </div>
+    <table class="tags-table" style="margin-top:16px">
+      <tr><th>Tag Semantik</th><th>Kegunaan</th></tr>
+      <tr><td><code>&lt;header&gt;</code></td><td>Header halaman atau section</td></tr>
+      <tr><td><code>&lt;nav&gt;</code></td><td>Navigasi utama</td></tr>
+      <tr><td><code>&lt;main&gt;</code></td><td>Konten utama (hanya 1 per halaman)</td></tr>
+      <tr><td><code>&lt;article&gt;</code></td><td>Konten mandiri (artikel, post blog)</td></tr>
+      <tr><td><code>&lt;section&gt;</code></td><td>Bagian tematik dari konten</td></tr>
+      <tr><td><code>&lt;aside&gt;</code></td><td>Konten sampingan / sidebar</td></tr>
+      <tr><td><code>&lt;footer&gt;</code></td><td>Footer halaman atau section</td></tr>
+      <tr><td><code>&lt;figure&gt;</code></td><td>Gambar, diagram, atau illustrasi</td></tr>
+      <tr><td><code>&lt;figcaption&gt;</code></td><td>Caption untuk figure</td></tr>
+      <tr><td><code>&lt;time&gt;</code></td><td>Tanggal atau waktu</td></tr>
+      <tr><td><code>&lt;address&gt;</code></td><td>Informasi kontak</td></tr>
+      <tr><td><code>&lt;details&gt; + &lt;summary&gt;</code></td><td>Accordion/dropdown konten</td></tr>
+    </table>
+  </div>
+
+  <!-- QUIZ 7 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — Semantik HTML</div>
+    <div class="quiz-subtitle">Apakah kamu tahu kapan menggunakan elemen semantik?</div>
+    <div id="quiz-7-container"></div>
+    <div class="quiz-result" id="quiz-7-result">
+      <div class="score" id="quiz-7-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-7-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(7)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 7 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #7 <span class="badge badge-hard">Sulit</span></div>
+    <div class="challenge-desc">Buat layout halaman blog dengan elemen semantik HTML5 yang benar.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Buat struktur halaman blog menggunakan: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, dan <code>&lt;footer&gt;</code>.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-7.html</span>
+        <button class="run-btn" onclick="runCode('editor-7','preview-7')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-7" spellcheck="false">&lt;header style="background:#333;color:white;padding:10px"&gt;
+  &lt;h1&gt;Blog Teknologi&lt;/h1&gt;
+  &lt;nav&gt;
+    &lt;a href="#" style="color:white;margin-right:10px"&gt;Beranda&lt;/a&gt;
+    &lt;a href="#" style="color:white;margin-right:10px"&gt;Artikel&lt;/a&gt;
+    &lt;a href="#" style="color:white"&gt;Kontak&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main style="display:flex;gap:20px;padding:20px"&gt;
+  &lt;article style="flex:3"&gt;
+    &lt;h2&gt;Belajar HTML5 di Tahun 2025&lt;/h2&gt;
+    &lt;time&gt;22 April 2025&lt;/time&gt;
+    &lt;section&gt;
+      &lt;p&gt;HTML5 membawa banyak fitur baru yang memudahkan pengembangan web modern...&lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/article&gt;
+
+  &lt;aside style="flex:1;background:#f5f5f5;padding:10px"&gt;
+    &lt;h3&gt;Artikel Populer&lt;/h3&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Pengenalan CSS&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;JavaScript Dasar&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/aside&gt;
+&lt;/main&gt;
+
+&lt;footer style="background:#333;color:white;padding:10px;text-align:center"&gt;
+  &lt;p&gt;&amp;copy; 2025 Blog Teknologi. Semua hak dilindungi.&lt;/p&gt;
+&lt;/footer&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-7"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(6)">← Form & Input</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(8)">Multimedia & Embed →</button>
+  </div>
+</div>
+
+<!-- SECTION 8: MULTIMEDIA -->
+<div class="content-section" id="section-8">
+  <div class="section-header">
+    <div class="section-icon">🎬</div>
+    <div>
+      <h2>Multimedia & Embed</h2>
+      <p>Audio, video, iframe, dan canvas di HTML5</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Video HTML5</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Tag video</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Video dasar --&gt;</span>
+<span class="tag">&lt;video</span> <span class="attr">src</span>=<span class="val">"video.mp4"</span> <span class="attr">controls</span><span class="tag">&gt;</span>
+  Browser kamu tidak mendukung tag video.
+<span class="tag">&lt;/video&gt;</span>
+
+<span class="cmt">&lt;!-- Video dengan banyak format (cross-browser) --&gt;</span>
+<span class="tag">&lt;video</span>
+  <span class="attr">width</span>=<span class="val">"640"</span>
+  <span class="attr">height</span>=<span class="val">"360"</span>
+  <span class="attr">controls</span>
+  <span class="attr">autoplay</span>
+  <span class="attr">muted</span>
+  <span class="attr">loop</span>
+  <span class="attr">poster</span>=<span class="val">"thumbnail.jpg"</span>
+<span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="val">"video.mp4"</span> <span class="attr">type</span>=<span class="val">"video/mp4"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="val">"video.webm"</span> <span class="attr">type</span>=<span class="val">"video/webm"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/video&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Audio HTML5</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Tag audio</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;audio</span> <span class="attr">controls</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="val">"musik.mp3"</span> <span class="attr">type</span>=<span class="val">"audio/mp3"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="val">"musik.ogg"</span> <span class="attr">type</span>=<span class="val">"audio/ogg"</span><span class="tag">&gt;</span>
+  Browser kamu tidak mendukung tag audio.
+<span class="tag">&lt;/audio&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>IFrame — Embed Konten Lain</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Embed YouTube & Google Maps</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Embed YouTube video --&gt;</span>
+<span class="tag">&lt;iframe</span>
+  <span class="attr">width</span>=<span class="val">"560"</span>
+  <span class="attr">height</span>=<span class="val">"315"</span>
+  <span class="attr">src</span>=<span class="val">"https://www.youtube.com/embed/VIDEO_ID"</span>
+  <span class="attr">title</span>=<span class="val">"Video YouTube"</span>
+  <span class="attr">frameborder</span>=<span class="val">"0"</span>
+  <span class="attr">allowfullscreen</span>
+<span class="tag">&gt;&lt;/iframe&gt;</span>
+
+<span class="cmt">&lt;!-- Embed Google Maps --&gt;</span>
+<span class="tag">&lt;iframe</span>
+  <span class="attr">src</span>=<span class="val">"https://maps.google.com/maps?q=Medan&output=embed"</span>
+  <span class="attr">width</span>=<span class="val">"600"</span>
+  <span class="attr">height</span>=<span class="val">"450"</span>
+  <span class="attr">style</span>=<span class="val">"border:0"</span>
+  <span class="attr">loading</span>=<span class="val">"lazy"</span>
+<span class="tag">&gt;&lt;/iframe&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Canvas — Grafis dengan JavaScript</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Canvas dasar</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmt">&lt;!-- Canvas element --&gt;</span>
+<span class="tag">&lt;canvas</span> <span class="attr">id</span>=<span class="val">"myCanvas"</span> <span class="attr">width</span>=<span class="val">"400"</span> <span class="attr">height</span>=<span class="val">"200"</span>
+  <span class="attr">style</span>=<span class="val">"border: 1px solid black"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/canvas&gt;</span>
+
+<span class="cmt">&lt;!-- Menggambar dengan JavaScript --&gt;</span>
+<span class="tag">&lt;script&gt;</span>
+  <span class="kw">const</span> canvas = document.getElementById(<span class="val">'myCanvas'</span>);
+  <span class="kw">const</span> ctx = canvas.getContext(<span class="val">'2d'</span>);
+
+  <span class="cmt">// Gambar persegi panjang merah</span>
+  ctx.fillStyle = <span class="val">'red'</span>;
+  ctx.fillRect(10, 10, 100, 80);
+
+  <span class="cmt">// Gambar teks</span>
+  ctx.font = <span class="val">'20px Arial'</span>;
+  ctx.fillStyle = <span class="val">'blue'</span>;
+  ctx.fillText(<span class="val">'Hello Canvas!'</span>, 150, 60);
+<span class="tag">&lt;/script&gt;</span></pre>
+    </div>
+  </div>
+
+  <!-- QUIZ 8 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis — Multimedia</div>
+    <div class="quiz-subtitle">Test pengetahuanmu tentang multimedia HTML5</div>
+    <div id="quiz-8-container"></div>
+    <div class="quiz-result" id="quiz-8-result">
+      <div class="score" id="quiz-8-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-8-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(8)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 8 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Praktikum #8 <span class="badge badge-hard">Sulit</span></div>
+    <div class="challenge-desc">Buat halaman multimedia dengan canvas interaktif.</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas:</h4>
+      <p>Buat canvas yang menggambar: (1) persegi panjang berwarna, (2) lingkaran, (3) teks. Bonus: tambahkan gambar dari URL menggunakan <code>drawImage()</code>.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>praktikum-8.html</span>
+        <button class="run-btn" onclick="runCode('editor-8','preview-8')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-8" spellcheck="false">&lt;canvas id="c" width="400" height="200" style="border:2px solid #333;display:block"&gt;&lt;/canvas&gt;
+&lt;script&gt;
+const ctx = document.getElementById('c').getContext('2d');
+
+// Latar belakang
+ctx.fillStyle = '#f0f8ff';
+ctx.fillRect(0, 0, 400, 200);
+
+// Persegi panjang oranye
+ctx.fillStyle = '#FF6B35';
+ctx.fillRect(20, 40, 120, 80);
+
+// Lingkaran biru
+ctx.beginPath();
+ctx.arc(250, 80, 60, 0, Math.PI * 2);
+ctx.fillStyle = '#0066FF';
+ctx.fill();
+
+// Teks
+ctx.font = 'bold 18px Arial';
+ctx.fillStyle = '#1A1A2E';
+ctx.fillText('Hello Canvas!', 130, 170);
+&lt;/script&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-8"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(7)">← Div, Span & Semantik</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(9)">Meta & Atribut →</button>
+  </div>
+</div>
+
+<!-- SECTION 9: META & ATRIBUT -->
+<div class="content-section" id="section-9">
+  <div class="section-header">
+    <div class="section-icon">🔖</div>
+    <div>
+      <h2>Meta, Head & Atribut Global</h2>
+      <p>SEO, aksesibilitas, dan atribut yang berlaku di semua elemen</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Tag Meta Penting</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span>Meta tags lengkap</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="tag">&lt;head&gt;</span>
+  <span class="cmt">&lt;!-- Wajib ada --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Judul Halaman — Nama Website<span class="tag">&lt;/title&gt;</span>
+
+  <span class="cmt">&lt;!-- SEO --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"description"</span> <span class="attr">content</span>=<span class="val">"Deskripsi singkat halaman ini untuk Google (150-160 karakter)"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"keywords"</span> <span class="attr">content</span>=<span class="val">"html, belajar, tutorial, web"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"author"</span> <span class="attr">content</span>=<span class="val">"Nama Kamu"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"robots"</span> <span class="attr">content</span>=<span class="val">"index, follow"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Open Graph (untuk share di sosmed) --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="val">"og:title"</span> <span class="attr">content</span>=<span class="val">"Judul untuk Share"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="val">"og:description"</span> <span class="attr">content</span>=<span class="val">"Deskripsi saat dibagikan"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="val">"og:image"</span> <span class="attr">content</span>=<span class="val">"https://contoh.com/gambar.jpg"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Favicon --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"icon"</span> <span class="attr">href</span>=<span class="val">"favicon.ico"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"icon"</span> <span class="attr">type</span>=<span class="val">"image/png"</span> <span class="attr">href</span>=<span class="val">"favicon.png"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Stylesheet --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"style.css"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Refresh otomatis setiap 30 detik --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">http-equiv</span>=<span class="val">"refresh"</span> <span class="attr">content</span>=<span class="val">"30"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Atribut Global HTML</h3>
+    <p>Atribut ini bisa digunakan pada <strong>semua elemen HTML</strong>:</p>
+    <table class="tags-table">
+      <tr><th>Atribut</th><th>Kegunaan & Contoh</th></tr>
+      <tr><td><code>id</code></td><td>Identifikasi unik — <code>id="menu-utama"</code></td></tr>
+      <tr><td><code>class</code></td><td>Pengelompokan (bisa banyak) — <code>class="btn btn-primary"</code></td></tr>
+      <tr><td><code>style</code></td><td>CSS inline — <code>style="color: red; font-size: 16px"</code></td></tr>
+      <tr><td><code>title</code></td><td>Tooltip saat hover — <code>title="Klik untuk info lebih"</code></td></tr>
+      <tr><td><code>lang</code></td><td>Bahasa konten — <code>lang="id"</code></td></tr>
+      <tr><td><code>dir</code></td><td>Arah teks — <code>dir="ltr"</code> atau <code>dir="rtl"</code></td></tr>
+      <tr><td><code>hidden</code></td><td>Sembunyikan elemen — <code>&lt;div hidden&gt;</code></td></tr>
+      <tr><td><code>tabindex</code></td><td>Urutan fokus keyboard — <code>tabindex="1"</code></td></tr>
+      <tr><td><code>contenteditable</code></td><td>Konten bisa diedit user — <code>contenteditable="true"</code></td></tr>
+      <tr><td><code>draggable</code></td><td>Bisa di-drag — <code>draggable="true"</code></td></tr>
+      <tr><td><code>data-*</code></td><td>Data kustom — <code>data-id="42" data-nama="Andi"</code></td></tr>
+      <tr><td><code>aria-*</code></td><td>Aksesibilitas — <code>aria-label="Tombol tutup"</code></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Entitas HTML (HTML Entities)</h3>
+    <p>Karakter khusus yang harus di-escape dalam HTML:</p>
+    <table class="tags-table">
+      <tr><th>Entitas</th><th>Simbol</th><th>Keterangan</th></tr>
+      <tr><td><code>&amp;lt;</code></td><td>&lt;</td><td>Less than (kurang dari)</td></tr>
+      <tr><td><code>&amp;gt;</code></td><td>&gt;</td><td>Greater than (lebih dari)</td></tr>
+      <tr><td><code>&amp;amp;</code></td><td>&amp;</td><td>Ampersand</td></tr>
+      <tr><td><code>&amp;quot;</code></td><td>"</td><td>Tanda kutip</td></tr>
+      <tr><td><code>&amp;nbsp;</code></td><td>&nbsp;</td><td>Non-breaking space</td></tr>
+      <tr><td><code>&amp;copy;</code></td><td>&copy;</td><td>Copyright ©</td></tr>
+      <tr><td><code>&amp;reg;</code></td><td>&reg;</td><td>Registered ®</td></tr>
+      <tr><td><code>&amp;trade;</code></td><td>&trade;</td><td>Trademark ™</td></tr>
+      <tr><td><code>&amp;euro;</code></td><td>&euro;</td><td>Euro €</td></tr>
+      <tr><td><code>&amp;hearts;</code></td><td>&hearts;</td><td>Hati ♥</td></tr>
+    </table>
+  </div>
+
+  <!-- QUIZ 9 -->
+  <div class="quiz-section">
+    <div class="quiz-title">🧠 Kuis Final — Meta & Atribut</div>
+    <div class="quiz-subtitle">Kuis penutup untuk topik Meta, Head & Atribut Global</div>
+    <div id="quiz-9-container"></div>
+    <div class="quiz-result" id="quiz-9-result">
+      <div class="score" id="quiz-9-score"></div>
+      <div class="score-label">dari total poin</div>
+      <div class="result-msg" id="quiz-9-msg"></div>
+      <button class="retry-btn" onclick="resetQuiz(9)">🔄 Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- CHALLENGE 9 -->
+  <div class="challenge-section">
+    <div class="challenge-title">🛠️ Tantangan Final #9 <span class="badge badge-hard">Sulit</span></div>
+    <div class="challenge-desc">Buat halaman HTML lengkap yang menerapkan semua yang sudah dipelajari!</div>
+    <div class="challenge-task">
+      <h4>📌 Tugas Akhir:</h4>
+      <p>Buat halaman <strong>portofolio mini</strong> yang mencakup: struktur semantik lengkap, heading, paragraf, gambar dengan figcaption, list keahlian, tabel pengalaman, form kontak, dan footer dengan entitas HTML.</p>
+    </div>
+    <div class="challenge-editor">
+      <div class="editor-header">
+        <div><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div></div>
+        <span>portfolio.html</span>
+        <button class="run-btn" onclick="runCode('editor-9','preview-9')">▶ Jalankan</button>
+      </div>
+      <textarea class="code-editor" id="editor-9" spellcheck="false">&lt;header style="background:#1A1A2E;color:white;padding:20px;text-align:center"&gt;
+  &lt;h1&gt;John Doe&lt;/h1&gt;
+  &lt;p&gt;Web Developer &amp; Designer&lt;/p&gt;
+  &lt;nav&gt;
+    &lt;a href="#tentang" style="color:#FF6B35;margin:0 10px"&gt;Tentang&lt;/a&gt;
+    &lt;a href="#keahlian" style="color:#FF6B35;margin:0 10px"&gt;Keahlian&lt;/a&gt;
+    &lt;a href="#kontak" style="color:#FF6B35;margin:0 10px"&gt;Kontak&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main style="max-width:700px;margin:0 auto;padding:20px"&gt;
+  &lt;section id="tentang"&gt;
+    &lt;h2&gt;Tentang Saya&lt;/h2&gt;
+    &lt;figure&gt;
+      &lt;img src="https://picsum.photos/100/100?random=1" alt="Foto profil" style="border-radius:50%"&gt;
+      &lt;figcaption&gt;Foto profil saya&lt;/figcaption&gt;
+    &lt;/figure&gt;
+    &lt;p&gt;Saya adalah &lt;strong&gt;web developer&lt;/strong&gt; yang passionate dalam membangun &lt;em&gt;pengalaman web yang luar biasa&lt;/em&gt;.&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;section id="keahlian"&gt;
+    &lt;h2&gt;Keahlian&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;mark&gt;HTML5&lt;/mark&gt; — Mahir&lt;/li&gt;
+      &lt;li&gt;CSS3 — Mahir&lt;/li&gt;
+      &lt;li&gt;JavaScript — Menengah&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+
+  &lt;section id="kontak"&gt;
+    &lt;h2&gt;Kontak&lt;/h2&gt;
+    &lt;form&gt;
+      &lt;p&gt;&lt;input type="text" placeholder="Nama kamu" style="width:100%;padding:8px"&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;input type="email" placeholder="email@contoh.com" style="width:100%;padding:8px"&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;textarea rows="3" placeholder="Pesan..." style="width:100%;padding:8px"&gt;&lt;/textarea&gt;&lt;/p&gt;
+      &lt;button type="submit" style="background:#FF6B35;color:white;padding:10px 20px;border:none;cursor:pointer"&gt;Kirim &amp;rarr;&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/section&gt;
+&lt;/main&gt;
+
+&lt;footer style="background:#1A1A2E;color:white;text-align:center;padding:15px"&gt;
+  &lt;p&gt;&amp;copy; 2025 John Doe. Dibuat dengan &amp;hearts; menggunakan HTML&lt;/p&gt;
+&lt;/footer&gt;</textarea>
+      <div class="editor-preview-label">👁️ Preview</div>
+      <div class="editor-preview" id="preview-9"></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn nav-btn-prev" onclick="showSection(8)">← Multimedia</button>
+    <button class="nav-btn nav-btn-next" onclick="showSection(0)" style="background:var(--correct);border-color:var(--correct)">🎉 Selesai! Ke Beranda</button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ===== QUIZ DATA =====
+const quizData = {
+  1: [
+    { q: "Apa kepanjangan dari HTML?", opts: ["HyperText Markup Language","HyperText Multiple Language","High Text Markup Language","HyperTransfer Markup Language"], correct: 0, explain: "HTML = HyperText Markup Language, bahasa standar untuk web." },
+    { q: "HTML termasuk jenis bahasa apa?", opts: ["Bahasa Pemrograman","Bahasa Markup","Bahasa Database","Bahasa Kompilasi"], correct: 1, explain: "HTML adalah bahasa markup, bukan bahasa pemrograman." },
+    { q: "Siapa yang menciptakan HTML?", opts: ["Bill Gates","Linus Torvalds","Tim Berners-Lee","Mark Zuckerberg"], correct: 2, explain: "HTML diciptakan Tim Berners-Lee di CERN tahun 1991." },
+    { q: "Versi HTML terbaru yang menjadi standar modern adalah?", opts: ["HTML 3.2","HTML 4.01","XHTML","HTML5"], correct: 3, explain: "HTML5 adalah standar modern yang dikelola WHATWG sebagai Living Standard." },
+  ],
+  2: [
+    { q: "Tag apa yang WAJIB ada di awal setiap dokumen HTML5?", opts: ["&lt;html&gt;","&lt;!DOCTYPE html&gt;","&lt;head&gt;","&lt;meta charset&gt;"], correct: 1, explain: "&lt;!DOCTYPE html&gt; memberitahu browser bahwa ini dokumen HTML5." },
+    { q: "Di mana konten yang terlihat oleh pengguna ditempatkan?", opts: ["&lt;head&gt;","&lt;meta&gt;","&lt;body&gt;","&lt;html&gt;"], correct: 2, explain: "Tag &lt;body&gt; berisi semua konten yang ditampilkan di browser." },
+    { q: "Atribut apa yang digunakan di &lt;html&gt; untuk menentukan bahasa?", opts: ["locale","language","lang","dialect"], correct: 2, explain: "Atribut lang='id' pada &lt;html&gt; menyatakan bahasa halaman adalah Indonesia." },
+    { q: "Tag &lt;title&gt; diletakkan di dalam tag?", opts: ["&lt;body&gt;","&lt;header&gt;","&lt;head&gt;","&lt;meta&gt;"], correct: 2, explain: "Tag &lt;title&gt; harus berada di dalam &lt;head&gt;." },
+  ],
+  3: [
+    { q: "Ada berapa level heading di HTML?", opts: ["3","4","5","6"], correct: 3, explain: "HTML memiliki 6 level heading dari H1 (terbesar) hingga H6 (terkecil)." },
+    { q: "Tag mana yang digunakan untuk paragraf?", opts: ["&lt;paragraph&gt;","&lt;text&gt;","&lt;p&gt;","&lt;para&gt;"], correct: 2, explain: "Tag &lt;p&gt; digunakan untuk paragraf." },
+    { q: "Apa perbedaan &lt;strong&gt; dengan &lt;b&gt;?", opts: ["Tidak ada perbedaan","&lt;strong&gt; lebih tebal","&lt;strong&gt; punya makna semantik (penting)","&lt;b&gt; lebih disarankan"], correct: 2, explain: "&lt;strong&gt; menandai teks penting secara semantik, sedangkan &lt;b&gt; hanya styling visual." },
+    { q: "Tag apa yang digunakan untuk pindah baris tanpa membuat paragraf baru?", opts: ["&lt;nl&gt;","&lt;newline&gt;","&lt;lb&gt;","&lt;br&gt;"], correct: 3, explain: "&lt;br&gt; adalah line break yang pindah baris tanpa membuat paragraf baru." },
+  ],
+  4: [
+    { q: "Atribut mana yang WAJIB ada di tag &lt;img&gt;?", opts: ["src saja","alt saja","src dan alt","href"], correct: 2, explain: "src (sumber gambar) dan alt (teks alternatif) adalah atribut wajib untuk &lt;img&gt;." },
+    { q: "Untuk membuka link di tab baru, atribut apa yang digunakan?", opts: ['target="_new"','target="_blank"','target="_tab"','open="new"'], correct: 1, explain: 'target="_blank" membuka link di tab/jendela browser baru.' },
+    { q: "Link ke email menggunakan protokol?", opts: ["email:","mail:","mailto:","to:"], correct: 2, explain: 'href="mailto:email@contoh.com" digunakan untuk membuka klien email.' },
+    { q: "Tag apa yang digunakan untuk gambar beserta keterangannya?", opts: ["&lt;img&gt; + &lt;caption&gt;","&lt;picture&gt; + &lt;desc&gt;","&lt;figure&gt; + &lt;figcaption&gt;","&lt;gallery&gt; + &lt;label&gt;"], correct: 2, explain: "&lt;figure&gt; membungkus gambar dan &lt;figcaption&gt; berisi keterangan gambar." },
+  ],
+  5: [
+    { q: "Tag apa untuk membuat list dengan bullet points?", opts: ["&lt;ol&gt;","&lt;ul&gt;","&lt;dl&gt;","&lt;list&gt;"], correct: 1, explain: "&lt;ul&gt; (unordered list) membuat list dengan bullet points." },
+    { q: "Tag apa untuk membuat list bernomor?", opts: ["&lt;ol&gt;","&lt;ul&gt;","&lt;nl&gt;","&lt;numlist&gt;"], correct: 0, explain: "&lt;ol&gt; (ordered list) membuat list dengan nomor urut." },
+    { q: "Atribut tabel mana yang menggabungkan 2 kolom ke kanan?", opts: ["rowspan='2'","colspan='2'","merge='2'","span='2'"], correct: 1, explain: "colspan='2' menggabungkan 2 kolom secara horizontal." },
+    { q: "Mana tag yang membuat header kolom tabel (teks tebal & tengah)?", opts: ["&lt;tc&gt;","&lt;td&gt;","&lt;th&gt;","&lt;thead&gt;"], correct: 2, explain: "&lt;th&gt; adalah table header cell yang ditampilkan tebal dan rata tengah." },
+  ],
+  6: [
+    { q: "Atribut form mana yang menentukan ke mana data dikirim?", opts: ["target","method","action","submit"], correct: 2, explain: "Atribut 'action' menentukan URL tujuan pengiriman data form." },
+    { q: "Type input apa untuk kata sandi?", opts: ["type='text'","type='hidden'","type='password'","type='secret'"], correct: 2, explain: "type='password' menampilkan karakter sebagai titik/bintang." },
+    { q: "Atribut apa yang membuat field wajib diisi sebelum submit?", opts: ["mandatory","validate","required","must"], correct: 2, explain: "Atribut 'required' memaksa pengguna mengisi field sebelum submit." },
+    { q: "Elemen apa yang digunakan untuk deskripsi field input?", opts: ["&lt;caption&gt;","&lt;legend&gt;","&lt;label&gt;","&lt;desc&gt;"], correct: 2, explain: "&lt;label&gt; mendeskripsikan input. Gunakan atribut 'for' yang cocok dengan 'id' input." },
+  ],
+  7: [
+    { q: "Apa perbedaan utama &lt;div&gt; dan &lt;span&gt;?", opts: ["div untuk teks, span untuk gambar","div adalah block-level, span adalah inline","span lebih baru dari div","tidak ada perbedaan"], correct: 1, explain: "&lt;div&gt; adalah block element (baris baru), &lt;span&gt; adalah inline element (mengalir dalam teks)." },
+    { q: "Tag semantik mana yang digunakan untuk navigasi utama?", opts: ["&lt;menu&gt;","&lt;nav&gt;","&lt;sidebar&gt;","&lt;navigation&gt;"], correct: 1, explain: "&lt;nav&gt; adalah tag semantik HTML5 untuk navigasi utama situs." },
+    { q: "Tag mana yang digunakan untuk artikel/konten mandiri?", opts: ["&lt;section&gt;","&lt;main&gt;","&lt;article&gt;","&lt;content&gt;"], correct: 2, explain: "&lt;article&gt; untuk konten mandiri seperti artikel blog atau berita." },
+    { q: "Berapa jumlah &lt;main&gt; yang direkomendasikan per halaman?", opts: ["Tidak terbatas","Maksimal 5","Hanya 1","Minimal 2"], correct: 2, explain: "Hanya boleh ada 1 elemen &lt;main&gt; per halaman — itulah konten utama." },
+  ],
+  8: [
+    { q: "Atribut apa yang menampilkan kontrol play/pause pada video?", opts: ["autoplay","controls","buttons","player"], correct: 1, explain: "Atribut 'controls' menampilkan kontrol media (play, pause, volume, dll)." },
+    { q: "Tag apa yang digunakan untuk menempel konten website lain?", opts: ["&lt;embed&gt;","&lt;link&gt;","&lt;iframe&gt;","&lt;include&gt;"], correct: 2, explain: "&lt;iframe&gt; (inline frame) digunakan untuk menanamkan konten dari sumber lain." },
+    { q: "Format video mana yang paling umum didukung browser modern?", opts: ["AVI","WMV","MP4","FLV"], correct: 2, explain: "MP4 (H.264) adalah format video paling kompatibel di semua browser modern." },
+    { q: "Untuk menggambar grafis dengan JavaScript di HTML, digunakan tag?", opts: ["&lt;draw&gt;","&lt;graphic&gt;","&lt;svg&gt;","&lt;canvas&gt;"], correct: 3, explain: "&lt;canvas&gt; adalah elemen HTML yang memungkinkan menggambar grafis 2D/3D menggunakan JavaScript." },
+  ],
+  9: [
+    { q: "Meta tag apa yang membuat halaman responsif di mobile?", opts: ["meta charset","meta viewport","meta responsive","meta mobile"], correct: 1, explain: '&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt; membuat halaman responsif.' },
+    { q: "Entitas HTML untuk simbol copyright ©?", opts: ["&copyright;","&cr;","&copy;","&c;"], correct: 2, explain: "&copy; menghasilkan simbol copyright © dalam HTML." },
+    { q: "Atribut global mana yang bisa digunakan pada SEMUA elemen HTML?", opts: ["href","src","class","action"], correct: 2, explain: "'class' adalah atribut global yang bisa digunakan pada semua elemen HTML." },
+    { q: "Atribut data-* digunakan untuk?", opts: ["Mengatur tampilan","Menyimpan data kustom","Menentukan tipe","Link ke file"], correct: 1, explain: "Atribut data-* memungkinkan developer menyimpan data kustom di elemen HTML." },
+  ]
+};
+
+// ===== RENDER QUIZ =====
+function renderQuiz(id) {
+  const data = quizData[id];
+  if (!data) return;
+  const container = document.getElementById(`quiz-${id}-container`);
+  if (!container) return;
+  container.innerHTML = '';
+  data.forEach((item, i) => {
+    const block = document.createElement('div');
+    block.className = 'quiz-question-block';
+    block.innerHTML = `
+      <div class="quiz-q"><span>${i+1}</span>${item.q}</div>
+      <div class="quiz-options">
+        ${item.opts.map((opt, j) => `
+          <button class="quiz-opt" data-q="${i}" data-a="${j}" onclick="selectOpt(${id},${i},${j},this)">
+            <div class="opt-letter">${['A','B','C','D'][j]}</div>${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="feedback-${id}-${i}"></div>
+    `;
+    container.appendChild(block);
+  });
+  const btn = document.createElement('button');
+  btn.className = 'quiz-submit-btn';
+  btn.id = `submit-${id}`;
+  btn.textContent = '✓ Periksa Jawaban';
+  btn.disabled = true;
+  btn.onclick = () => submitQuiz(id);
+  container.appendChild(btn);
+  window[`quiz_${id}_answers`] = {};
+}
+
+function selectOpt(qid, qi, ai, el) {
+  const opts = document.querySelectorAll(`[data-q="${qi}"][data-a]`);
+  // Only allow one selection per question
+  const stored = window[`quiz_${qid}_answers`];
+  if (stored && stored[qi] !== undefined) return;
+  opts.forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if (!window[`quiz_${qid}_answers`]) window[`quiz_${qid}_answers`] = {};
+  window[`quiz_${qid}_answers`][qi] = ai;
+  const btn = document.getElementById(`submit-${qid}`);
+  if (btn && Object.keys(window[`quiz_${qid}_answers`]).length === quizData[qid].length) {
+    btn.disabled = false;
+  }
+}
+
+function submitQuiz(id) {
+  const data = quizData[id];
+  const answers = window[`quiz_${id}_answers`] || {};
+  let score = 0;
+  data.forEach((item, i) => {
+    const userAns = answers[i];
+    const feedback = document.getElementById(`feedback-${id}-${i}`);
+    const opts = document.querySelectorAll(`[data-q="${i}"][data-a]`);
+    opts.forEach(o => {
+      o.classList.add('disabled');
+      if (parseInt(o.dataset.a) === item.correct) o.classList.add('correct');
+      else if (parseInt(o.dataset.a) === userAns && userAns !== item.correct) o.classList.add('wrong');
+    });
+    if (userAns === item.correct) {
+      score++;
+      if (feedback) { feedback.textContent = '✅ Benar! ' + item.explain; feedback.className = 'quiz-feedback show ok'; }
+    } else {
+      if (feedback) { feedback.textContent = '❌ Salah. ' + item.explain; feedback.className = 'quiz-feedback show no'; }
+    }
+  });
+  const btn = document.getElementById(`submit-${id}`);
+  if (btn) btn.disabled = true;
+  const result = document.getElementById(`quiz-${id}-result`);
+  const scoreEl = document.getElementById(`quiz-${id}-score`);
+  const msgEl = document.getElementById(`quiz-${id}-msg`);
+  if (result && scoreEl && msgEl) {
+    scoreEl.textContent = `${score}/${data.length}`;
+    const pct = (score/data.length)*100;
+    msgEl.textContent = pct === 100 ? '🎉 Sempurna! Kamu menguasai materi ini!' : pct >= 75 ? '👍 Bagus! Tinggal sedikit lagi menuju sempurna.' : pct >= 50 ? '📚 Cukup! Coba pelajari lagi materi yang salah.' : '💪 Semangat! Baca ulang materi dan coba lagi.';
+    result.classList.add('show');
+    // Mark done
+    markDone(parseInt(id.toString().replace('quiz-','')) || id);
+  }
+}
+
+function resetQuiz(id) {
+  window[`quiz_${id}_answers`] = {};
+  renderQuiz(id);
+  const result = document.getElementById(`quiz-${id}-result`);
+  if (result) result.classList.remove('show');
+}
+
+// ===== SECTION NAVIGATION =====
+const completed = new Set();
+
+function showSection(idx) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById(`section-${idx}`);
+  if (sec) { sec.classList.add('active'); }
+  document.querySelectorAll('.nav-item').forEach((item, i) => item.classList.toggle('active', i === idx));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Render quiz for this section if applicable
+  if (idx >= 1 && idx <= 9) renderQuiz(idx);
+  // Mark as visited
+  completed.add(idx);
+  updateProgress();
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function markDone(idx) {
+  completed.add(idx);
+  const check = document.getElementById(`check-${idx}`);
+  if (check) {
+    const navItem = check.closest('.nav-item');
+    if (navItem) navItem.classList.add('done');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = 10;
+  const done = completed.size;
+  document.getElementById('progressText').textContent = `${done} / ${total} materi`;
+  document.getElementById('progressFill').style.width = `${(done/total)*100}%`;
+}
+
+// ===== RUN CODE =====
+function runCode(editorId, previewId) {
+  const code = document.getElementById(editorId).value;
+  const preview = document.getElementById(previewId);
+  if (preview) {
+    preview.innerHTML = code;
+    // Run scripts inside preview
+    const scripts = preview.querySelectorAll('script');
+    scripts.forEach(s => {
+      const newScript = document.createElement('script');
+      newScript.textContent = s.textContent;
+      document.body.appendChild(newScript);
+      document.body.removeChild(newScript);
+    });
+  }
+}
+
+// ===== COPY CODE =====
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  if (pre) {
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      btn.style.background = 'var(--correct)';
+      btn.style.color = 'white';
+      setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1500);
+    });
+  }
+}
+
+// ===== MOBILE MENU =====
+document.getElementById('menuToggle').addEventListener('click', () => {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+});
+document.getElementById('overlay').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+});
+
+// ===== INIT =====
+(function init() {
+  completed.add(0);
+  updateProgress();
+  // Auto-run all editors on page load for better UX
+  setTimeout(() => {
+    for (let i = 1; i <= 9; i++) {
+      const editor = document.getElementById(`editor-${i}`);
+      const preview = document.getElementById(`preview-${i}`);
+      if (editor && preview) {
+        preview.innerHTML = editor.value;
+      }
+    }
+  }, 300);
+  renderQuiz(1);
+})();
+</script>
+</body>
+</html>

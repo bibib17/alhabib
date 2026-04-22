@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Masterclass — Belajar CSS dari Dasar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===== CSS VARIABLES ===== */
+  :root {
+    --ink: #1A1A2E;
+    --sun: #FF6B35;
+    --bg: #faf8f4;
+    --bg2: #f2ede4;
+    --surface: #ffffff;
+    --border: #e2d9cc;
+    --text: #1a1510;
+    --text2: #5a4f42;
+    --text3: #9a8d7e;
+    --accent: #e85d2f;
+    --accent2: #f5a623;
+    --accent3: #2e7d8c;
+    --accent4: #6b4fa0;
+    --green: #2a7a4b;
+    --red: #c0392b;
+    --shadow: 0 4px 24px rgba(26,21,16,0.10);
+    --shadow-lg: 0 8px 48px rgba(26,21,16,0.14);
+    --radius: 16px;
+    --radius-sm: 8px;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-code: 'DM Mono', monospace;
+  }
+
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 280px; background: var(--surface);
+    border-right: 1.5px solid var(--border);
+    overflow-y: auto; z-index: 100;
+    padding: 0;
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1.5px solid var(--border);
+    position: sticky; top: 0;
+    background: var(--surface); z-index: 2;
+  }
+  .sidebar-logo h1 {
+    font-family: var(--font-head);
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .sidebar-logo span { color: var(--text3); font-size: .75rem; font-weight: 400; display: block; margin-top: 2px; }
+  .sidebar-nav { padding: 12px 0 24px; }
+  .nav-section-label {
+    font-size: .68rem; font-weight: 700; letter-spacing: 1.2px;
+    color: var(--text3); text-transform: uppercase;
+    padding: 16px 24px 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 24px; cursor: pointer;
+    font-size: .88rem; font-weight: 500; color: var(--text2);
+    border-left: 3px solid transparent;
+    transition: all .18s;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: var(--bg2); color: var(--text); border-left-color: var(--border); }
+  .nav-item.active { background: #fde8e2; color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+  .nav-item .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+  .nav-item .nav-badge {
+    margin-left: auto; font-size: .65rem; font-weight: 700;
+    background: var(--accent); color: #fff;
+    padding: 1px 7px; border-radius: 20px;
+  }
+  .progress-ring {
+    padding: 16px 24px;
+    border-top: 1.5px solid var(--border);
+    margin-top: 8px;
+  }
+  .progress-label { font-size: .8rem; color: var(--text3); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .progress-bar-wrap { background: var(--bg2); border-radius: 99px; height: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width .5s; }
+
+  /* ===== HAMBURGER ===== */
+  .hamburger {
+    display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 10px; width: 42px; height: 42px;
+    font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow);
+    align-items: center; justify-content: center;
+  }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 99; }
+
+  /* ===== MAIN CONTENT ===== */
+  .main {
+    margin-left: 280px;
+    min-height: 100vh;
+    padding: 0 0 80px;
+    transition: margin .3s;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #fff8f0 0%, #fde8e2 40%, #e8f4f7 100%);
+    padding: 72px 60px 60px;
+    border-bottom: 1.5px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: 'CSS'; position: absolute; right: -20px; top: -30px;
+    font-family: var(--font-head); font-size: 18vw; font-weight: 800;
+    color: rgba(232,93,47,.06); line-height: 1; pointer-events: none;
+    letter-spacing: -10px;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent); color: #fff;
+    font-size: .75rem; font-weight: 700; letter-spacing: .8px;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 99px;
+    margin-bottom: 20px;
+  }
+  .hero h2 {
+    font-family: var(--font-head); font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800; line-height: 1.1; letter-spacing: -1.5px;
+    color: var(--text); margin-bottom: 16px;
+    max-width: 600px;
+  }
+  .hero h2 span { color: var(--accent); }
+  .hero p { font-size: 1.05rem; color: var(--text2); max-width: 520px; margin-bottom: 32px; }
+  .hero-stats {
+    display: flex; gap: 32px; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num { font-family: var(--font-head); font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .hero-stat .lbl { font-size: .78rem; color: var(--text3); margin-top: 2px; }
+
+  /* ===== SECTION WRAPPER ===== */
+  .section {
+    padding: 48px 60px;
+    border-bottom: 1.5px solid var(--border);
+    display: none;
+    animation: fadeIn .35s ease;
+  }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  .section-header {
+    display: flex; align-items: flex-start; gap: 20px; margin-bottom: 36px;
+    padding-bottom: 24px; border-bottom: 1.5px solid var(--border);
+  }
+  .section-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; flex-shrink: 0;
+  }
+  .section-title h2 {
+    font-family: var(--font-head); font-size: 1.8rem; font-weight: 800;
+    letter-spacing: -0.8px; color: var(--text);
+  }
+  .section-title p { color: var(--text3); font-size: .9rem; margin-top: 4px; }
+
+  /* ===== CONTENT CARDS ===== */
+  .content-grid { display: grid; gap: 24px; }
+  .content-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+  }
+  .card-head {
+    padding: 18px 24px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .card-head-icon { font-size: 1.2rem; }
+  .card-head h3 { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .card-body { padding: 20px 24px; }
+  .card-body p, .card-body li { font-size: .92rem; color: var(--text2); line-height: 1.75; }
+  .card-body ul, .card-body ol { padding-left: 20px; }
+  .card-body ul li, .card-body ol li { margin-bottom: 6px; }
+  .card-body strong { color: var(--text); font-weight: 600; }
+
+  /* ===== CODE BLOCK ===== */
+  .code-wrap {
+    background: #1a1510; border-radius: var(--radius-sm);
+    overflow: hidden; margin: 16px 0;
+  }
+  .code-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; background: #2a2118;
+  }
+  .code-header .dots { display: flex; gap: 6px; }
+  .code-header .dot { width: 10px; height: 10px; border-radius: 99px; }
+  .dot-r { background: #e85d2f; }
+  .dot-y { background: #f5a623; }
+  .dot-g { background: #2a7a4b; }
+  .code-header .lang-tag { font-size: .7rem; color: #9a8d7e; font-family: var(--font-code); letter-spacing: 1px; text-transform: uppercase; }
+  .copy-btn {
+    background: rgba(255,255,255,.1); color: #ccc; border: none;
+    font-size: .7rem; font-family: var(--font-code); padding: 3px 10px;
+    border-radius: 4px; cursor: pointer; transition: all .2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,.2); color: #fff; }
+  .copy-btn.copied { background: var(--green); color: #fff; }
+  pre {
+    padding: 20px; overflow-x: auto;
+    font-family: var(--font-code); font-size: .83rem; line-height: 1.7;
+    color: #e8d5b8;
+  }
+  .kw { color: #f5a623; } /* keyword - orange */
+  .prop { color: #7ec8e3; } /* property - blue */
+  .val { color: #98d980; } /* value - green */
+  .sel { color: #e85d2f; } /* selector - red */
+  .cmt { color: #6b5f52; font-style: italic; } /* comment */
+  .str { color: #d4a8f0; } /* string - purple */
+  .pun { color: #c9b99a; } /* punctuation */
+
+  /* ===== DEMO BOX ===== */
+  .demo-box {
+    border: 1.5px dashed var(--border); border-radius: var(--radius-sm);
+    padding: 20px; margin: 16px 0;
+    background: var(--bg2);
+    position: relative;
+  }
+  .demo-label {
+    position: absolute; top: -10px; left: 12px;
+    background: var(--accent2); color: #fff;
+    font-size: .65rem; font-weight: 700; letter-spacing: .8px;
+    text-transform: uppercase; padding: 2px 10px; border-radius: 99px;
+  }
+
+  /* ===== VISUAL DEMO ===== */
+  .box-model-demo {
+    display: inline-flex; flex-direction: column; align-items: center; gap: 0;
+    font-size: .75rem; font-family: var(--font-code); text-align: center;
+  }
+  .bm-margin { background: #fde8d0; padding: 16px; border-radius: 4px; }
+  .bm-border { background: #f5c880; padding: 12px; border-radius: 4px; }
+  .bm-padding { background: #b8e0a8; padding: 12px; border-radius: 4px; }
+  .bm-content { background: #7ec8e3; padding: 12px 24px; border-radius: 4px; color: #1a1510; font-weight: 600; }
+  .bm-label { font-size: .65rem; color: var(--text3); margin-top: 2px; }
+
+  /* ===== FLEXBOX / GRID DEMO ===== */
+  .flex-demo {
+    display: flex; gap: 8px; padding: 12px;
+    background: var(--bg2); border-radius: var(--radius-sm);
+    flex-wrap: wrap; margin: 8px 0;
+    transition: all .3s;
+  }
+  .flex-item {
+    background: var(--accent); color: #fff;
+    padding: 8px 16px; border-radius: 8px;
+    font-size: .8rem; font-weight: 600;
+  }
+  .flex-item:nth-child(2) { background: var(--accent3); }
+  .flex-item:nth-child(3) { background: var(--accent4); }
+  .flex-item:nth-child(4) { background: var(--accent2); color: var(--text); }
+
+  .flex-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .flex-btn {
+    background: var(--surface); border: 1.5px solid var(--border);
+    color: var(--text2); padding: 5px 12px; border-radius: 6px;
+    font-size: .78rem; font-family: var(--font-body); cursor: pointer;
+    transition: all .2s;
+  }
+  .flex-btn:hover, .flex-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .grid-demo {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; padding: 12px;
+    background: var(--bg2); border-radius: var(--radius-sm);
+    margin: 8px 0;
+    transition: all .3s;
+  }
+  .grid-item {
+    background: var(--accent3); color: #fff;
+    padding: 12px; border-radius: 8px;
+    font-size: .78rem; font-weight: 600; text-align: center;
+  }
+  .grid-item:nth-child(2) { background: var(--accent4); }
+  .grid-item:nth-child(3) { background: var(--accent); }
+  .grid-item:nth-child(4) { background: var(--accent2); color: var(--text); }
+  .grid-item:nth-child(5) { background: var(--green); }
+  .grid-item:nth-child(6) { background: var(--accent3); opacity:.7; }
+
+  /* ===== COLOR PALETTE ===== */
+  .color-palette {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px; margin: 16px 0;
+  }
+  .color-chip { border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow); }
+  .color-chip-swatch { height: 60px; }
+  .color-chip-info { padding: 8px; background: var(--surface); border: 1px solid var(--border); }
+  .color-chip-info .hex { font-family: var(--font-code); font-size: .7rem; color: var(--text3); }
+  .color-chip-info .name { font-size: .72rem; font-weight: 600; color: var(--text); }
+
+  /* ===== SPECIFICITY VISUAL ===== */
+  .specificity-bar {
+    display: flex; align-items: center; gap: 12px; margin: 8px 0;
+  }
+  .spec-label { font-size: .8rem; font-family: var(--font-code); min-width: 200px; color: var(--text2); }
+  .spec-bars { display: flex; gap: 4px; }
+  .spec-seg {
+    height: 22px; border-radius: 4px; min-width: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 700; color: #fff; padding: 0 8px;
+    transition: all .4s;
+  }
+  .spec-a { background: #e85d2f; }
+  .spec-b { background: #6b4fa0; }
+  .spec-c { background: #2e7d8c; }
+  .spec-total { font-family: var(--font-code); font-size: .78rem; font-weight: 700; color: var(--text); }
+
+  /* ===== TRANSITION DEMO ===== */
+  .transition-demo-box {
+    width: 80px; height: 80px; background: var(--accent);
+    border-radius: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: .75rem; font-weight: 600; text-align: center;
+    transition: all .4s cubic-bezier(.4,0,.2,1);
+    user-select: none;
+  }
+  .transition-demo-box:hover {
+    background: var(--accent3);
+    transform: scale(1.15) rotate(8deg);
+    border-radius: 50%;
+    box-shadow: 0 12px 32px rgba(46,125,140,.35);
+  }
+  .animation-demo {
+    width: 50px; height: 50px; background: var(--accent4);
+    border-radius: 50%;
+    animation: bounceDemo 1.2s infinite ease-in-out alternate;
+  }
+  @keyframes bounceDemo {
+    from { transform: translateY(0); background: var(--accent4); }
+    to { transform: translateY(-40px); background: var(--accent); }
+  }
+
+  /* ===== TYPOGRAPHY DEMO ===== */
+  .typo-demo { display: grid; gap: 8px; }
+  .typo-row { display: flex; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .typo-meta { font-size: .72rem; font-family: var(--font-code); color: var(--text3); min-width: 130px; }
+
+  /* ===== QUIZ ===== */
+  .quiz-section {
+    background: linear-gradient(135deg, #fff8f0 0%, #fde8e2 100%);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius); padding: 28px; margin-top: 32px;
+  }
+  .quiz-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+  }
+  .quiz-header h3 {
+    font-family: var(--font-head); font-size: 1.3rem; font-weight: 800; color: var(--text);
+  }
+  .quiz-badge {
+    background: var(--accent); color: #fff;
+    font-size: .7rem; font-weight: 700; letter-spacing: .8px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 99px;
+  }
+  .quiz-q { margin-bottom: 20px; }
+  .quiz-q-text { font-size: .95rem; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .quiz-q-num { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: var(--accent); opacity: .2; float: left; margin-right: 8px; line-height: 1; }
+  .quiz-options { display: grid; gap: 8px; }
+  .quiz-opt {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: var(--radius-sm);
+    background: var(--surface); border: 1.5px solid var(--border);
+    cursor: pointer; transition: all .18s; user-select: none;
+  }
+  .quiz-opt:hover { border-color: var(--accent); background: #fde8e2; }
+  .quiz-opt.selected { border-color: var(--accent); background: #fde8e2; }
+  .quiz-opt.correct { border-color: var(--green); background: #e6f7ec; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fce8e6; }
+  .quiz-opt-letter {
+    width: 28px; height: 28px; border-radius: 99px;
+    background: var(--bg2); border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .78rem; font-weight: 700; color: var(--text2); flex-shrink: 0;
+    transition: all .18s;
+  }
+  .quiz-opt.selected .quiz-opt-letter { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .quiz-opt.correct .quiz-opt-letter { background: var(--green); color: #fff; border-color: var(--green); }
+  .quiz-opt.wrong .quiz-opt-letter { background: var(--red); color: #fff; border-color: var(--red); }
+  .quiz-opt-text { font-size: .88rem; color: var(--text2); }
+  .quiz-explanation {
+    margin-top: 10px; padding: 12px 16px;
+    border-radius: var(--radius-sm); font-size: .85rem; display: none;
+  }
+  .quiz-explanation.show { display: block; }
+  .quiz-explanation.correct-exp { background: #e6f7ec; border-left: 3px solid var(--green); color: #1a5c2e; }
+  .quiz-explanation.wrong-exp { background: #fce8e6; border-left: 3px solid var(--red); color: #7a1f1f; }
+  .quiz-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 24px; padding-top: 20px; border-top: 1.5px solid var(--border);
+    flex-wrap: wrap; gap: 12px;
+  }
+  .quiz-score { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--text); }
+  .quiz-btn {
+    background: var(--accent); color: #fff;
+    border: none; padding: 10px 24px; border-radius: var(--radius-sm);
+    font-family: var(--font-body); font-size: .88rem; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+  }
+  .quiz-btn:hover { background: #c44b20; transform: translateY(-1px); }
+  .quiz-result {
+    text-align: center; padding: 24px;
+    background: var(--surface); border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border); display: none; margin-top: 16px;
+  }
+  .quiz-result.show { display: block; }
+  .quiz-result .score-big { font-family: var(--font-head); font-size: 3rem; font-weight: 800; color: var(--accent); }
+  .quiz-result p { color: var(--text2); margin-top: 8px; }
+
+  /* ===== PRAKTIKUM ===== */
+  .praktikum-section {
+    background: linear-gradient(135deg, #e8f4f7 0%, #d4edf5 100%);
+    border: 2px solid var(--accent3);
+    border-radius: var(--radius); padding: 28px; margin-top: 32px;
+  }
+  .prak-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .prak-header h3 { font-family: var(--font-head); font-size: 1.3rem; font-weight: 800; color: var(--text); }
+  .prak-badge { background: var(--accent3); color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; }
+  .prak-task {
+    background: var(--surface); border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border); margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .prak-task-head {
+    padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+    background: var(--bg2); border-bottom: 1.5px solid var(--border);
+    cursor: pointer;
+  }
+  .prak-task-head:hover { background: #e8f4f7; }
+  .prak-task-num {
+    width: 28px; height: 28px; background: var(--accent3); color: #fff;
+    border-radius: 99px; display: flex; align-items: center; justify-content: center;
+    font-size: .78rem; font-weight: 700; flex-shrink: 0;
+  }
+  .prak-task-title { font-weight: 600; font-size: .92rem; color: var(--text); flex: 1; }
+  .prak-task-diff {
+    font-size: .68rem; font-weight: 700; letter-spacing: .5px;
+    padding: 2px 10px; border-radius: 99px;
+  }
+  .diff-easy { background: #e6f7ec; color: var(--green); }
+  .diff-medium { background: #fef3de; color: #c07d00; }
+  .diff-hard { background: #fce8e6; color: var(--red); }
+  .prak-task-arrow { color: var(--text3); transition: transform .2s; }
+  .prak-task-body { padding: 20px; display: none; }
+  .prak-task-body.open { display: block; animation: fadeIn .25s ease; }
+  .prak-task-body p { font-size: .88rem; color: var(--text2); margin-bottom: 12px; }
+  .prak-requirements { margin: 12px 0; }
+  .prak-req-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 6px 0; font-size: .86rem; color: var(--text2);
+  }
+  .prak-req-item::before {
+    content: '→'; color: var(--accent3); font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .prak-result-preview {
+    background: var(--bg2); border-radius: var(--radius-sm);
+    padding: 16px; margin-top: 12px;
+    border: 1.5px dashed var(--border);
+  }
+  .prak-result-label { font-size: .72rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px; }
+
+  /* Result preview mini-cards */
+  .preview-card {
+    background: var(--accent); color: #fff;
+    border-radius: 10px; padding: 16px 20px;
+    font-size: .85rem; font-weight: 500;
+    box-shadow: 0 4px 16px rgba(232,93,47,.25);
+    transition: all .3s;
+    cursor: pointer; display: inline-block;
+  }
+  .preview-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(232,93,47,.35); }
+
+  /* ===== HIGHLIGHT BOX ===== */
+  .info-box {
+    border-radius: var(--radius-sm); padding: 14px 18px;
+    display: flex; gap: 12px; margin: 12px 0; font-size: .87rem;
+  }
+  .info-box-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .info-box p { color: var(--text2); line-height: 1.6; }
+  .info-tip { background: #fffbec; border-left: 3px solid var(--accent2); }
+  .info-warn { background: #fce8e6; border-left: 3px solid var(--red); }
+  .info-note { background: #e8f4f7; border-left: 3px solid var(--accent3); }
+
+  /* ===== TABS ===== */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1.5px solid var(--border); }
+  .tab {
+    padding: 8px 18px; font-size: .84rem; font-weight: 500;
+    color: var(--text3); cursor: pointer; border-bottom: 2.5px solid transparent;
+    margin-bottom: -1.5px; transition: all .18s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .tab-content { display: none; animation: fadeIn .2s ease; }
+  .tab-content.active { display: block; }
+
+  /* ===== PROPERTIES TABLE ===== */
+  .prop-table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 12px 0; }
+  .prop-table th { background: var(--bg2); padding: 10px 14px; text-align: left; font-weight: 700; color: var(--text); border-bottom: 2px solid var(--border); font-size: .78rem; text-transform: uppercase; letter-spacing: .5px; }
+  .prop-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  .prop-table tr:hover td { background: var(--bg2); }
+  .prop-table code { font-family: var(--font-code); background: var(--bg2); padding: 1px 6px; border-radius: 4px; font-size: .8rem; color: var(--accent); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .overlay.show { display: block; }
+    .hamburger { display: flex; }
+    .main { margin-left: 0; }
+    .hero { padding: 72px 24px 40px; }
+    .section { padding: 32px 24px; }
+    .hero-stats { gap: 20px; }
+    .quiz-footer { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 600px) {
+    .hero h2 { font-size: 1.8rem; }
+    .section-header { flex-direction: column; gap: 12px; }
+    .flex-controls { gap: 6px; }
+    .color-palette { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+    .spec-label { min-width: 130px; font-size: .7rem; }
+  }
+
+  /* ===== COMPLETE BUTTON ===== */
+  .complete-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1.5px solid var(--border);
+    color: var(--text2); padding: 10px 20px; border-radius: var(--radius-sm);
+    font-family: var(--font-body); font-size: .88rem; font-weight: 600;
+    cursor: pointer; transition: all .2s; margin-top: 16px;
+  }
+  .complete-btn:hover { border-color: var(--green); color: var(--green); }
+  .complete-btn.done { background: #e6f7ec; border-color: var(--green); color: var(--green); }
+
+  /* Landing page */
+  #home { display: block; }
+
+  /* ===== NAV BUTTONS ===== */
+.navb-buttons {
+  display: flex; gap: 12px; margin-top: 36px;
+  padding-top: 24px; border-top: 1.5px solid var(--border);
+
+}
+.navb-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: 100px;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.85rem; cursor: pointer; transition: all 0.25s;
+  text-decoration: none;
+}
+.navb-btn-prev {
+  background: white; color: var(--ink);
+  border: 2px solid var(--border);
+}
+.navb-btn-prev:hover { border-color: var(--ink); }
+.navb-btn-next {
+  background: var(--ink); color: white;
+  border: 2px solid var(--ink);
+  box-shadow: 0 4px 14px rgba(26,26,46,0.2);
+}
+.navb-btn-next:hover { background: var(--sun); border-color: var(--sun); transform: translateX(3px); }
+
+@media (max-width: 600px) {
+  .navb-buttons { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h1>CSS Masterclass</h1>
+    <span>Belajar CSS dari Dasar hingga Mahir</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Mulai</div>
+    <a class="nav-item active" onclick="showSection('home')" href="#home-hero">
+      <span class="nav-icon">🏠</span> Beranda
+    </a>
+
+    <div class="nav-section-label">Materi</div>
+    <a class="nav-item" onclick="showSection('pengenalan')" href="#pengenalan">
+      <span class="nav-icon">📖</span> 1. Pengenalan CSS
+    </a>
+    <a class="nav-item" onclick="showSection('selektor')" href="#selektor">
+      <span class="nav-icon">🎯</span> 2. Selektor CSS
+    </a>
+    <a class="nav-item" onclick="showSection('boxmodel')" href="#boxmodel">
+      <span class="nav-icon">📦</span> 3. Box Model
+    </a>
+    <a class="nav-item" onclick="showSection('tipografi')" href="#tipografi">
+      <span class="nav-icon">🔤</span> 4. Tipografi
+    </a>
+    <a class="nav-item" onclick="showSection('warna')" href="#warna">
+      <span class="nav-icon">🎨</span> 5. Warna & Background
+    </a>
+    <a class="nav-item" onclick="showSection('flexbox')" href="#flexbox">
+      <span class="nav-icon">📐</span> 6. Flexbox
+    </a>
+    <a class="nav-item" onclick="showSection('grid')" href="#grid">
+      <span class="nav-icon">🗂️</span> 7. CSS Grid
+    </a>
+    <a class="nav-item" onclick="showSection('posisi')" href="#posisi">
+      <span class="nav-icon">📍</span> 8. Posisi & Display
+    </a>
+    <a class="nav-item" onclick="showSection('transisi')" href="#transisi">
+      <span class="nav-icon">✨</span> 9. Transisi & Animasi
+    </a>
+    <a class="nav-item" onclick="showSection('responsif')" href="#responsif">
+      <span class="nav-icon">📱</span> 10. Responsive Design
+    </a>
+  </nav>
+  <div class="progress-ring">
+    <div class="progress-label">
+      <span>Progress Belajar</span>
+      <span id="progressText">0/10</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="navb-buttons" style="padding: 10px 10px 10px 15px;">
+    <a href="materi-portofolio.html">
+      <button class="navb-btn navb-btn-next" onclick="">Let's Go Buat Portofolio →</button>
+    </a>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+
+  <!-- ========== HOME ========== -->
+  <div class="hero" id="home-hero">
+    <div class="hero-tag">✦ Web Course</div>
+    <h2>Kuasai <span>CSS</span> dengan Mudah & Menyenangkan</h2>
+    <p>Panduan lengkap belajar CSS dari dasar hingga mahir — disertai contoh interaktif, kuis, dan tugas praktikum di setiap materi.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">10</div><div class="lbl">Topik Materi</div></div>
+      <div class="hero-stat"><div class="num">40+</div><div class="lbl">Soal Kuis</div></div>
+      <div class="hero-stat"><div class="num">20+</div><div class="lbl">Tugas Praktikum</div></div>
+      <div class="hero-stat"><div class="num">100%</div><div class="lbl">Gratis</div></div>
+    </div>
+  </div>
+
+  <section class="section active" id="home">
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+      <div class="content-card" style="border-top: 3px solid var(--accent); cursor:pointer;" onclick="showSection('pengenalan')">
+        <div class="card-head"><span class="card-head-icon">📖</span><h3>1. Pengenalan CSS</h3></div>
+        <div class="card-body"><p>Apa itu CSS, cara penulisan, dan bagaimana CSS bekerja bersama HTML.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid var(--accent4); cursor:pointer;" onclick="showSection('selektor')">
+        <div class="card-head"><span class="card-head-icon">🎯</span><h3>2. Selektor CSS</h3></div>
+        <div class="card-body"><p>Memilih elemen HTML dengan tepat menggunakan berbagai jenis selektor.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid var(--accent3); cursor:pointer;" onclick="showSection('boxmodel')">
+        <div class="card-head"><span class="card-head-icon">📦</span><h3>3. Box Model</h3></div>
+        <div class="card-body"><p>Memahami margin, border, padding, dan content — fondasi layout CSS.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid var(--accent2); cursor:pointer;" onclick="showSection('tipografi')">
+        <div class="card-head"><span class="card-head-icon">🔤</span><h3>4. Tipografi</h3></div>
+        <div class="card-body"><p>Mengatur font, ukuran teks, jarak baris, dan tampilan teks secara keseluruhan.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid #e91e8c; cursor:pointer;" onclick="showSection('warna')">
+        <div class="card-head"><span class="card-head-icon">🎨</span><h3>5. Warna & Background</h3></div>
+        <div class="card-body"><p>Sistem warna CSS, gradient, background-image, dan efek visual.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid var(--accent); cursor:pointer;" onclick="showSection('flexbox')">
+        <div class="card-head"><span class="card-head-icon">📐</span><h3>6. Flexbox</h3></div>
+        <div class="card-body"><p>Layout satu dimensi yang fleksibel untuk menyusun elemen secara dinamis.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid var(--accent4); cursor:pointer;" onclick="showSection('grid')">
+        <div class="card-head"><span class="card-head-icon">🗂️</span><h3>7. CSS Grid</h3></div>
+        <div class="card-body"><p>Layout dua dimensi yang powerful untuk membuat tata letak halaman kompleks.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid var(--accent3); cursor:pointer;" onclick="showSection('posisi')">
+        <div class="card-head"><span class="card-head-icon">📍</span><h3>8. Posisi & Display</h3></div>
+        <div class="card-body"><p>Mengontrol penempatan elemen dengan position, display, float, dan z-index.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid var(--accent2); cursor:pointer;" onclick="showSection('transisi')">
+        <div class="card-head"><span class="card-head-icon">✨</span><h3>9. Transisi & Animasi</h3></div>
+        <div class="card-body"><p>Membuat efek gerak halus dengan transition dan animasi CSS keyframe.</p></div>
+      </div>
+      <div class="content-card" style="border-top: 3px solid #e91e8c; cursor:pointer;" onclick="showSection('responsif')">
+        <div class="card-head"><span class="card-head-icon">📱</span><h3>10. Responsive Design</h3></div>
+        <div class="card-body"><p>Membuat website yang tampil sempurna di berbagai ukuran layar dengan media query.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 1. PENGENALAN CSS ========== -->
+  <section class="section" id="pengenalan">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fde8e2;">📖</div>
+      <div class="section-title">
+        <h2>Pengenalan CSS</h2>
+        <p>Apa itu CSS, cara kerjanya, dan bagaimana cara menulisnya</p>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">💡</span><h3>Apa itu CSS?</h3></div>
+        <div class="card-body">
+          <p><strong>CSS (Cascading Style Sheets)</strong> adalah bahasa yang digunakan untuk menentukan tampilan dan gaya halaman web yang ditulis dalam HTML. Jika HTML adalah "kerangka" website, maka CSS adalah "pakaian" dan "dekorasinya".</p>
+          <div class="info-box info-note" style="margin-top:12px;">
+            <span class="info-box-icon">📝</span>
+            <p><strong>Analogi mudah:</strong> HTML = bangunan rumah, CSS = cat dinding, furnitur, dekorasi.</p>
+          </div>
+          <p style="margin-top:12px;">CSS memungkinkan kita mengontrol:</p>
+          <ul>
+            <li>Warna teks dan latar belakang</li>
+            <li>Ukuran dan jenis font</li>
+            <li>Tata letak dan posisi elemen</li>
+            <li>Efek visual seperti bayangan dan gradasi</li>
+            <li>Animasi dan transisi</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🔗</span><h3>3 Cara Menerapkan CSS</h3></div>
+        <div class="card-body">
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab(this,'ext')">External</div>
+            <div class="tab" onclick="switchTab(this,'int')">Internal</div>
+            <div class="tab" onclick="switchTab(this,'inl')">Inline</div>
+          </div>
+          <div class="tab-content active" id="tab-ext">
+            <p>File CSS terpisah, dihubungkan lewat tag <code>&lt;link&gt;</code>. <strong>Cara terbaik dan paling umum digunakan.</strong></p>
+            <div class="code-wrap">
+              <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">HTML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><span class="cmt">&lt;!-- Di dalam &lt;head&gt; HTML --&gt;</span>
+<span class="kw">&lt;link</span> <span class="prop">rel</span>=<span class="str">"stylesheet"</span> <span class="prop">href</span>=<span class="str">"style.css"</span><span class="kw">&gt;</span></pre>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-int">
+            <p>CSS ditulis di dalam tag <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code> HTML.</p>
+            <div class="code-wrap">
+              <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">HTML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><span class="kw">&lt;style&gt;</span>
+  <span class="sel">p</span> <span class="pun">{</span>
+    <span class="prop">color</span><span class="pun">:</span> <span class="val">blue</span><span class="pun">;</span>
+  <span class="pun">}</span>
+<span class="kw">&lt;/style&gt;</span></pre>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-inl">
+            <p>CSS ditulis langsung di atribut <code>style</code> elemen HTML. Tidak disarankan untuk proyek besar.</p>
+            <div class="code-wrap">
+              <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">HTML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><span class="kw">&lt;p</span> <span class="prop">style</span>=<span class="str">"color: blue; font-size: 18px;"</span><span class="kw">&gt;</span>
+  Teks berwarna biru
+<span class="kw">&lt;/p&gt;</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">⚙️</span><h3>Sintaks CSS</h3></div>
+        <div class="card-body">
+          <p>Aturan CSS terdiri dari <strong>selektor</strong> dan <strong>deklarasi</strong>. Deklarasi berisi <strong>properti</strong> dan <strong>nilai</strong>.</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Struktur dasar CSS */</span>
+<span class="sel">selektor</span> <span class="pun">{</span>
+    <span class="prop">properti</span><span class="pun">:</span> <span class="val">nilai</span><span class="pun">;</span>
+    <span class="prop">properti2</span><span class="pun">:</span> <span class="val">nilai2</span><span class="pun">;</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Contoh nyata */</span>
+<span class="sel">h1</span> <span class="pun">{</span>
+    <span class="prop">color</span><span class="pun">:</span> <span class="val">#e85d2f</span><span class="pun">;</span>
+    <span class="prop">font-size</span><span class="pun">:</span> <span class="val">2rem</span><span class="pun">;</span>
+    <span class="prop">font-weight</span><span class="pun">:</span> <span class="val">bold</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div class="info-box info-tip" style="margin-top:8px;">
+            <span class="info-box-icon">💡</span>
+            <p>Setiap deklarasi diakhiri dengan titik koma (<code>;</code>). Lupa tanda ini adalah kesalahan paling umum!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">⬇️</span><h3>Apa itu "Cascading"?</h3></div>
+        <div class="card-body">
+          <p>Kata <strong>"Cascading"</strong> berarti "mengalir ke bawah". CSS mengikuti aturan:</p>
+          <ul>
+            <li><strong>Urutan:</strong> CSS yang ditulis belakangan akan menimpa yang sebelumnya.</li>
+            <li><strong>Spesifisitas:</strong> Selektor yang lebih spesifik memiliki prioritas lebih tinggi.</li>
+            <li><strong>Warisan (Inheritance):</strong> Beberapa properti diwarisi dari elemen induk ke anak.</li>
+          </ul>
+          <div class="code-wrap" style="margin-top:12px;">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">p</span> <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">blue</span><span class="pun">;</span> <span class="pun">}</span>   <span class="cmt">/* aturan 1 */</span>
+<span class="sel">p</span> <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">red</span><span class="pun">;</span>  <span class="pun">}</span>   <span class="cmt">/* aturan 2 menang! */</span>
+<span class="cmt">/* Teks paragraf akan berwarna merah */</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ 1 -->
+    <div class="quiz-section">
+      <div class="quiz-header">
+        <div class="quiz-badge">🧠 Quiz</div>
+        <h3>Uji Pemahaman — Pengenalan CSS</h3>
+      </div>
+      <div id="quiz-pengenalan"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-pengenalan">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('pengenalan')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-pengenalan"></div>
+    </div>
+
+    <!-- PRAKTIKUM 1 -->
+    <div class="praktikum-section">
+      <div class="prak-header">
+        <div class="prak-badge">🔬 Praktikum</div>
+        <h3>Tugas Praktikum — Pengenalan CSS</h3>
+      </div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)">
+          <div class="prak-task-num">1</div>
+          <div class="prak-task-title">Halaman Profil Diri dengan CSS External</div>
+          <div class="prak-task-diff diff-easy">Mudah</div>
+          <span class="prak-task-arrow">▼</span>
+        </div>
+        <div class="prak-task-body">
+          <p>Buat halaman HTML sederhana tentang profil diri Anda, kemudian beri gaya menggunakan file CSS external terpisah.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Buat file <code>index.html</code> dengan minimal 5 elemen HTML berbeda</div>
+            <div class="prak-req-item">Buat file <code>style.css</code> terpisah dan hubungkan dengan tag <code>&lt;link&gt;</code></div>
+            <div class="prak-req-item">Berikan warna berbeda pada judul (h1), subjudul (h2), dan paragraf</div>
+            <div class="prak-req-item">Ubah font-family seluruh halaman menjadi font sans-serif</div>
+            <div class="prak-req-item">Atur lebar maksimum halaman menjadi <code>max-width: 800px</code></div>
+          </div>
+          <div class="prak-result-preview">
+            <div class="prak-result-label">Hasil yang Diharapkan</div>
+            <div style="background:#fff;border-radius:8px;padding:16px;border:1px solid #e2d9cc;">
+              <div style="font-family:sans-serif;max-width:400px;">
+                <h2 style="color:#e85d2f;font-size:1.3rem;margin-bottom:6px;">Nama Saya</h2>
+                <h3 style="color:#6b4fa0;font-size:1rem;margin-bottom:8px;">Web Developer</h3>
+                <p style="color:#5a4f42;font-size:.85rem;line-height:1.6;">Deskripsi singkat tentang diri Anda ditampilkan di sini dengan gaya yang rapi menggunakan CSS.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)">
+          <div class="prak-task-num">2</div>
+          <div class="prak-task-title">Eksperimen Cascading — Siapa yang Menang?</div>
+          <div class="prak-task-diff diff-medium">Menengah</div>
+          <span class="prak-task-arrow">▼</span>
+        </div>
+        <div class="prak-task-body">
+          <p>Eksperimen untuk memahami konsep cascading dengan membuat konflik antar aturan CSS.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Buat sebuah paragraf dengan class <code>teks-penting</code></div>
+            <div class="prak-req-item">Tulis 3 aturan CSS yang berbeda untuk elemen yang sama dengan warna berbeda</div>
+            <div class="prak-req-item">Gunakan CSS inline, internal, dan external secara bersamaan</div>
+            <div class="prak-req-item">Catat warna mana yang "menang" dan jelaskan mengapa</div>
+            <div class="prak-req-item">Tambahkan komentar CSS untuk menjelaskan setiap aturan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="complete-btn" onclick="markComplete('pengenalan', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 2. SELEKTOR ========== -->
+  <section class="section" id="selektor">
+    <div class="section-header">
+      <div class="section-icon" style="background:#ede8f7;">🎯</div>
+      <div class="section-title">
+        <h2>Selektor CSS</h2>
+        <p>Cara memilih elemen HTML yang ingin diberi gaya</p>
+      </div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🔡</span><h3>Jenis-Jenis Selektor Dasar</h3></div>
+        <div class="card-body">
+          <table class="prop-table">
+            <tr><th>Selektor</th><th>Contoh</th><th>Keterangan</th></tr>
+            <tr><td>Elemen</td><td><code>p { }</code></td><td>Semua tag &lt;p&gt;</td></tr>
+            <tr><td>Class</td><td><code>.merah { }</code></td><td>Elemen dengan class="merah"</td></tr>
+            <tr><td>ID</td><td><code>#header { }</code></td><td>Elemen dengan id="header"</td></tr>
+            <tr><td>Universal</td><td><code>* { }</code></td><td>Semua elemen</td></tr>
+            <tr><td>Atribut</td><td><code>[type="text"]</code></td><td>Elemen dengan atribut tertentu</td></tr>
+          </table>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Selektor elemen */</span>
+<span class="sel">p</span> <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">gray</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* Selektor class (pakai titik) */</span>
+<span class="sel">.teks-merah</span> <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">red</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* Selektor ID (pakai #) */</span>
+<span class="sel">#judul-utama</span> <span class="pun">{</span> <span class="prop">font-size</span><span class="pun">:</span> <span class="val">2rem</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* Universal — mempengaruhi semua elemen */</span>
+<span class="sel">*</span> <span class="pun">{</span> <span class="prop">box-sizing</span><span class="pun">:</span> <span class="val">border-box</span><span class="pun">;</span> <span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🔗</span><h3>Selektor Kombinasi</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Descendant — semua p di dalam div */</span>
+<span class="sel">div p</span> <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">blue</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* Child — hanya p langsung di dalam div */</span>
+<span class="sel">div > p</span> <span class="pun">{</span> <span class="prop">font-weight</span><span class="pun">:</span> <span class="val">bold</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* Adjacent sibling — p tepat setelah h2 */</span>
+<span class="sel">h2 + p</span> <span class="pun">{</span> <span class="prop">font-style</span><span class="pun">:</span> <span class="val">italic</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* General sibling — semua p setelah h2 */</span>
+<span class="sel">h2 ~ p</span> <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">gray</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* Gabungan beberapa selektor */</span>
+<span class="sel">h1, h2, h3</span> <span class="pun">{</span> <span class="prop">font-family</span><span class="pun">:</span> <span class="val">Georgia, serif</span><span class="pun">;</span> <span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🎭</span><h3>Pseudo-class & Pseudo-element</h3></div>
+        <div class="card-body">
+          <p>Pseudo-class memilih elemen berdasarkan <strong>state/kondisi</strong>, pseudo-element memilih <strong>bagian tertentu</strong> dari elemen.</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Pseudo-class — state elemen */</span>
+<span class="sel">a:hover</span>   <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">red</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">a:visited</span> <span class="pun">{</span> <span class="prop">color</span><span class="pun">:</span> <span class="val">purple</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">input:focus</span> <span class="pun">{</span> <span class="prop">border</span><span class="pun">:</span> <span class="val">2px solid blue</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">li:first-child</span> <span class="pun">{</span> <span class="prop">font-weight</span><span class="pun">:</span> <span class="val">bold</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">li:nth-child(2n)</span> <span class="pun">{</span> <span class="prop">background</span><span class="pun">:</span> <span class="val">#f0f0f0</span><span class="pun">;</span> <span class="pun">}</span>
+
+<span class="cmt">/* Pseudo-element — bagian elemen */</span>
+<span class="sel">p::first-letter</span> <span class="pun">{</span> <span class="prop">font-size</span><span class="pun">:</span> <span class="val">2em</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">p::before</span> <span class="pun">{</span> <span class="prop">content</span><span class="pun">:</span> <span class="str">"→ "</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">::selection</span> <span class="pun">{</span> <span class="prop">background</span><span class="pun">:</span> <span class="val">yellow</span><span class="pun">;</span> <span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">⚖️</span><h3>Spesifisitas (Specificity)</h3></div>
+        <div class="card-body">
+          <p>Selektor yang lebih spesifik akan menang jika terjadi konflik. Dihitung dengan format <strong>(A, B, C)</strong>:</p>
+          <ul>
+            <li><strong>A</strong> = ID selektor</li>
+            <li><strong>B</strong> = Class, pseudo-class, atribut</li>
+            <li><strong>C</strong> = Elemen, pseudo-element</li>
+          </ul>
+          <div style="margin-top:16px;">
+            <div class="specificity-bar"><span class="spec-label">p</span><div class="spec-bars"><div class="spec-seg spec-a" style="min-width:28px">0</div><div class="spec-seg spec-b" style="min-width:28px">0</div><div class="spec-seg spec-c">1</div></div><span class="spec-total">= 001</span></div>
+            <div class="specificity-bar"><span class="spec-label">.class</span><div class="spec-bars"><div class="spec-seg spec-a" style="min-width:28px">0</div><div class="spec-seg spec-b" style="min-width:28px">1</div><div class="spec-seg spec-c" style="min-width:28px">0</div></div><span class="spec-total">= 010</span></div>
+            <div class="specificity-bar"><span class="spec-label">#id</span><div class="spec-bars"><div class="spec-seg spec-a">1</div><div class="spec-seg spec-b" style="min-width:28px">0</div><div class="spec-seg spec-c" style="min-width:28px">0</div></div><span class="spec-total">= 100</span></div>
+            <div class="specificity-bar"><span class="spec-label">div p.class</span><div class="spec-bars"><div class="spec-seg spec-a" style="min-width:28px">0</div><div class="spec-seg spec-b">1</div><div class="spec-seg spec-c">2</div></div><span class="spec-total">= 012</span></div>
+            <div class="specificity-bar"><span class="spec-label">style="" (inline)</span><div class="spec-bars"><div class="spec-seg" style="background:#e85d2f;min-width:40px">1000</div></div><span class="spec-total">Menang!</span></div>
+          </div>
+          <div class="info-box info-warn" style="margin-top:12px;">
+            <span class="info-box-icon">⚠️</span>
+            <p><strong>!important</strong> mengesampingkan semua spesifisitas. Gunakan hanya sebagai jalan terakhir!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ 2 -->
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Selektor CSS</h3></div>
+      <div id="quiz-selektor"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-selektor">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('selektor')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-selektor"></div>
+    </div>
+
+    <!-- PRAKTIKUM 2 -->
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Selektor CSS</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)">
+          <div class="prak-task-num">1</div>
+          <div class="prak-task-title">Menu Navigasi Interaktif dengan Hover</div>
+          <div class="prak-task-diff diff-easy">Mudah</div>
+          <span class="prak-task-arrow">▼</span>
+        </div>
+        <div class="prak-task-body">
+          <p>Buat menu navigasi sederhana yang berubah tampilan saat kursor berada di atasnya.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Buat daftar navigasi dengan 5 item menggunakan <code>&lt;ul&gt;</code> dan <code>&lt;li&gt;</code></div>
+            <div class="prak-req-item">Hapus bullet point default dengan <code>list-style: none</code></div>
+            <div class="prak-req-item">Gunakan <code>:hover</code> untuk mengubah warna background saat kursor di atas item</div>
+            <div class="prak-req-item">Tambahkan efek pada link aktif menggunakan class <code>.active</code></div>
+            <div class="prak-req-item">Gunakan <code>:nth-child</code> untuk memberi warna zebra (berselang-seling) pada item</div>
+          </div>
+        </div>
+      </div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)">
+          <div class="prak-task-num">2</div>
+          <div class="prak-task-title">Tabel Data dengan Pseudo-class</div>
+          <div class="prak-task-diff diff-medium">Menengah</div>
+          <span class="prak-task-arrow">▼</span>
+        </div>
+        <div class="prak-task-body">
+          <p>Buat tabel data nilai siswa dengan styling menggunakan pseudo-class.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Buat tabel dengan minimal 6 baris dan 4 kolom data</div>
+            <div class="prak-req-item">Beri warna berbeda pada baris ganjil dan genap dengan <code>:nth-child(odd/even)</code></div>
+            <div class="prak-req-item">Highlight baris pertama (header) dengan background gelap dan teks putih</div>
+            <div class="prak-req-item">Tambahkan efek hover pada setiap baris untuk highlight</div>
+            <div class="prak-req-item">Gunakan <code>::before</code> pada sel header untuk menambahkan ikon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('selektor', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 3. BOX MODEL ========== -->
+  <section class="section" id="boxmodel">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8f4f7;">📦</div>
+      <div class="section-title"><h2>Box Model CSS</h2><p>Setiap elemen HTML adalah sebuah kotak — pahami strukturnya</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📦</span><h3>Struktur Box Model</h3></div>
+        <div class="card-body">
+          <p>Setiap elemen HTML terdiri dari 4 lapisan box model dari dalam ke luar:</p>
+          <div class="demo-box" style="text-align:center; padding-top:30px;">
+            <div class="demo-label">Visual</div>
+            <div class="box-model-demo">
+              <div class="bm-margin">
+                <span class="bm-label">margin</span>
+                <div class="bm-border">
+                  <span class="bm-label">border</span>
+                  <div class="bm-padding">
+                    <span class="bm-label">padding</span>
+                    <div class="bm-content">content</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ul style="margin-top:12px;">
+            <li><strong>Content</strong> — Area konten (teks, gambar)</li>
+            <li><strong>Padding</strong> — Jarak antara konten dan border (dalam)</li>
+            <li><strong>Border</strong> — Garis tepi elemen</li>
+            <li><strong>Margin</strong> — Jarak luar antar elemen</li>
+          </ul>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📏</span><h3>Properti Box Model</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.kotak</span> <span class="pun">{</span>
+  <span class="cmt">/* Ukuran */</span>
+  <span class="prop">width</span><span class="pun">:</span> <span class="val">300px</span><span class="pun">;</span>
+  <span class="prop">height</span><span class="pun">:</span> <span class="val">200px</span><span class="pun">;</span>
+
+  <span class="cmt">/* Padding (semua sisi) */</span>
+  <span class="prop">padding</span><span class="pun">:</span> <span class="val">20px</span><span class="pun">;</span>
+  <span class="cmt">/* atau per sisi */</span>
+  <span class="prop">padding</span><span class="pun">:</span> <span class="val">10px 20px 10px 20px</span><span class="pun">;</span>
+  <span class="cmt">/* atas kanan bawah kiri */</span>
+
+  <span class="cmt">/* Border */</span>
+  <span class="prop">border</span><span class="pun">:</span> <span class="val">2px solid #333</span><span class="pun">;</span>
+  <span class="prop">border-radius</span><span class="pun">:</span> <span class="val">8px</span><span class="pun">;</span>
+
+  <span class="cmt">/* Margin */</span>
+  <span class="prop">margin</span><span class="pun">:</span> <span class="val">16px auto</span><span class="pun">;</span>
+  <span class="cmt">/* atas/bawah 16px, kiri/kanan auto (center) */</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🔲</span><h3>box-sizing: border-box</h3></div>
+        <div class="card-body">
+          <p>Secara default, <code>width</code> hanya menghitung area konten. Dengan <code>box-sizing: border-box</code>, padding dan border sudah termasuk dalam lebar yang ditentukan.</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* TANPA border-box */</span>
+<span class="sel">.kotak</span> <span class="pun">{</span>
+  <span class="prop">width</span><span class="pun">:</span> <span class="val">200px</span><span class="pun">;</span>
+  <span class="prop">padding</span><span class="pun">:</span> <span class="val">20px</span><span class="pun">;</span>
+  <span class="cmt">/* Total lebar = 200 + 40 = 240px */</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* DENGAN border-box (direkomendasikan) */</span>
+<span class="sel">*</span> <span class="pun">{</span> <span class="prop">box-sizing</span><span class="pun">:</span> <span class="val">border-box</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">.kotak</span> <span class="pun">{</span>
+  <span class="prop">width</span><span class="pun">:</span> <span class="val">200px</span><span class="pun">;</span>
+  <span class="prop">padding</span><span class="pun">:</span> <span class="val">20px</span><span class="pun">;</span>
+  <span class="cmt">/* Total lebar = tetap 200px */</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div class="info-box info-tip">
+            <span class="info-box-icon">💡</span>
+            <p>Hampir semua developer modern menggunakan <code>* { box-sizing: border-box; }</code> di setiap project.</p>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🎨</span><h3>Gaya Border</h3></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div style="padding:10px;border:2px solid #e85d2f;border-radius:4px;font-size:.82rem;text-align:center;font-family:var(--font-code);">solid</div>
+            <div style="padding:10px;border:2px dashed #6b4fa0;border-radius:4px;font-size:.82rem;text-align:center;font-family:var(--font-code);">dashed</div>
+            <div style="padding:10px;border:2px dotted #2e7d8c;border-radius:4px;font-size:.82rem;text-align:center;font-family:var(--font-code);">dotted</div>
+            <div style="padding:10px;border:4px double #f5a623;border-radius:4px;font-size:.82rem;text-align:center;font-family:var(--font-code);">double</div>
+            <div style="padding:10px;border-radius:50%;border:2px solid #e85d2f;font-size:.82rem;text-align:center;font-family:var(--font-code);">radius: 50%</div>
+            <div style="padding:10px;box-shadow:0 4px 16px rgba(0,0,0,.15);border-radius:8px;font-size:.82rem;text-align:center;font-family:var(--font-code);">box-shadow</div>
+          </div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="prop">border</span><span class="pun">:</span> <span class="val">2px solid red</span><span class="pun">;</span>
+<span class="prop">border-radius</span><span class="pun">:</span> <span class="val">12px</span><span class="pun">;</span>
+<span class="prop">box-shadow</span><span class="pun">:</span> <span class="val">0 4px 16px rgba(0,0,0,.2)</span><span class="pun">;</span>
+<span class="cmt">/* x-offset y-offset blur spread color */</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Box Model</h3></div>
+      <div id="quiz-boxmodel"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-boxmodel">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('boxmodel')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-boxmodel"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Box Model</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Kartu Produk dengan Box Model</div><div class="prak-task-diff diff-medium">Menengah</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat 3 kartu produk yang rapi menggunakan konsep box model.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Setiap kartu punya gambar placeholder, nama produk, harga, dan tombol beli</div>
+            <div class="prak-req-item">Gunakan padding yang tepat agar konten tidak terlalu rapat dengan tepi kartu</div>
+            <div class="prak-req-item">Tambahkan border dan border-radius untuk estetika kartu</div>
+            <div class="prak-req-item">Gunakan margin untuk memberi jarak antar kartu</div>
+            <div class="prak-req-item">Tambahkan box-shadow agar kartu terlihat seperti melayang</div>
+          </div>
+          <div class="prak-result-preview">
+            <div class="prak-result-label">Contoh Hasil</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #e2d9cc;box-shadow:0 4px 16px rgba(0,0,0,.08);width:140px;">
+                <div style="width:100%;height:70px;background:linear-gradient(135deg,#fde8e2,#e8f4f7);border-radius:8px;margin-bottom:10px;"></div>
+                <div style="font-size:.78rem;font-weight:600;margin-bottom:4px;color:#1a1510;">Produk A</div>
+                <div style="font-size:.75rem;color:#e85d2f;font-weight:700;margin-bottom:8px;">Rp 99.000</div>
+                <div style="background:#e85d2f;color:#fff;text-align:center;padding:5px;border-radius:6px;font-size:.72rem;font-weight:600;">Beli</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('boxmodel', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 4. TIPOGRAFI ========== -->
+  <section class="section" id="tipografi">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fffbec;">🔤</div>
+      <div class="section-title"><h2>Tipografi CSS</h2><p>Mengatur tampilan teks agar nyaman dibaca dan menarik secara visual</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🖋️</span><h3>Properti Font Utama</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">body</span> <span class="pun">{</span>
+  <span class="cmt">/* Jenis font */</span>
+  <span class="prop">font-family</span><span class="pun">:</span> <span class="val">'Roboto', Arial, sans-serif</span><span class="pun">;</span>
+
+  <span class="cmt">/* Ukuran font */</span>
+  <span class="prop">font-size</span><span class="pun">:</span> <span class="val">16px</span><span class="pun">;</span>   <span class="cmt">/* atau rem, em, % */</span>
+
+  <span class="cmt">/* Ketebalan */</span>
+  <span class="prop">font-weight</span><span class="pun">:</span> <span class="val">400</span><span class="pun">;</span>  <span class="cmt">/* 100-900 atau bold */</span>
+
+  <span class="cmt">/* Gaya */</span>
+  <span class="prop">font-style</span><span class="pun">:</span> <span class="val">italic</span><span class="pun">;</span>
+
+  <span class="cmt">/* Tinggi baris */</span>
+  <span class="prop">line-height</span><span class="pun">:</span> <span class="val">1.6</span><span class="pun">;</span>
+
+  <span class="cmt">/* Jarak antar huruf */</span>
+  <span class="prop">letter-spacing</span><span class="pun">:</span> <span class="val">0.5px</span><span class="pun">;</span>
+
+  <span class="cmt">/* Jarak antar kata */</span>
+  <span class="prop">word-spacing</span><span class="pun">:</span> <span class="val">2px</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📐</span><h3>Satuan Ukuran Font</h3></div>
+        <div class="card-body">
+          <table class="prop-table">
+            <tr><th>Satuan</th><th>Deskripsi</th><th>Contoh</th></tr>
+            <tr><td><code>px</code></td><td>Piksel — ukuran tetap</td><td>16px</td></tr>
+            <tr><td><code>rem</code></td><td>Relatif terhadap root (html)</td><td>1rem = 16px</td></tr>
+            <tr><td><code>em</code></td><td>Relatif terhadap elemen induk</td><td>1.5em</td></tr>
+            <tr><td><code>%</code></td><td>Persentase dari induk</td><td>120%</td></tr>
+            <tr><td><code>vw/vh</code></td><td>Persen dari viewport</td><td>5vw</td></tr>
+          </table>
+          <div class="info-box info-tip" style="margin-top:8px;">
+            <span class="info-box-icon">💡</span>
+            <p>Gunakan <code>rem</code> untuk font — responsif dan mudah dikelola secara konsisten.</p>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">✍️</span><h3>Properti Teks Lainnya</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.teks</span> <span class="pun">{</span>
+  <span class="cmt">/* Perataan teks */</span>
+  <span class="prop">text-align</span><span class="pun">:</span> <span class="val">center</span><span class="pun">;</span> <span class="cmt">/* left|right|justify */</span>
+
+  <span class="cmt">/* Dekorasi */</span>
+  <span class="prop">text-decoration</span><span class="pun">:</span> <span class="val">underline</span><span class="pun">;</span>
+  <span class="prop">text-decoration</span><span class="pun">:</span> <span class="val">none</span><span class="pun">;</span> <span class="cmt">/* hapus garis link */</span>
+
+  <span class="cmt">/* Transformasi */</span>
+  <span class="prop">text-transform</span><span class="pun">:</span> <span class="val">uppercase</span><span class="pun">;</span>
+  <span class="prop">text-transform</span><span class="pun">:</span> <span class="val">capitalize</span><span class="pun">;</span>
+
+  <span class="cmt">/* Bayangan teks */</span>
+  <span class="prop">text-shadow</span><span class="pun">:</span> <span class="val">2px 2px 4px rgba(0,0,0,.3)</span><span class="pun">;</span>
+
+  <span class="cmt">/* Overflow teks */</span>
+  <span class="prop">white-space</span><span class="pun">:</span> <span class="val">nowrap</span><span class="pun">;</span>
+  <span class="prop">overflow</span><span class="pun">:</span> <span class="val">hidden</span><span class="pun">;</span>
+  <span class="prop">text-overflow</span><span class="pun">:</span> <span class="val">ellipsis</span><span class="pun">;</span> <span class="cmt">/* "..." */</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🌐</span><h3>Google Fonts</h3></div>
+        <div class="card-body">
+          <p>Cara menggunakan font dari Google Fonts:</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">HTML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">&lt;!-- 1. Tambahkan di &lt;head&gt; HTML --&gt;</span>
+<span class="kw">&lt;link</span> <span class="prop">href</span>=<span class="str">"https://fonts.googleapis.com/css2?
+  family=Poppins:wght@400;600;700
+  &display=swap"</span> <span class="prop">rel</span>=<span class="str">"stylesheet"</span><span class="kw">&gt;</span></pre>
+          </div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* 2. Gunakan di CSS */</span>
+<span class="sel">body</span> <span class="pun">{</span>
+  <span class="prop">font-family</span><span class="pun">:</span> <span class="val">'Poppins', sans-serif</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div class="typo-demo" style="margin-top:12px;">
+            <div class="typo-row"><span class="typo-meta">font-size: 2rem</span><span style="font-size:2rem;font-weight:700;">Judul Besar</span></div>
+            <div class="typo-row"><span class="typo-meta">font-size: 1.5rem</span><span style="font-size:1.5rem;font-weight:600;">Subjudul</span></div>
+            <div class="typo-row"><span class="typo-meta">font-size: 1rem</span><span style="font-size:1rem;">Teks paragraf normal</span></div>
+            <div class="typo-row"><span class="typo-meta">font-size: 0.8rem</span><span style="font-size:0.8rem;color:#9a8d7e;">Teks keterangan kecil</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Tipografi</h3></div>
+      <div id="quiz-tipografi"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-tipografi">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('tipografi')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-tipografi"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Tipografi</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Halaman Artikel Blog dengan Tipografi Indah</div><div class="prak-task-diff diff-medium">Menengah</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat halaman artikel blog dengan tipografi yang nyaman dibaca.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Gunakan Google Font Poppins untuk seluruh halaman</div>
+            <div class="prak-req-item">Atur <code>line-height: 1.8</code> pada paragraf agar mudah dibaca</div>
+            <div class="prak-req-item">Buat hierarki tipografi: h1 (32px), h2 (24px), h3 (20px), p (16px)</div>
+            <div class="prak-req-item">Tambahkan drop cap (huruf pertama besar) menggunakan <code>::first-letter</code></div>
+            <div class="prak-req-item">Gaya teks kutipan (blockquote) dengan border-left berwarna dan font italic</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('tipografi', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 5. WARNA ========== -->
+  <section class="section" id="warna">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fde8f5;">🎨</div>
+      <div class="section-title"><h2>Warna & Background CSS</h2><p>Sistem warna, gradasi, dan latar belakang untuk menciptakan tampilan visual menarik</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🌈</span><h3>Format Warna CSS</h3></div>
+        <div class="card-body">
+          <div class="color-palette">
+            <div class="color-chip"><div class="color-chip-swatch" style="background:#e85d2f;"></div><div class="color-chip-info"><div class="name">Named</div><div class="hex">red, blue...</div></div></div>
+            <div class="color-chip"><div class="color-chip-swatch" style="background:#e85d2f;"></div><div class="color-chip-info"><div class="name">HEX</div><div class="hex">#e85d2f</div></div></div>
+            <div class="color-chip"><div class="color-chip-swatch" style="background:rgb(232,93,47);"></div><div class="color-chip-info"><div class="name">RGB</div><div class="hex">rgb(232,93,47)</div></div></div>
+            <div class="color-chip"><div class="color-chip-swatch" style="background:rgba(232,93,47,.5);"></div><div class="color-chip-info"><div class="name">RGBA</div><div class="hex">rgba(…,.5)</div></div></div>
+            <div class="color-chip"><div class="color-chip-swatch" style="background:hsl(18,79%,54%);"></div><div class="color-chip-info"><div class="name">HSL</div><div class="hex">hsl(18,79%,54%)</div></div></div>
+          </div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.contoh</span> <span class="pun">{</span>
+  <span class="prop">color</span><span class="pun">:</span> <span class="val">red</span><span class="pun">;</span>
+  <span class="prop">color</span><span class="pun">:</span> <span class="val">#e85d2f</span><span class="pun">;</span>
+  <span class="prop">color</span><span class="pun">:</span> <span class="val">rgb(232, 93, 47)</span><span class="pun">;</span>
+  <span class="prop">color</span><span class="pun">:</span> <span class="val">rgba(232, 93, 47, 0.8)</span><span class="pun">;</span>
+  <span class="prop">color</span><span class="pun">:</span> <span class="val">hsl(18, 79%, 54%)</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🌅</span><h3>Gradient</h3></div>
+        <div class="card-body">
+          <div style="display:grid;gap:8px;margin-bottom:12px;">
+            <div style="height:50px;border-radius:8px;background:linear-gradient(90deg,#e85d2f,#f5a623);"></div>
+            <div style="height:50px;border-radius:8px;background:linear-gradient(135deg,#6b4fa0,#2e7d8c);"></div>
+            <div style="height:50px;border-radius:8px;background:radial-gradient(circle,#e85d2f,#1a1510);"></div>
+          </div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Linear gradient */</span>
+<span class="prop">background</span><span class="pun">:</span> <span class="val">linear-gradient(
+  90deg, #e85d2f, #f5a623
+)</span><span class="pun">;</span>
+
+<span class="cmt">/* Diagonal */</span>
+<span class="prop">background</span><span class="pun">:</span> <span class="val">linear-gradient(
+  135deg, #6b4fa0, #2e7d8c
+)</span><span class="pun">;</span>
+
+<span class="cmt">/* Radial gradient */</span>
+<span class="prop">background</span><span class="pun">:</span> <span class="val">radial-gradient(
+  circle, #e85d2f, #1a1510
+)</span><span class="pun">;</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🖼️</span><h3>Background Properties</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.hero</span> <span class="pun">{</span>
+  <span class="cmt">/* Warna solid */</span>
+  <span class="prop">background-color</span><span class="pun">:</span> <span class="val">#f5f5f5</span><span class="pun">;</span>
+
+  <span class="cmt">/* Gambar background */</span>
+  <span class="prop">background-image</span><span class="pun">:</span> <span class="val">url('gambar.jpg')</span><span class="pun">;</span>
+  <span class="prop">background-size</span><span class="pun">:</span> <span class="val">cover</span><span class="pun">;</span>
+  <span class="prop">background-position</span><span class="pun">:</span> <span class="val">center</span><span class="pun">;</span>
+  <span class="prop">background-repeat</span><span class="pun">:</span> <span class="val">no-repeat</span><span class="pun">;</span>
+  <span class="prop">background-attachment</span><span class="pun">:</span> <span class="val">fixed</span><span class="pun">;</span>
+
+  <span class="cmt">/* Shorthand */</span>
+  <span class="prop">background</span><span class="pun">:</span> <span class="val">url('bg.jpg') center/cover no-repeat</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🎨</span><h3>CSS Variables untuk Warna</h3></div>
+        <div class="card-body">
+          <p>CSS Variables (custom properties) sangat berguna untuk menyimpan warna tema agar mudah diubah.</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Definisikan di :root */</span>
+<span class="sel">:root</span> <span class="pun">{</span>
+  <span class="prop">--warna-utama</span><span class="pun">:</span> <span class="val">#e85d2f</span><span class="pun">;</span>
+  <span class="prop">--warna-sekunder</span><span class="pun">:</span> <span class="val">#2e7d8c</span><span class="pun">;</span>
+  <span class="prop">--warna-teks</span><span class="pun">:</span> <span class="val">#1a1510</span><span class="pun">;</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Gunakan dengan var() */</span>
+<span class="sel">h1</span> <span class="pun">{</span>
+  <span class="prop">color</span><span class="pun">:</span> <span class="val">var(--warna-utama)</span><span class="pun">;</span>
+<span class="pun">}</span>
+<span class="sel">.tombol</span> <span class="pun">{</span>
+  <span class="prop">background</span><span class="pun">:</span> <span class="val">var(--warna-utama)</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div class="info-box info-tip">
+            <span class="info-box-icon">💡</span>
+            <p>Dengan CSS Variables, mengubah tema warna seluruh website hanya butuh edit 1 baris!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Warna & Background</h3></div>
+      <div id="quiz-warna"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-warna">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('warna')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-warna"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Warna & Background</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Halaman Hero dengan Gradient dan CSS Variables</div><div class="prak-task-diff diff-hard">Sulit</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat section hero halaman landing page dengan latar belakang gradient yang menarik.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Definisikan minimal 5 warna menggunakan CSS Variables di <code>:root</code></div>
+            <div class="prak-req-item">Buat hero section dengan <code>background: linear-gradient</code> yang menarik</div>
+            <div class="prak-req-item">Tambahkan overlay semi-transparan menggunakan <code>rgba</code></div>
+            <div class="prak-req-item">Buat tombol dengan gradient dan efek hover yang mengubah gradasi</div>
+            <div class="prak-req-item">Implementasikan mode gelap (dark mode) menggunakan CSS Variables</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('warna', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 6. FLEXBOX ========== -->
+  <section class="section" id="flexbox">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fde8e2;">📐</div>
+      <div class="section-title"><h2>CSS Flexbox</h2><p>Layout satu dimensi yang fleksibel — solusi terbaik untuk menyusun item secara baris atau kolom</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🧭</span><h3>Konsep Dasar Flexbox</h3></div>
+        <div class="card-body">
+          <p>Flexbox bekerja dengan <strong>container</strong> (parent) dan <strong>item</strong> (child). Aktifkan dengan <code>display: flex</code>.</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.container</span> <span class="pun">{</span>
+  <span class="prop">display</span><span class="pun">:</span> <span class="val">flex</span><span class="pun">;</span>
+
+  <span class="cmt">/* Arah utama */</span>
+  <span class="prop">flex-direction</span><span class="pun">:</span> <span class="val">row</span><span class="pun">;</span>       <span class="cmt">/* row|column|row-reverse */</span>
+
+  <span class="cmt">/* Penempatan di sumbu utama */</span>
+  <span class="prop">justify-content</span><span class="pun">:</span> <span class="val">center</span><span class="pun">;</span>   <span class="cmt">/* flex-start|end|center|space-between|space-around */</span>
+
+  <span class="cmt">/* Penempatan di sumbu silang */</span>
+  <span class="prop">align-items</span><span class="pun">:</span> <span class="val">center</span><span class="pun">;</span>      <span class="cmt">/* stretch|flex-start|flex-end|center|baseline */</span>
+
+  <span class="cmt">/* Jarak antar item */</span>
+  <span class="prop">gap</span><span class="pun">:</span> <span class="val">16px</span><span class="pun">;</span>
+
+  <span class="cmt">/* Wrap item */</span>
+  <span class="prop">flex-wrap</span><span class="pun">:</span> <span class="val">wrap</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🎮</span><h3>Demo Interaktif Flexbox</h3></div>
+        <div class="card-body">
+          <p>Klik tombol untuk melihat efek perubahan properti:</p>
+          <div class="flex-controls">
+            <button class="flex-btn active" onclick="setFlex('justify-content','flex-start',this,'jc')">start</button>
+            <button class="flex-btn" onclick="setFlex('justify-content','center',this,'jc')">center</button>
+            <button class="flex-btn" onclick="setFlex('justify-content','space-between',this,'jc')">space-between</button>
+            <button class="flex-btn" onclick="setFlex('justify-content','space-around',this,'jc')">space-around</button>
+          </div>
+          <div class="flex-controls">
+            <button class="flex-btn active" onclick="setFlex('align-items','stretch',this,'ai')">stretch</button>
+            <button class="flex-btn" onclick="setFlex('align-items','flex-start',this,'ai')">flex-start</button>
+            <button class="flex-btn" onclick="setFlex('align-items','center',this,'ai')">center</button>
+            <button class="flex-btn" onclick="setFlex('align-items','flex-end',this,'ai')">flex-end</button>
+          </div>
+          <div class="flex-demo" id="flexDemo" style="justify-content:flex-start;align-items:stretch;min-height:80px;">
+            <div class="flex-item" style="height:40px;">A</div>
+            <div class="flex-item" style="height:60px;">B</div>
+            <div class="flex-item" style="height:50px;">C</div>
+            <div class="flex-item" style="height:45px;">D</div>
+          </div>
+          <div style="margin-top:8px;font-size:.8rem;color:var(--text3);font-family:var(--font-code);" id="flexCode">justify-content: flex-start; align-items: stretch;</div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📦</span><h3>Properti Flex Item</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.item</span> <span class="pun">{</span>
+  <span class="cmt">/* Seberapa item bisa tumbuh */</span>
+  <span class="prop">flex-grow</span><span class="pun">:</span> <span class="val">1</span><span class="pun">;</span>   <span class="cmt">/* 0 = tidak tumbuh */</span>
+
+  <span class="cmt">/* Seberapa item bisa mengecil */</span>
+  <span class="prop">flex-shrink</span><span class="pun">:</span> <span class="val">1</span><span class="pun">;</span>
+
+  <span class="cmt">/* Ukuran dasar item */</span>
+  <span class="prop">flex-basis</span><span class="pun">:</span> <span class="val">200px</span><span class="pun">;</span>
+
+  <span class="cmt">/* Shorthand: grow shrink basis */</span>
+  <span class="prop">flex</span><span class="pun">:</span> <span class="val">1 1 200px</span><span class="pun">;</span>
+
+  <span class="cmt">/* Urutan tampil */</span>
+  <span class="prop">order</span><span class="pun">:</span> <span class="val">2</span><span class="pun">;</span>
+
+  <span class="cmt">/* Override align-items untuk 1 item */</span>
+  <span class="prop">align-self</span><span class="pun">:</span> <span class="val">flex-end</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">💡</span><h3>Use Case Flexbox Populer</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Pusatkan elemen secara sempurna */</span>
+<span class="sel">.center</span> <span class="pun">{</span>
+  <span class="prop">display</span><span class="pun">:</span> <span class="val">flex</span><span class="pun">;</span>
+  <span class="prop">justify-content</span><span class="pun">:</span> <span class="val">center</span><span class="pun">;</span>
+  <span class="prop">align-items</span><span class="pun">:</span> <span class="val">center</span><span class="pun">;</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Navbar dengan logo kiri, menu kanan */</span>
+<span class="sel">.navbar</span> <span class="pun">{</span>
+  <span class="prop">display</span><span class="pun">:</span> <span class="val">flex</span><span class="pun">;</span>
+  <span class="prop">justify-content</span><span class="pun">:</span> <span class="val">space-between</span><span class="pun">;</span>
+  <span class="prop">align-items</span><span class="pun">:</span> <span class="val">center</span><span class="pun">;</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Kartu produk yang fleksibel */</span>
+<span class="sel">.cards</span> <span class="pun">{</span>
+  <span class="prop">display</span><span class="pun">:</span> <span class="val">flex</span><span class="pun">;</span>
+  <span class="prop">flex-wrap</span><span class="pun">:</span> <span class="val">wrap</span><span class="pun">;</span>
+  <span class="prop">gap</span><span class="pun">:</span> <span class="val">16px</span><span class="pun">;</span>
+<span class="pun">}</span>
+<span class="sel">.card</span> <span class="pun">{</span> <span class="prop">flex</span><span class="pun">:</span> <span class="val">1 1 250px</span><span class="pun">;</span> <span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Flexbox</h3></div>
+      <div id="quiz-flexbox"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-flexbox">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('flexbox')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-flexbox"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Flexbox</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Navbar Responsif dengan Flexbox</div><div class="prak-task-diff diff-medium">Menengah</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat navigasi website yang profesional menggunakan flexbox.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Logo/brand di sebelah kiri, menu di sebelah kanan menggunakan <code>justify-content: space-between</code></div>
+            <div class="prak-req-item">Menu item disusun horizontal menggunakan flexbox</div>
+            <div class="prak-req-item">Tombol CTA (Call to Action) di ujung kanan navbar</div>
+            <div class="prak-req-item">Navbar sticky di bagian atas saat scroll menggunakan <code>position: sticky</code></div>
+            <div class="prak-req-item">Semua item rata tengah secara vertikal menggunakan <code>align-items: center</code></div>
+          </div>
+        </div>
+      </div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">2</div><div class="prak-task-title">Galeri Foto Responsif</div><div class="prak-task-diff diff-hard">Sulit</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat galeri foto dengan layout flexbox yang menyesuaikan kolom secara otomatis.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Gunakan <code>flex-wrap: wrap</code> agar foto menyesuaikan ukuran layar</div>
+            <div class="prak-req-item">Setiap foto punya ukuran minimum 200px dan bisa tumbuh mengisi ruang kosong</div>
+            <div class="prak-req-item">Tambahkan overlay teks yang muncul saat hover pada setiap foto</div>
+            <div class="prak-req-item">Satu foto "featured" berukuran 2x lebih besar menggunakan <code>flex: 2</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('flexbox', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 7. GRID ========== -->
+  <section class="section" id="grid">
+    <div class="section-header">
+      <div class="section-icon" style="background:#ede8f7;">🗂️</div>
+      <div class="section-title"><h2>CSS Grid</h2><p>Layout dua dimensi (baris & kolom) untuk struktur halaman yang kompleks</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🏗️</span><h3>Dasar CSS Grid</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.container</span> <span class="pun">{</span>
+  <span class="prop">display</span><span class="pun">:</span> <span class="val">grid</span><span class="pun">;</span>
+
+  <span class="cmt">/* Definisi kolom */</span>
+  <span class="prop">grid-template-columns</span><span class="pun">:</span> <span class="val">1fr 2fr 1fr</span><span class="pun">;</span>
+  <span class="cmt">/* atau: repeat(3, 1fr) */</span>
+
+  <span class="cmt">/* Definisi baris */</span>
+  <span class="prop">grid-template-rows</span><span class="pun">:</span> <span class="val">auto 300px auto</span><span class="pun">;</span>
+
+  <span class="cmt">/* Jarak antar cell */</span>
+  <span class="prop">gap</span><span class="pun">:</span> <span class="val">20px</span><span class="pun">;</span>
+  <span class="prop">column-gap</span><span class="pun">:</span> <span class="val">24px</span><span class="pun">;</span>
+  <span class="prop">row-gap</span><span class="pun">:</span> <span class="val">16px</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div class="grid-demo" id="gridDemo">
+            <div class="grid-item">1</div>
+            <div class="grid-item">2</div>
+            <div class="grid-item">3</div>
+            <div class="grid-item">4</div>
+            <div class="grid-item">5</div>
+            <div class="grid-item">6</div>
+          </div>
+          <div class="flex-controls" style="margin-top:8px;">
+            <button class="flex-btn active" onclick="setGrid('repeat(3,1fr)',this)">3 Kolom</button>
+            <button class="flex-btn" onclick="setGrid('repeat(2,1fr)',this)">2 Kolom</button>
+            <button class="flex-btn" onclick="setGrid('1fr 2fr',this)">1:2</button>
+            <button class="flex-btn" onclick="setGrid('1fr 1fr 1fr 1fr',this)">4 Kolom</button>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🗺️</span><h3>Grid Area & Template</h3></div>
+        <div class="card-body">
+          <p>Beri nama area grid untuk layout yang lebih intuitif:</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.layout</span> <span class="pun">{</span>
+  <span class="prop">display</span><span class="pun">:</span> <span class="val">grid</span><span class="pun">;</span>
+  <span class="prop">grid-template-columns</span><span class="pun">:</span> <span class="val">200px 1fr</span><span class="pun">;</span>
+  <span class="prop">grid-template-rows</span><span class="pun">:</span> <span class="val">60px 1fr 60px</span><span class="pun">;</span>
+  <span class="prop">grid-template-areas</span><span class="pun">:</span>
+    <span class="str">"header  header"</span>
+    <span class="str">"sidebar main"</span>
+    <span class="str">"footer  footer"</span><span class="pun">;</span>
+  <span class="prop">min-height</span><span class="pun">:</span> <span class="val">100vh</span><span class="pun">;</span>
+<span class="pun">}</span>
+<span class="sel">.header</span>  <span class="pun">{</span> <span class="prop">grid-area</span><span class="pun">:</span> <span class="val">header</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">.sidebar</span> <span class="pun">{</span> <span class="prop">grid-area</span><span class="pun">:</span> <span class="val">sidebar</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">.main</span>    <span class="pun">{</span> <span class="prop">grid-area</span><span class="pun">:</span> <span class="val">main</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">.footer</span>  <span class="pun">{</span> <span class="prop">grid-area</span><span class="pun">:</span> <span class="val">footer</span><span class="pun">;</span> <span class="pun">}</span></pre>
+          </div>
+          <div style="display:grid;grid-template-columns:80px 1fr;grid-template-rows:32px 80px 32px;gap:4px;margin-top:12px;font-size:.72rem;font-weight:600;text-align:center;">
+            <div style="grid-column:1/-1;background:#e85d2f;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;">header</div>
+            <div style="background:#6b4fa0;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;">sidebar</div>
+            <div style="background:#2e7d8c;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;">main</div>
+            <div style="grid-column:1/-1;background:#f5a623;color:#1a1510;border-radius:4px;display:flex;align-items:center;justify-content:center;">footer</div>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📏</span><h3>Span — Merentangkan Item</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.item-besar</span> <span class="pun">{</span>
+  <span class="cmt">/* Merentang 2 kolom */</span>
+  <span class="prop">grid-column</span><span class="pun">:</span> <span class="val">1 / 3</span><span class="pun">;</span>
+  <span class="cmt">/* atau: span 2 */</span>
+  <span class="prop">grid-column</span><span class="pun">:</span> <span class="val">span 2</span><span class="pun">;</span>
+
+  <span class="cmt">/* Merentang 2 baris */</span>
+  <span class="prop">grid-row</span><span class="pun">:</span> <span class="val">span 2</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;">
+            <div style="grid-column:span 2;background:#e85d2f;color:#fff;padding:12px;border-radius:6px;text-align:center;font-size:.75rem;font-weight:600;">span 2 kolom</div>
+            <div style="background:#6b4fa0;color:#fff;padding:12px;border-radius:6px;text-align:center;font-size:.75rem;font-weight:600;">normal</div>
+            <div style="background:#2e7d8c;color:#fff;padding:12px;border-radius:6px;text-align:center;font-size:.75rem;font-weight:600;">normal</div>
+            <div style="background:#f5a623;color:#1a1510;padding:12px;border-radius:6px;text-align:center;font-size:.75rem;font-weight:600;">normal</div>
+            <div style="background:#2a7a4b;color:#fff;padding:12px;border-radius:6px;text-align:center;font-size:.75rem;font-weight:600;">normal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — CSS Grid</h3></div>
+      <div id="quiz-grid"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-grid">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('grid')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-grid"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — CSS Grid</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Layout Majalah/Blog dengan CSS Grid</div><div class="prak-task-diff diff-hard">Sulit</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat layout halaman blog bergaya majalah menggunakan CSS Grid.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Artikel utama (featured) menempati 2 kolom dan 2 baris menggunakan <code>grid-column/row: span 2</code></div>
+            <div class="prak-req-item">Artikel sekunder menempati masing-masing 1 cell grid</div>
+            <div class="prak-req-item">Sidebar berisi widget (populer, kategori) di sisi kanan</div>
+            <div class="prak-req-item">Gunakan <code>grid-template-areas</code> untuk mendefinisikan layout dengan nama</div>
+            <div class="prak-req-item">Tambahkan efek hover pada setiap kartu artikel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('grid', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 8. POSISI ========== -->
+  <section class="section" id="posisi">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8f4f7;">📍</div>
+      <div class="section-title"><h2>Posisi & Display</h2><p>Mengontrol bagaimana dan di mana elemen ditempatkan dalam dokumen</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📍</span><h3>Position</h3></div>
+        <div class="card-body">
+          <table class="prop-table">
+            <tr><th>Nilai</th><th>Keterangan</th></tr>
+            <tr><td><code>static</code></td><td>Default — mengikuti alur dokumen normal</td></tr>
+            <tr><td><code>relative</code></td><td>Bergeser dari posisi normal-nya, masih memengaruhi alur</td></tr>
+            <tr><td><code>absolute</code></td><td>Keluar dari alur, relatif ke ancestor yang di-position</td></tr>
+            <tr><td><code>fixed</code></td><td>Tetap di posisi layar saat scroll (navbar sticky)</td></tr>
+            <tr><td><code>sticky</code></td><td>Relative sampai ambang scroll, lalu fixed</td></tr>
+          </table>
+          <div class="code-wrap" style="margin-top:12px;">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.overlay-teks</span> <span class="pun">{</span>
+  <span class="prop">position</span><span class="pun">:</span> <span class="val">absolute</span><span class="pun">;</span>
+  <span class="prop">bottom</span><span class="pun">:</span> <span class="val">16px</span><span class="pun">;</span>
+  <span class="prop">left</span><span class="pun">:</span> <span class="val">16px</span><span class="pun">;</span>
+  <span class="prop">right</span><span class="pun">:</span> <span class="val">16px</span><span class="pun">;</span>
+<span class="pun">}</span>
+<span class="sel">.parent</span> <span class="pun">{</span>
+  <span class="prop">position</span><span class="pun">:</span> <span class="val">relative</span><span class="pun">;</span> <span class="cmt">/* wajib! */</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🖥️</span><h3>Display</h3></div>
+        <div class="card-body">
+          <table class="prop-table">
+            <tr><th>Nilai</th><th>Keterangan</th></tr>
+            <tr><td><code>block</code></td><td>Mengambil lebar penuh, mulai baris baru (div, p, h1)</td></tr>
+            <tr><td><code>inline</code></td><td>Sejajar dengan konten, tidak bisa set width/height (span, a)</td></tr>
+            <tr><td><code>inline-block</code></td><td>Sejajar tapi bisa set width/height</td></tr>
+            <tr><td><code>none</code></td><td>Elemen tidak ditampilkan dan tidak mengambil ruang</td></tr>
+            <tr><td><code>flex</code></td><td>Aktifkan flexbox</td></tr>
+            <tr><td><code>grid</code></td><td>Aktifkan CSS Grid</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🃏</span><h3>z-index & Overflow</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* z-index — lapisan elemen */</span>
+<span class="sel">.modal</span>   <span class="pun">{</span> <span class="prop">z-index</span><span class="pun">:</span> <span class="val">1000</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="sel">.navbar</span>  <span class="pun">{</span> <span class="prop">z-index</span><span class="pun">:</span> <span class="val">100</span><span class="pun">;</span>  <span class="pun">}</span>
+<span class="sel">.tooltip</span> <span class="pun">{</span> <span class="prop">z-index</span><span class="pun">:</span> <span class="val">50</span><span class="pun">;</span>   <span class="pun">}</span>
+<span class="cmt">/* z-index hanya bekerja pada position != static */</span>
+
+<span class="cmt">/* Overflow */</span>
+<span class="sel">.kotak</span> <span class="pun">{</span>
+  <span class="prop">overflow</span><span class="pun">:</span> <span class="val">hidden</span><span class="pun">;</span>   <span class="cmt">/* potong konten lebih */</span>
+  <span class="prop">overflow</span><span class="pun">:</span> <span class="val">scroll</span><span class="pun">;</span>   <span class="cmt">/* tambah scrollbar */</span>
+  <span class="prop">overflow</span><span class="pun">:</span> <span class="val">auto</span><span class="pun">;</span>     <span class="cmt">/* scrollbar bila perlu */</span>
+  <span class="prop">overflow-x</span><span class="pun">:</span> <span class="val">hidden</span><span class="pun">;</span> <span class="cmt">/* hanya horizontal */</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Posisi & Display</h3></div>
+      <div id="quiz-posisi"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-posisi">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('posisi')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-posisi"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Posisi & Display</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Popup Modal dengan Position Absolute/Fixed</div><div class="prak-task-diff diff-hard">Sulit</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat popup modal yang muncul saat tombol diklik.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Buat overlay gelap di belakang modal menggunakan <code>position: fixed; inset: 0</code></div>
+            <div class="prak-req-item">Modal berada di tengah layar menggunakan <code>position: fixed</code> dan transform</div>
+            <div class="prak-req-item">Tombol close (X) di pojok kanan atas modal menggunakan <code>position: absolute</code></div>
+            <div class="prak-req-item">Modal hanya tampil saat class <code>.open</code> ditambahkan via JavaScript</div>
+            <div class="prak-req-item">Overlay dan close button keduanya bisa menutup modal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('posisi', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 9. TRANSISI & ANIMASI ========== -->
+  <section class="section" id="transisi">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fffbec;">✨</div>
+      <div class="section-title"><h2>Transisi & Animasi CSS</h2><p>Menghidupkan halaman dengan efek gerak yang halus dan menarik</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🔀</span><h3>CSS Transition</h3></div>
+        <div class="card-body">
+          <p>Transition membuat perubahan properti CSS menjadi animasi yang halus.</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.tombol</span> <span class="pun">{</span>
+  <span class="prop">background</span><span class="pun">:</span> <span class="val">#e85d2f</span><span class="pun">;</span>
+  <span class="cmt">/* property durasi timing-function delay */</span>
+  <span class="prop">transition</span><span class="pun">:</span> <span class="val">all 0.3s ease</span><span class="pun">;</span>
+  <span class="cmt">/* atau spesifik: */</span>
+  <span class="prop">transition</span><span class="pun">:</span> <span class="val">background 0.3s ease,
+    transform 0.2s ease</span><span class="pun">;</span>
+<span class="pun">}</span>
+<span class="sel">.tombol:hover</span> <span class="pun">{</span>
+  <span class="prop">background</span><span class="pun">:</span> <span class="val">#c44b20</span><span class="pun">;</span>
+  <span class="prop">transform</span><span class="pun">:</span> <span class="val">translateY(-2px)</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div style="margin-top:16px;text-align:center;">
+            <div class="transition-demo-box">Hover<br>aku!</div>
+          </div>
+          <p style="text-align:center;font-size:.75rem;color:var(--text3);margin-top:8px;">Coba arahkan kursor ke kotak di atas</p>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">⏱️</span><h3>Timing Functions</h3></div>
+        <div class="card-body">
+          <table class="prop-table">
+            <tr><th>Nilai</th><th>Keterangan</th></tr>
+            <tr><td><code>ease</code></td><td>Lambat-cepat-lambat (default)</td></tr>
+            <tr><td><code>linear</code></td><td>Kecepatan konstan</td></tr>
+            <tr><td><code>ease-in</code></td><td>Mulai lambat, akhiri cepat</td></tr>
+            <tr><td><code>ease-out</code></td><td>Mulai cepat, akhiri lambat</td></tr>
+            <tr><td><code>ease-in-out</code></td><td>Lambat di awal dan akhir</td></tr>
+            <tr><td><code>cubic-bezier()</code></td><td>Kustomisasi kurva sendiri</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🎬</span><h3>CSS Animation & Keyframes</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* 1. Definisikan keyframes */</span>
+<span class="kw">@keyframes</span> <span class="sel">bouncing</span> <span class="pun">{</span>
+  <span class="sel">0%</span>   <span class="pun">{</span> <span class="prop">transform</span><span class="pun">:</span> <span class="val">translateY(0)</span><span class="pun">;</span> <span class="pun">}</span>
+  <span class="sel">50%</span>  <span class="pun">{</span> <span class="prop">transform</span><span class="pun">:</span> <span class="val">translateY(-40px)</span><span class="pun">;</span> <span class="pun">}</span>
+  <span class="sel">100%</span> <span class="pun">{</span> <span class="prop">transform</span><span class="pun">:</span> <span class="val">translateY(0)</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* 2. Terapkan ke elemen */</span>
+<span class="sel">.bola</span> <span class="pun">{</span>
+  <span class="prop">animation-name</span><span class="pun">:</span> <span class="val">bouncing</span><span class="pun">;</span>
+  <span class="prop">animation-duration</span><span class="pun">:</span> <span class="val">1s</span><span class="pun">;</span>
+  <span class="prop">animation-iteration-count</span><span class="pun">:</span> <span class="val">infinite</span><span class="pun">;</span>
+  <span class="prop">animation-timing-function</span><span class="pun">:</span> <span class="val">ease-in-out</span><span class="pun">;</span>
+  <span class="cmt">/* shorthand: */</span>
+  <span class="prop">animation</span><span class="pun">:</span> <span class="val">bouncing 1s infinite ease-in-out</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div style="padding:20px;text-align:center;">
+            <div class="animation-demo" style="display:inline-block;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">🔄</span><h3>CSS Transform</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="sel">.elemen</span> <span class="pun">{</span>
+  <span class="cmt">/* Pindah posisi */</span>
+  <span class="prop">transform</span><span class="pun">:</span> <span class="val">translateX(20px) translateY(-10px)</span><span class="pun">;</span>
+
+  <span class="cmt">/* Putar */</span>
+  <span class="prop">transform</span><span class="pun">:</span> <span class="val">rotate(45deg)</span><span class="pun">;</span>
+
+  <span class="cmt">/* Perbesar/perkecil */</span>
+  <span class="prop">transform</span><span class="pun">:</span> <span class="val">scale(1.2)</span><span class="pun">;</span>
+
+  <span class="cmt">/* Memiringkan */</span>
+  <span class="prop">transform</span><span class="pun">:</span> <span class="val">skewX(15deg)</span><span class="pun">;</span>
+
+  <span class="cmt">/* Gabungkan beberapa transform */</span>
+  <span class="prop">transform</span><span class="pun">:</span> <span class="val">translateY(-4px) scale(1.05)</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+          <div class="info-box info-tip" style="margin-top:8px;">
+            <span class="info-box-icon">⚡</span>
+            <p>Transform dan opacity diproses oleh GPU — gunakan keduanya untuk animasi yang performa-nya tinggi!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Transisi & Animasi</h3></div>
+      <div id="quiz-transisi"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-transisi">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('transisi')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-transisi"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Transisi & Animasi</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Loading Spinner Animasi</div><div class="prak-task-diff diff-medium">Menengah</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat berbagai jenis loading indicator menggunakan animasi CSS murni (tanpa JavaScript).</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Buat spinner melingkar menggunakan <code>border</code> dan animasi <code>rotate</code></div>
+            <div class="prak-req-item">Buat loading dots (3 titik bergelombang) dengan <code>animation-delay</code> berbeda</div>
+            <div class="prak-req-item">Buat progress bar yang bergerak dari kiri ke kanan menggunakan keyframes</div>
+            <div class="prak-req-item">Buat efek skeleton loading (abu-abu bergelombang) seperti di sosial media</div>
+          </div>
+        </div>
+      </div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">2</div><div class="prak-task-title">Tombol Interaktif dengan Efek Hover</div><div class="prak-task-diff diff-easy">Mudah</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Buat kumpulan tombol dengan berbagai efek hover yang menarik menggunakan transition.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Tombol 1: Geser ke atas saat hover dengan <code>translateY</code></div>
+            <div class="prak-req-item">Tombol 2: Berubah warna background dengan gradient saat hover</div>
+            <div class="prak-req-item">Tombol 3: Border muncul dari tengah saat hover menggunakan <code>scale</code></div>
+            <div class="prak-req-item">Tombol 4: Efek ripple (gelombang) saat diklik menggunakan <code>::after</code> dan keyframes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('transisi', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+  <!-- ========== 10. RESPONSIF ========== -->
+  <section class="section" id="responsif">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fde8f5;">📱</div>
+      <div class="section-title"><h2>Responsive Design</h2><p>Membuat website yang tampil sempurna di semua ukuran layar</p></div>
+    </div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📱</span><h3>Media Query</h3></div>
+        <div class="card-body">
+          <p>Media query mengaplikasikan CSS berdasarkan kondisi tertentu (lebar layar, orientasi, dll).</p>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Mobile First — mulai dari layar kecil */</span>
+<span class="sel">.kolom</span> <span class="pun">{</span>
+  <span class="prop">grid-template-columns</span><span class="pun">:</span> <span class="val">1fr</span><span class="pun">;</span> <span class="cmt">/* 1 kolom */</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Tablet (≥768px) */</span>
+<span class="kw">@media</span> <span class="pun">(</span><span class="prop">min-width</span><span class="pun">:</span> <span class="val">768px</span><span class="pun">)</span> <span class="pun">{</span>
+  <span class="sel">.kolom</span> <span class="pun">{</span>
+    <span class="prop">grid-template-columns</span><span class="pun">:</span> <span class="val">1fr 1fr</span><span class="pun">;</span>
+  <span class="pun">}</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Desktop (≥1024px) */</span>
+<span class="kw">@media</span> <span class="pun">(</span><span class="prop">min-width</span><span class="pun">:</span> <span class="val">1024px</span><span class="pun">)</span> <span class="pun">{</span>
+  <span class="sel">.kolom</span> <span class="pun">{</span>
+    <span class="prop">grid-template-columns</span><span class="pun">:</span> <span class="val">1fr 1fr 1fr</span><span class="pun">;</span>
+  <span class="pun">}</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Orientasi landscape */</span>
+<span class="kw">@media</span> <span class="pun">(</span><span class="prop">orientation</span><span class="pun">:</span> <span class="val">landscape</span><span class="pun">)</span> <span class="pun">{</span>
+  <span class="sel">.hero</span> <span class="pun">{</span> <span class="prop">height</span><span class="pun">:</span> <span class="val">100vh</span><span class="pun">;</span> <span class="pun">}</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📏</span><h3>Breakpoint Standar</h3></div>
+        <div class="card-body">
+          <table class="prop-table">
+            <tr><th>Nama</th><th>Lebar</th><th>Perangkat</th></tr>
+            <tr><td>xs</td><td>&lt; 576px</td><td>HP kecil</td></tr>
+            <tr><td>sm</td><td>≥ 576px</td><td>HP besar</td></tr>
+            <tr><td>md</td><td>≥ 768px</td><td>Tablet</td></tr>
+            <tr><td>lg</td><td>≥ 992px</td><td>Laptop</td></tr>
+            <tr><td>xl</td><td>≥ 1200px</td><td>Desktop</td></tr>
+            <tr><td>xxl</td><td>≥ 1400px</td><td>Monitor besar</td></tr>
+          </table>
+          <div class="info-box info-note" style="margin-top:10px;">
+            <span class="info-box-icon">📱</span>
+            <p><strong>Mobile-first</strong> adalah pendekatan terbaik: desain untuk layar kecil dulu, lalu tambahkan style untuk layar lebih besar.</p>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="card-head"><span class="card-head-icon">📐</span><h3>Viewport Meta & Fluid Layout</h3></div>
+        <div class="card-body">
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">HTML</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">&lt;!-- Wajib ada di &lt;head&gt; --&gt;</span>
+<span class="kw">&lt;meta</span> <span class="prop">name</span>=<span class="str">"viewport"</span>
+  <span class="prop">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="kw">&gt;</span></pre>
+          </div>
+          <div class="code-wrap">
+            <div class="code-header"><div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div><span class="lang-tag">CSS</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><span class="cmt">/* Gambar responsif */</span>
+<span class="sel">img</span> <span class="pun">{</span>
+  <span class="prop">max-width</span><span class="pun">:</span> <span class="val">100%</span><span class="pun">;</span>
+  <span class="prop">height</span><span class="pun">:</span> <span class="val">auto</span><span class="pun">;</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Font responsif dengan clamp */</span>
+<span class="sel">h1</span> <span class="pun">{</span>
+  <span class="prop">font-size</span><span class="pun">:</span> <span class="val">clamp(1.5rem, 5vw, 3rem)</span><span class="pun">;</span>
+  <span class="cmt">/* min, preferred, max */</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Kontainer responsif */</span>
+<span class="sel">.container</span> <span class="pun">{</span>
+  <span class="prop">width</span><span class="pun">:</span> <span class="val">min(1200px, 100% - 32px)</span><span class="pun">;</span>
+  <span class="prop">margin-inline</span><span class="pun">:</span> <span class="val">auto</span><span class="pun">;</span>
+<span class="pun">}</span>
+
+<span class="cmt">/* Grid responsif tanpa media query! */</span>
+<span class="sel">.auto-grid</span> <span class="pun">{</span>
+  <span class="prop">display</span><span class="pun">:</span> <span class="val">grid</span><span class="pun">;</span>
+  <span class="prop">grid-template-columns</span><span class="pun">:</span>
+    <span class="val">repeat(auto-fit, minmax(250px, 1fr))</span><span class="pun">;</span>
+<span class="pun">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-header"><div class="quiz-badge">🧠 Quiz</div><h3>Uji Pemahaman — Responsive Design</h3></div>
+      <div id="quiz-responsif"></div>
+      <div class="quiz-footer">
+        <span class="quiz-score" id="score-responsif">Jawab semua soal terlebih dahulu</span>
+        <button class="quiz-btn" onclick="submitQuiz('responsif')">Cek Jawaban</button>
+      </div>
+      <div class="quiz-result" id="result-responsif"></div>
+    </div>
+    <div class="praktikum-section">
+      <div class="prak-header"><div class="prak-badge">🔬 Praktikum</div><h3>Tugas Praktikum — Responsive Design</h3></div>
+      <div class="prak-task">
+        <div class="prak-task-head" onclick="togglePrak(this)"><div class="prak-task-num">1</div><div class="prak-task-title">Landing Page Responsif Penuh</div><div class="prak-task-diff diff-hard">Sulit</div><span class="prak-task-arrow">▼</span></div>
+        <div class="prak-task-body">
+          <p>Proyek akhir: Buat landing page lengkap yang responsif di semua ukuran layar.</p>
+          <div class="prak-requirements">
+            <div class="prak-req-item">Navbar: horizontal di desktop, hamburger menu di mobile</div>
+            <div class="prak-req-item">Hero section dengan teks besar di desktop, lebih kecil di mobile (clamp)</div>
+            <div class="prak-req-item">Grid 3 kolom di desktop → 2 kolom di tablet → 1 kolom di mobile</div>
+            <div class="prak-req-item">Footer dengan 4 kolom di desktop → 2 kolom di tablet → 1 kolom di mobile</div>
+            <div class="prak-req-item">Gambar dan media selalu responsif (<code>max-width: 100%</code>)</div>
+            <div class="prak-req-item">Test di Chrome DevTools dengan berbagai ukuran layar (320px — 1440px)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="complete-btn" onclick="markComplete('responsif', this)">☑ Tandai Materi Selesai</button>
+  </section>
+
+</main>
+
+<script>
+// ===== DATA QUIZ =====
+const quizData = {
+  pengenalan: [
+    { q: "Apa kepanjangan dari CSS?", opts: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Color Style Sheets"], ans: 1, exp: "CSS adalah singkatan dari Cascading Style Sheets — bahasa untuk menata tampilan halaman web." },
+    { q: "Cara terbaik menerapkan CSS adalah menggunakan...", opts: ["Atribut style di setiap elemen", "Tag <style> di dalam <body>", "File CSS external terpisah", "JavaScript DOM"], ans: 2, exp: "File CSS external adalah cara terbaik karena memisahkan konten (HTML) dari tampilan (CSS), serta dapat digunakan ulang." },
+    { q: "Pernyataan CSS yang benar adalah...", opts: ["color = blue;", "{color: blue;}", "p {color: blue;}", "p color: blue"], ans: 2, exp: "Sintaks CSS yang benar adalah: selektor { properti: nilai; } — Selektor, kurung kurawal, properti, titik dua, nilai, dan titik koma." },
+    { q: "Apa yang dimaksud dengan 'Cascading' dalam CSS?", opts: ["CSS jatuh ke bawah seperti air terjun", "CSS memiliki urutan prioritas yang bertingkat", "CSS hanya bisa digunakan untuk warna", "CSS selalu menimpa HTML"], ans: 1, exp: "Cascading berarti CSS memiliki aturan prioritas yang mengalir — aturan yang lebih spesifik atau ditulis belakangan akan menimpa aturan sebelumnya." }
+  ],
+  selektor: [
+    { q: "Selektor CSS mana yang memilih elemen berdasarkan class?", opts: ["#namaClass", ".namaClass", "@namaClass", "*namaClass"], ans: 1, exp: "Selektor class menggunakan titik (.) diikuti nama class, contoh: .teks-merah" },
+    { q: "Apa perbedaan antara selektor 'div p' dan 'div > p'?", opts: ["Tidak ada perbedaan", "'div p' hanya memilih p langsung; 'div > p' memilih semua p", "'div > p' hanya memilih p langsung di dalam div; 'div p' memilih semua p di dalam div", "'div > p' tidak valid"], ans: 2, exp: "'div p' (descendant) memilih semua elemen p di dalam div. 'div > p' (child) hanya memilih elemen p yang merupakan anak langsung dari div." },
+    { q: "Pseudo-class :nth-child(2n) akan memilih...", opts: ["Hanya elemen ke-2", "Elemen bernomor ganjil", "Elemen bernomor genap", "Dua elemen pertama"], ans: 2, exp: "2n berarti kelipatan 2, yaitu elemen ke-2, 4, 6, 8, dst. Ini sama dengan :nth-child(even)." },
+    { q: "Berapa nilai spesifisitas dari selektor '#header .menu a'?", opts: ["003", "011", "110", "111"], ans: 2, exp: "#header = 100 (ID), .menu = 010 (class), a = 001 (element). Total: 100+010+001 = 111." }
+  ],
+  boxmodel: [
+    { q: "Dari dalam ke luar, urutan Box Model yang benar adalah...", opts: ["margin → border → padding → content", "content → padding → border → margin", "padding → content → border → margin", "border → padding → margin → content"], ans: 1, exp: "Urutan Box Model dari dalam ke luar: Content → Padding → Border → Margin." },
+    { q: "Dengan box-sizing: border-box, jika lebar elemen 200px dan padding 20px, maka lebar total adalah...", opts: ["240px", "220px", "200px", "180px"], ans: 2, exp: "Dengan border-box, width sudah mencakup padding dan border. Jadi total lebar tetap 200px." },
+    { q: "Properti CSS mana yang digunakan untuk membuat sudut elemen menjadi bulat?", opts: ["border-style: round", "border-radius", "corner-radius", "border-corner"], ans: 1, exp: "border-radius digunakan untuk membulatkan sudut elemen. Contoh: border-radius: 8px atau border-radius: 50% untuk lingkaran penuh." },
+    { q: "Untuk memusatkan elemen block secara horizontal, gunakan...", opts: ["text-align: center", "margin: auto", "padding: auto", "align: center"], ans: 1, exp: "margin: auto (atau margin: 0 auto untuk atas/bawah 0) digunakan untuk memusatkan elemen block secara horizontal, asalkan lebar ditentukan." }
+  ],
+  tipografi: [
+    { q: "Satuan CSS mana yang relatif terhadap elemen induk?", opts: ["px", "rem", "em", "vw"], ans: 2, exp: "'em' adalah satuan relatif terhadap font-size elemen induk. 'rem' relatif terhadap elemen root (html). 'px' adalah nilai tetap." },
+    { q: "Properti CSS untuk mengatur ketebalan font adalah...", opts: ["font-style", "font-weight", "font-thickness", "text-bold"], ans: 1, exp: "font-weight mengatur ketebalan font. Nilainya bisa berupa angka (100-900) atau kata kunci (normal, bold, lighter, bolder)." },
+    { q: "Untuk menghilangkan garis bawah default pada link, gunakan...", opts: ["text-decoration: none", "underline: remove", "link-style: plain", "border-bottom: 0"], ans: 0, exp: "text-decoration: none menghapus semua dekorasi teks, termasuk garis bawah pada link. Ini sering digunakan dalam styling navigasi." },
+    { q: "CSS untuk membuat teks menjadi HURUF KAPITAL semua tanpa mengubah HTML adalah...", opts: ["font-case: upper", "text-transform: uppercase", "text-style: capitalize-all", "letter-case: upper"], ans: 1, exp: "text-transform: uppercase mengubah tampilan teks menjadi huruf kapital semua, tanpa mengubah konten HTML aslinya." }
+  ],
+  warna: [
+    { q: "Format warna CSS mana yang mendukung transparansi?", opts: ["HEX (#rrggbb)", "Named color (red)", "rgba(r,g,b,a)", "RGB tanpa alpha"], ans: 2, exp: "rgba() mendukung transparansi melalui parameter alpha (a) dengan nilai 0 (transparan penuh) hingga 1 (solid). hsla() juga mendukung." },
+    { q: "Cara mendefinisikan CSS Variable adalah...", opts: ["$warna: #ff0000;", "--warna: #ff0000;", "@warna: #ff0000;", "var-warna: #ff0000;"], ans: 1, exp: "CSS Variables (custom properties) didefinisikan dengan dua tanda hubung (--) diikuti nama variabel. Contoh: --warna-utama: #ff0000;" },
+    { q: "linear-gradient(to right, red, blue) akan membuat...", opts: ["Gradient merah ke biru dari atas ke bawah", "Gradient merah ke biru dari kiri ke kanan", "Gradient biru ke merah dari kiri ke kanan", "Lingkaran gradient"], ans: 1, exp: "'to right' berarti arah gradient dari kiri ke kanan. Warna mulai dari merah (kiri) dan berakhir dengan biru (kanan)." },
+    { q: "Cara menggunakan CSS Variable yang sudah didefinisikan adalah...", opts: ["$warna-utama", "$(--warna-utama)", "var(--warna-utama)", "@warna-utama"], ans: 2, exp: "Untuk menggunakan CSS Variable, gunakan fungsi var() dengan nama variabel di dalamnya: var(--nama-variabel)." }
+  ],
+  flexbox: [
+    { q: "Properti mana yang digunakan untuk mengaktifkan flexbox?", opts: ["flex: true", "display: flex", "position: flex", "layout: flex"], ans: 1, exp: "display: flex diterapkan pada container (elemen induk) untuk mengaktifkan flexbox dan membuat semua anak langsungnya menjadi flex items." },
+    { q: "Untuk membuat item flex berada di tengah secara horizontal DAN vertikal, gunakan...", opts: ["text-align: center; vertical-align: middle", "justify-content: center; align-items: center", "margin: auto", "align: center center"], ans: 1, exp: "justify-content: center memusatkan item di sumbu utama (horizontal untuk row), dan align-items: center memusatkan di sumbu silang (vertikal)." },
+    { q: "Properti flex-wrap: wrap berfungsi untuk...", opts: ["Membungkus teks di dalam item", "Membuat item pindah ke baris baru bila tidak cukup ruang", "Meratakan semua item ke kiri", "Mengurutkan item secara otomatis"], ans: 1, exp: "flex-wrap: wrap memungkinkan flex items untuk pindah ke baris baru jika tidak cukup ruang di baris saat ini." },
+    { q: "Apa fungsi properti 'order' pada flex item?", opts: ["Mengatur ukuran item", "Mengatur urutan tampil item tanpa mengubah HTML", "Mengatur jarak antar item", "Mengatur arah flex"], ans: 1, exp: "Properti 'order' mengubah urutan visual flex item tanpa mengubah struktur HTML. Item dengan order lebih kecil ditampilkan lebih dulu." }
+  ],
+  grid: [
+    { q: "Cara membuat grid dengan 3 kolom berukuran sama menggunakan shorthand adalah...", opts: ["grid-columns: 3", "grid-template-columns: 1fr 1fr 1fr", "columns: repeat(3)", "grid: 3 columns"], ans: 1, exp: "grid-template-columns: 1fr 1fr 1fr atau dapat disingkat repeat(3, 1fr) membuat 3 kolom berukuran sama yang membagi ruang tersedia secara merata." },
+    { q: "Satuan 'fr' dalam CSS Grid berarti...", opts: ["Fixed Rate", "Fractional unit (bagian dari ruang yang tersedia)", "Full Row", "Frame"], ans: 1, exp: "'fr' adalah fractional unit, yang mewakili sebagian dari ruang yang tersedia di dalam grid. Misalnya, 1fr 2fr berarti kolom kedua dua kali lebih besar." },
+    { q: "Untuk membuat item grid merentang 2 kolom, gunakan...", opts: ["width: 2 columns", "grid-column: span 2", "colspan: 2", "column-span: 2"], ans: 1, exp: "grid-column: span 2 membuat item merentang 2 kolom. Alternatifnya: grid-column: 1 / 3 (dari garis 1 sampai garis 3)." },
+    { q: "Properti CSS Grid yang digunakan untuk mendefinisikan area bernama adalah...", opts: ["grid-template-areas", "grid-area-names", "grid-regions", "grid-layout"], ans: 0, exp: "grid-template-areas mendefinisikan tata letak dengan nama area. Setiap string mewakili satu baris, dan setiap nama mewakili satu cell." }
+  ],
+  posisi: [
+    { q: "Elemen dengan position: absolute diposisikan relatif terhadap...", opts: ["Selalu relatif terhadap viewport (layar)", "Ancestor terdekat yang memiliki position selain static", "Elemen induk langsung", "Body dokumen"], ans: 1, exp: "Elemen absolute ditempatkan relatif terhadap ancestor terdekat yang memiliki position: relative, absolute, fixed, atau sticky. Jika tidak ada, relatif ke body." },
+    { q: "Perbedaan utama antara position: fixed dan position: sticky adalah...", opts: ["Tidak ada perbedaan", "Fixed selalu tetap di layar; sticky relatif hingga ambang scroll tertentu lalu jadi fixed", "Sticky lebih cepat dari fixed", "Fixed hanya untuk header, sticky untuk footer"], ans: 1, exp: "Fixed selalu tetap di posisi layar terlepas dari scroll. Sticky berperilaku seperti relative sampai elemen mencapai offset tertentu saat scroll, lalu jadi fixed." },
+    { q: "display: none berbeda dengan visibility: hidden karena...", opts: ["Tidak ada perbedaan", "display: none menghilangkan elemen dan ruangnya; visibility: hidden menyembunyikan tapi ruang tetap ada", "visibility: hidden lebih cepat", "display: none hanya untuk teks"], ans: 1, exp: "display: none menghapus elemen dari layout (tidak ada ruang). visibility: hidden menyembunyikan elemen tapi ruang yang ditempatinya tetap ada." },
+    { q: "Untuk z-index bekerja, elemen harus memiliki position...", opts: ["static (default)", "Selain static (relative, absolute, fixed, sticky)", "fixed saja", "absolute saja"], ans: 1, exp: "z-index hanya bekerja pada elemen yang memiliki position selain static. Ini karena z-index memerlukan stacking context." }
+  ],
+  transisi: [
+    { q: "Sintaks lengkap properti transition adalah...", opts: ["transition: duration", "transition: property duration timing-function delay", "transition: name speed", "transition: animate duration"], ans: 1, exp: "Sintaks lengkap transition: property duration timing-function delay. Contoh: transition: all 0.3s ease 0s" },
+    { q: "Properti CSS mana yang PALING EFISIEN untuk animasi (diproses GPU)?", opts: ["width dan height", "margin dan padding", "transform dan opacity", "color dan background"], ans: 2, exp: "transform dan opacity diproses oleh GPU (compositor thread), bukan CPU. Animasi keduanya jauh lebih smooth dan efisien dibanding properti layout seperti margin/width." },
+    { q: "Untuk membuat animasi berulang tak terbatas, gunakan...", opts: ["animation-count: infinite", "animation-repeat: forever", "animation-iteration-count: infinite", "animation-loop: true"], ans: 2, exp: "animation-iteration-count: infinite membuat animasi berjalan terus tanpa batas. Nilai lain bisa berupa angka tertentu." },
+    { q: "@keyframes dalam CSS digunakan untuk...", opts: ["Mendefinisikan frame rate animasi", "Mendefinisikan tahapan perubahan dalam animasi", "Mengatur kecepatan animasi", "Memilih elemen yang akan dianimasi"], ans: 1, exp: "@keyframes mendefinisikan tahapan (milestones) animasi — properti apa yang berubah pada titik waktu tertentu (0%, 50%, 100%, atau from/to)." }
+  ],
+  responsif: [
+    { q: "Tag HTML wajib untuk responsive design di mobile adalah...", opts: ['<meta name="mobile" ...>', '<meta name="viewport" content="width=device-width, initial-scale=1.0">', '<responsive>', '<meta charset="utf-8">'], ans: 1, exp: 'Meta viewport memberitahu browser untuk menggunakan lebar perangkat yang sebenarnya dan tidak melakukan zoom out otomatis pada layar kecil.' },
+    { q: "Pendekatan 'Mobile First' berarti...", opts: ["Website hanya dibuat untuk mobile", "CSS dimulai dari desain desktop, lalu dikurangi untuk mobile", "CSS dimulai dari desain mobile, lalu ditambah untuk desktop", "Menggunakan aplikasi mobile untuk coding"], ans: 2, exp: "Mobile first berarti menulis CSS dasar untuk layar kecil terlebih dahulu, kemudian menggunakan min-width media query untuk menambahkan style bagi layar yang lebih besar." },
+    { q: "Cara membuat gambar responsif adalah...", opts: ["width: 100px", "max-width: 100%; height: auto", "display: responsive", "responsive: true"], ans: 1, exp: "max-width: 100% memastikan gambar tidak melebihi lebar container-nya, dan height: auto menjaga rasio aspek (aspect ratio) gambar tetap proporsional." },
+    { q: "Fungsi clamp() untuk font-size menerima berapa parameter?", opts: ["1 parameter", "2 parameter", "3 parameter", "4 parameter"], ans: 2, exp: "clamp() menerima 3 parameter: clamp(minimum, preferred, maximum). Contoh: clamp(1rem, 5vw, 3rem) — minimal 1rem, ideal 5vw, maksimal 3rem." }
+  ]
+};
+
+// ===== STATE =====
+const state = {
+  currentSection: 'home',
+  answers: {},
+  submitted: {},
+  completed: new Set()
+};
+
+// ===== NAVIGATION =====
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(`'${id}'`)) {
+      n.classList.add('active');
+    }
+  });
+  state.currentSection = id;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  closeSidebar();
+}
+
+// ===== SIDEBAR TOGGLE =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ===== TABS =====
+function switchTab(el, id) {
+  const parent = el.closest('.card-body');
+  parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const tc = document.getElementById('tab-' + id);
+  if (tc) tc.classList.add('active');
+}
+
+// ===== COPY CODE =====
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ===== PRAKTIKUM TOGGLE =====
+function togglePrak(head) {
+  const body = head.nextElementSibling;
+  const arrow = head.querySelector('.prak-task-arrow');
+  body.classList.toggle('open');
+  arrow.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+// ===== FLEXBOX DEMO =====
+let flexState = { 'jc': 'flex-start', 'ai': 'stretch' };
+function setFlex(prop, val, btn, group) {
+  flexState[group] = val;
+  document.querySelectorAll('.flex-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`,'${group}'`)) {
+      b.classList.remove('active');
+    }
+  });
+  btn.classList.add('active');
+  const demo = document.getElementById('flexDemo');
+  if (demo) {
+    demo.style[prop.replace(/-([a-z])/g, (_, l) => l.toUpperCase())] = val;
+    document.getElementById('flexCode').textContent = `justify-content: ${flexState['jc']}; align-items: ${flexState['ai']};`;
+  }
+}
+
+// ===== GRID DEMO =====
+function setGrid(cols, btn) {
+  document.querySelectorAll('.flex-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const demo = document.getElementById('gridDemo');
+  if (demo) demo.style.gridTemplateColumns = cols;
+}
+
+// ===== PROGRESS =====
+function updateProgress() {
+  const total = 10;
+  const done = state.completed.size;
+  document.getElementById('progressText').textContent = `${done}/${total}`;
+  document.getElementById('progressBar').style.width = `${(done / total) * 100}%`;
+}
+
+// ===== MARK COMPLETE =====
+function markComplete(section, btn) {
+  state.completed.add(section);
+  btn.classList.add('done');
+  btn.textContent = '✅ Materi Selesai!';
+  btn.disabled = true;
+  updateProgress();
+}
+
+// ===== RENDER QUIZ =====
+function renderQuiz(sectionId) {
+  const container = document.getElementById('quiz-' + sectionId);
+  if (!container || container.innerHTML) return;
+  const questions = quizData[sectionId];
+  if (!questions) return;
+  state.answers[sectionId] = {};
+  let html = '';
+  questions.forEach((q, qi) => {
+    html += `<div class="quiz-q"><div class="quiz-q-text"><span class="quiz-q-num">${qi + 1}</span>${q.q}</div><div class="quiz-options">`;
+    q.opts.forEach((opt, oi) => {
+      const letter = String.fromCharCode(65 + oi);
+      html += `<div class="quiz-opt" onclick="selectOpt('${sectionId}',${qi},${oi},this)" data-qi="${qi}" data-oi="${oi}"><div class="quiz-opt-letter">${letter}</div><div class="quiz-opt-text">${opt}</div></div>`;
+    });
+    html += `</div><div class="quiz-explanation" id="exp-${sectionId}-${qi}"></div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function selectOpt(section, qi, oi, el) {
+  if (state.submitted[section]) return;
+  const opts = el.closest('.quiz-options').querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  state.answers[section][qi] = oi;
+}
+
+function submitQuiz(section) {
+  const questions = quizData[section];
+  const answers = state.answers[section] || {};
+  const unanswered = questions.filter((_, i) => answers[i] === undefined);
+  if (unanswered.length > 0) {
+    document.getElementById('score-' + section).textContent = `⚠️ Jawab semua ${questions.length} soal!`;
+    return;
+  }
+  state.submitted[section] = true;
+  let correct = 0;
+  questions.forEach((q, qi) => {
+    const userAns = answers[qi];
+    const opts = document.querySelectorAll(`#quiz-${section} .quiz-opt[data-qi="${qi}"]`);
+    opts.forEach(o => {
+      const oi = parseInt(o.getAttribute('data-oi'));
+      if (oi === q.ans) o.classList.add('correct');
+      else if (oi === userAns && oi !== q.ans) o.classList.add('wrong');
+    });
+    const expEl = document.getElementById(`exp-${section}-${qi}`);
+    if (expEl) {
+      expEl.classList.add('show');
+      if (userAns === q.ans) {
+        correct++;
+        expEl.classList.add('correct-exp');
+        expEl.innerHTML = `✅ Benar! ${q.exp}`;
+      } else {
+        expEl.classList.add('wrong-exp');
+        expEl.innerHTML = `❌ Salah. ${q.exp}`;
+      }
+    }
+  });
+  const pct = Math.round((correct / questions.length) * 100);
+  document.getElementById('score-' + section).textContent = `Skor: ${correct}/${questions.length} (${pct}%)`;
+  const resultEl = document.getElementById('result-' + section);
+  if (resultEl) {
+    resultEl.classList.add('show');
+    let emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '💪';
+    let msg = pct >= 80 ? 'Luar biasa! Pemahaman kamu sangat baik.' : pct >= 60 ? 'Bagus! Coba pelajari materi yang salah lagi.' : 'Jangan menyerah! Baca lagi materinya ya.';
+    resultEl.innerHTML = `<div class="score-big">${pct}%</div><p>${emoji} ${msg}</p>`;
+  }
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  // Render semua quiz
+  Object.keys(quizData).forEach(renderQuiz);
+  updateProgress();
+});
+
+// Observer to render quiz when section becomes visible
+const observer = new MutationObserver(() => {
+  Object.keys(quizData).forEach(renderQuiz);
+});
+document.querySelectorAll('.section').forEach(s => {
+  observer.observe(s, { attributes: true, attributeFilter: ['class'] });
+});
+</script>
+</body>
+</html>

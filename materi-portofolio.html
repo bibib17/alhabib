@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Belajar Bootstrap Portfolio — WebPoint</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue-50: #eff6ff;
+      --blue-100: #dbeafe;
+      --blue-200: #bfdbfe;
+      --blue-400: #60a5fa;
+      --blue-500: #3b82f6;
+      --blue-600: #2563eb;
+      --blue-700: #1d4ed8;
+      --blue-900: #1e3a8a;
+      --teal-400: #2dd4bf;
+      --amber-400: #fbbf24;
+      --rose-400: #fb7185;
+      --green-400: #4ade80;
+      --purple-400: #c084fc;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+      --shadow: 0 4px 16px rgba(0,0,0,.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,.12);
+      --shadow-xl: 0 24px 60px rgba(0,0,0,.16);
+      --radius: 14px;
+      --radius-lg: 20px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ─────────────────────────────── */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .header-logo {
+      display: flex; align-items: center; gap: .6rem;
+      font-weight: 800; font-size: 1.1rem; color: var(--blue-600);
+      text-decoration: none;
+    }
+    .header-logo .dot { color: var(--teal-400); }
+    .header-meta { display: flex; align-items: center; gap: 1rem; }
+    .badge-course {
+      background: var(--blue-50); color: var(--blue-600);
+      border: 1px solid var(--blue-200);
+      padding: .25rem .7rem; border-radius: 999px; font-size: .75rem; font-weight: 600;
+    }
+    .progress-bar-wrap {
+      width: 160px; height: 6px; background: var(--gray-200); border-radius: 99px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%; background: linear-gradient(90deg, var(--blue-500), var(--teal-400));
+      border-radius: 99px; transition: width .4s ease;
+    }
+    .slide-counter { font-size: .8rem; color: var(--gray-500); font-weight: 600; white-space: nowrap; }
+
+    /* ─── LAYOUT ─────────────────────────────── */
+    .app { display: flex; padding-top: 64px; min-height: 100vh; }
+
+    /* ─── SIDEBAR ────────────────────────────── */
+    .sidebar {
+      width: 280px; min-width: 280px;
+      background: #fff;
+      border-right: 1px solid var(--gray-200);
+      height: calc(100vh - 64px);
+      position: sticky; top: 64px;
+      overflow-y: auto;
+      padding: 1.5rem 0;
+    }
+    .sidebar-section-title {
+      font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--gray-400);
+      padding: 1rem 1.5rem .4rem;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .55rem 1.5rem; cursor: pointer;
+      font-size: .85rem; font-weight: 500; color: var(--gray-600);
+      border-left: 3px solid transparent;
+      transition: all .18s;
+      text-decoration: none;
+    }
+    .nav-item:hover { background: var(--gray-50); color: var(--blue-600); }
+    .nav-item.active {
+      background: var(--blue-50); color: var(--blue-600);
+      border-left-color: var(--blue-500); font-weight: 700;
+    }
+    .nav-item .icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; flex-shrink: 0;
+    }
+    .nav-item.active .icon { background: var(--blue-500); color: #fff; }
+    .nav-item:not(.active) .icon { background: var(--gray-100); }
+    .nav-item .step-num {
+      margin-left: auto; font-size: .7rem; font-weight: 700;
+      color: var(--gray-400);
+    }
+    .nav-item.active .step-num { color: var(--blue-400); }
+
+    /* ─── MAIN CONTENT ───────────────────────── */
+    .main { flex: 1; padding: 2.5rem 3rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    /* SLIDE HIDDEN/VISIBLE */
+    .slide { display: none; animation: fadeSlide .35s ease both; }
+    .slide.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SLIDE COMPONENTS ───────────────────── */
+    .slide-header { margin-bottom: 2rem; }
+    .slide-tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: .3rem .8rem; border-radius: 999px; margin-bottom: .8rem;
+    }
+    .tag-intro    { background: #ede9fe; color: #7c3aed; }
+    .tag-html     { background: #fff7ed; color: #ea580c; }
+    .tag-css      { background: #f0fdf4; color: #16a34a; }
+    .tag-bootstrap{ background: #eff6ff; color: #2563eb; }
+    .tag-section  { background: #fdf2f8; color: #9d174d; }
+    .tag-advanced { background: #fefce8; color: #a16207; }
+
+    .slide-title {
+      font-size: 2rem; font-weight: 800; line-height: 1.15;
+      color: var(--gray-900); margin-bottom: .6rem;
+    }
+    .slide-subtitle {
+      font-size: 1.05rem; color: var(--gray-500); font-weight: 400; line-height: 1.6;
+    }
+
+    /* INFO CARD */
+    .info-card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .info-card h3 {
+      font-size: 1.05rem; font-weight: 700; color: var(--gray-800);
+      margin-bottom: .8rem; display: flex; align-items: center; gap: .5rem;
+    }
+    .info-card p, .info-card li {
+      font-size: .92rem; color: var(--gray-600); line-height: 1.7; margin-bottom: .4rem;
+    }
+    .info-card ul { padding-left: 1.2rem; }
+
+    /* HIGHLIGHT CARD */
+    .highlight-card {
+      border-radius: var(--radius-lg); padding: 1.2rem 1.5rem;
+      margin-bottom: 1.5rem; display: flex; gap: .9rem; align-items: flex-start;
+    }
+    .highlight-card .hi-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+    .highlight-card .hi-text { font-size: .9rem; line-height: 1.65; }
+    .highlight-card .hi-text strong { display: block; font-size: .95rem; font-weight: 700; margin-bottom: .25rem; }
+    .hc-blue   { background: var(--blue-50); border: 1px solid var(--blue-200); color: var(--blue-700); }
+    .hc-green  { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+    .hc-amber  { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .hc-purple { background: #faf5ff; border: 1px solid #e9d5ff; color: #6b21a8; }
+    .hc-rose   { background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; }
+
+    /* CODE BLOCK */
+    .code-wrap { margin-bottom: 1.5rem; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--gray-800); padding: .65rem 1rem;
+      font-size: .75rem; font-weight: 600; color: var(--gray-400);
+    }
+    .code-header .dots { display: flex; gap: .4rem; }
+    .code-header .dot-r { width: 12px; height: 12px; background: #ff5f57; border-radius: 50%; }
+    .code-header .dot-y { width: 12px; height: 12px; background: #febc2e; border-radius: 50%; }
+    .code-header .dot-g { width: 12px; height: 12px; background: #28c840; border-radius: 50%; }
+    .copy-btn {
+      background: var(--gray-700); border: none; color: var(--gray-300);
+      padding: .2rem .6rem; border-radius: 6px; cursor: pointer;
+      font-size: .7rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+      transition: background .15s;
+    }
+    .copy-btn:hover { background: var(--blue-600); color: #fff; }
+    .copy-btn.copied { background: #16a34a; color: #fff; }
+    pre {
+      background: var(--gray-900); padding: 1.2rem 1.4rem;
+      overflow-x: auto; font-family: 'Fira Code', monospace;
+      font-size: .82rem; line-height: 1.7; color: #e2e8f0;
+      margin: 0;
+    }
+    /* Syntax highlights */
+    .t { color: #e2e8f0; }
+    .k { color: #7dd3fc; } /* keyword / tag */
+    .a { color: #86efac; } /* attribute */
+    .v { color: #fca5a5; } /* value string */
+    .c { color: #94a3b8; font-style: italic; } /* comment */
+    .p { color: #c4b5fd; } /* property */
+    .n { color: #fde68a; } /* number/selector */
+    .s { color: #6ee7b7; } /* string */
+    .cl { color: #f9a8d4; } /* class */
+
+    /* SECTION DIVIDER */
+    .divider { height: 1px; background: var(--gray-200); margin: 2rem 0; }
+
+    /* TWO COLUMNS */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+    @media (max-width: 720px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* COMPARISON */
+    .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+    @media (max-width: 720px) { .compare-wrap { grid-template-columns: 1fr; } }
+    .compare-box { border-radius: var(--radius); overflow: hidden; }
+    .compare-label {
+      padding: .5rem 1rem; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    }
+    .compare-box.bad .compare-label  { background: #fff1f2; color: #9f1239; }
+    .compare-box.good .compare-label { background: #f0fdf4; color: #15803d; }
+    .compare-box pre { border-radius: 0; }
+
+    /* RESULT PREVIEW */
+    .preview-box {
+      border: 2px dashed var(--blue-200); border-radius: var(--radius-lg);
+      padding: 1.5rem; margin-bottom: 1.5rem; background: var(--blue-50);
+      position: relative;
+    }
+    .preview-box::before {
+      content: '👁 PREVIEW'; position: absolute; top: -10px; left: 1rem;
+      background: var(--blue-500); color: #fff; font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em; padding: .1rem .6rem; border-radius: 999px;
+    }
+
+    /* QUIZ */
+    .quiz-card {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+      border-radius: var(--radius-lg); padding: 2rem;
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .quiz-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; opacity: .8; }
+    .quiz-card p { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; line-height: 1.5; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+    @media (max-width: 600px) { .quiz-options { grid-template-columns: 1fr; } }
+    .quiz-opt {
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px; padding: .75rem 1rem;
+      cursor: pointer; font-size: .9rem; font-weight: 600;
+      transition: all .2s; text-align: left; color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .quiz-opt:hover { background: rgba(255,255,255,.2); transform: translateY(-2px); }
+    .quiz-opt.correct { background: #16a34a; border-color: #22c55e; }
+    .quiz-opt.wrong   { background: #dc2626; border-color: #ef4444; }
+    .quiz-result { margin-top: 1rem; font-size: .95rem; font-weight: 600; min-height: 1.5rem; }
+
+    /* STRUCTURE VIZ */
+    .tree-wrap { font-family: 'Fira Code', monospace; font-size: .85rem; line-height: 1.9; }
+    .tree-wrap .tl { color: var(--gray-500); }
+    .tree-wrap .tn { color: var(--blue-600); font-weight: 600; }
+    .tree-wrap .td { color: var(--gray-400); font-size: .78rem; }
+
+    /* FILE CARD */
+    .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .file-card {
+      background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius);
+      padding: 1.2rem; text-align: center; box-shadow: var(--shadow-sm);
+      transition: all .2s; cursor: default;
+    }
+    .file-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .file-card .file-icon { font-size: 2rem; margin-bottom: .6rem; }
+    .file-card .file-name { font-weight: 700; font-size: .9rem; color: var(--gray-800); margin-bottom: .3rem; }
+    .file-card .file-desc { font-size: .78rem; color: var(--gray-500); line-height: 1.5; }
+
+    /* ANATOMY */
+    .anatomy {
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      margin-bottom: 1.5rem; font-family: 'Fira Code', monospace; font-size: .82rem; line-height: 1.8;
+      position: relative; box-shadow: var(--shadow-sm);
+    }
+    .anatomy .ann {
+      display: inline-block;
+      background: var(--amber-400); color: #1a1100;
+      font-size: .68rem; font-weight: 700; padding: .05rem .4rem; border-radius: 4px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      vertical-align: middle; margin-left: .3rem;
+      cursor: pointer; transition: transform .15s;
+    }
+    .anatomy .ann:hover { transform: scale(1.1); }
+
+    /* STEP FLOW */
+    .step-flow { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .step-item { display: flex; gap: 1rem; align-items: flex-start; }
+    .step-num-circle {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: var(--blue-600); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .85rem;
+    }
+    .step-body h4 { font-size: .95rem; font-weight: 700; color: var(--gray-800); margin-bottom: .25rem; }
+    .step-body p { font-size: .88rem; color: var(--gray-600); line-height: 1.6; }
+
+    /* NAVBAR VIZ */
+    .navbar-demo {
+      background: #0d6efd; color: #fff;
+      border-radius: var(--radius); padding: .75rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem; font-size: .85rem; font-weight: 600;
+    }
+    .navbar-demo .brand { font-size: 1rem; font-weight: 800; }
+    .navbar-demo .links { display: flex; gap: 1.2rem; opacity: .85; }
+
+    /* GRID VIZ */
+    .grid-demo {
+      border: 2px solid var(--blue-200); border-radius: var(--radius);
+      padding: 1rem; margin-bottom: 1rem; background: var(--blue-50);
+    }
+    .grid-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .grid-col {
+      border-radius: 8px; padding: .5rem; text-align: center;
+      font-size: .75rem; font-weight: 700; color: #fff; line-height: 1.3;
+    }
+    .gc-blue   { background: #3b82f6; }
+    .gc-teal   { background: #14b8a6; }
+    .gc-purple { background: #8b5cf6; }
+    .gc-rose   { background: #f43f5e; }
+
+    /* WAVE VIZ */
+    .wave-demo {
+      background: linear-gradient(180deg, #e2edff 0%, #fff 100%);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem;
+    }
+
+    /* SUMMARY CHECKLIST */
+    .checklist { list-style: none; margin-bottom: 1.5rem; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .6rem 0; border-bottom: 1px solid var(--gray-100);
+      font-size: .92rem; color: var(--gray-700); line-height: 1.5;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist .chk { color: #16a34a; font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
+
+    /* NAV BUTTONS */
+    .nav-btns {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--gray-200);
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .7rem 1.5rem; border-radius: 10px; border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: .88rem; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-primary { background: var(--blue-600); color: #fff; }
+    .btn-primary:hover { background: var(--blue-700); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,.3); }
+    .btn-outline { background: #fff; color: var(--gray-600); border: 1.5px solid var(--gray-300); }
+    .btn-outline:hover { border-color: var(--blue-400); color: var(--blue-600); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+    /* FINAL CARD */
+    .final-hero {
+      background: linear-gradient(135deg, var(--blue-600) 0%, #7c3aed 100%);
+      border-radius: var(--radius-lg); padding: 3rem 2rem; text-align: center; color: #fff;
+      margin-bottom: 2rem; position: relative; overflow: hidden;
+    }
+    .final-hero::before {
+      content: ''; position: absolute; top: -50%; left: -20%;
+      width: 300px; height: 300px; background: rgba(255,255,255,.06); border-radius: 50%;
+    }
+    .final-hero h2 { font-size: 2rem; font-weight: 800; margin-bottom: .6rem; }
+    .final-hero p { opacity: .85; font-size: 1.05rem; line-height: 1.7; }
+    .final-hero .emoji-big { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+    /* TOOLTIP annotation */
+    .tooltip-ann {
+      position: relative; display: inline-block;
+      border-bottom: 2px dashed var(--amber-400); cursor: help;
+    }
+    .tooltip-ann::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: var(--gray-900); color: #fff; padding: .4rem .8rem; border-radius: 8px;
+      font-size: .75rem; white-space: nowrap; pointer-events: none;
+      opacity: 0; transition: opacity .2s; font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600; z-index: 10;
+    }
+    .tooltip-ann:hover::after { opacity: 1; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { padding: 1.5rem; }
+      .slide-title { font-size: 1.5rem; }
+    }
+
+    /* SCROLL */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+    /* MOBILE BOTTOM NAV */
+    .mobile-nav {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(255,255,255,.96); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--gray-200); padding: .6rem 1rem;
+      justify-content: space-between; align-items: center; z-index: 99;
+    }
+    @media (max-width: 900px) { .mobile-nav { display: flex; } }
+
+    /* CALLOUT */
+    .callout {
+      border-left: 4px solid; border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: .9rem; line-height: 1.65;
+    }
+    .callout-blue   { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-800); }
+    .callout-green  { border-color: #22c55e; background: #f0fdf4; color: #15803d; }
+    .callout-amber  { border-color: #f59e0b; background: #fffbeb; color: #92400e; }
+    .callout strong { font-weight: 700; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: .88rem; }
+    th { background: var(--gray-800); color: #fff; padding: .6rem .9rem; text-align: left; font-weight: 700; }
+    td { padding: .6rem .9rem; border-bottom: 1px solid var(--gray-200); color: var(--gray-700); }
+    tr:hover td { background: var(--gray-50); }
+
+    /* ===== NAV BUTTONS ===== */
+    .navb-buttons {
+      display: flex; gap: 12px; margin-top: 36px;
+      padding-top: 24px; border-top: 1.5px solid var(--border);
+
+    }
+    .navb-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 22px; border-radius: 100px;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.85rem; cursor: pointer; transition: all 0.25s;
+      text-decoration: none;
+    }
+    .navb-btn-prev {
+      background: white; color: var(--blue-700);
+      border: 2px solid var(--border);
+    }
+    .navb-btn-prev:hover { border-color: var(--blue-700); }
+    .navb-btn-next {
+      background: var(--blue-700); color: white;
+      border: 2px solid var(--blue-700);
+      box-shadow: 0 4px 14px rgba(26,26,46,0.2);
+    }
+    .navb-btn-next:hover { background: var(--blue-500); border-color: var(--blue-500); transform: translateX(3px); }
+
+    @media (max-width: 600px) {
+      .navb-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a class="header-logo" href="#">Bootstrap<span class="dot">.</span>Portfolio</a>
+  <div class="header-meta">
+    <a href="design.pdf" target="_blank" style="text-decoration: none;"><span class="badge-course">🖼️ Design Portofolio</span></a>
+    <span class="badge-course">📚 WebPoint Tutorial</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:8%"></div>
+    </div>
+    <span class="slide-counter" id="slideCounter">1 / 12</span>
+  </div>
+</header>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section-title">Pendahuluan</div>
+    <a class="nav-item active" onclick="goTo(0)" href="#">
+      <span class="icon">🏠</span> Selamat Datang <span class="step-num">01</span>
+    </a>
+    <a class="nav-item" onclick="goTo(1)" href="#">
+      <span class="icon">📁</span> Struktur File <span class="step-num">02</span>
+    </a>
+
+    <div class="sidebar-section-title">HTML — index.html</div>
+    <a class="nav-item" onclick="goTo(2)" href="#">
+      <span class="icon">🧱</span> Head & Meta <span class="step-num">03</span>
+    </a>
+    <a class="nav-item" onclick="goTo(3)" href="#">
+      <span class="icon">🔝</span> Navbar <span class="step-num">04</span>
+    </a>
+    <a class="nav-item" onclick="goTo(4)" href="#">
+      <span class="icon">🎯</span> Jumbotron <span class="step-num">05</span>
+    </a>
+    <a class="nav-item" onclick="goTo(5)" href="#">
+      <span class="icon">👤</span> About Section <span class="step-num">06</span>
+    </a>
+    <a class="nav-item" onclick="goTo(6)" href="#">
+      <span class="icon">💼</span> Project Cards <span class="step-num">07</span>
+    </a>
+    <a class="nav-item" onclick="goTo(7)" href="#">
+      <span class="icon">📬</span> Contact Form <span class="step-num">08</span>
+    </a>
+
+    <div class="sidebar-section-title">CSS — style.css</div>
+    <a class="nav-item" onclick="goTo(8)" href="#">
+      <span class="icon">🎨</span> Custom CSS <span class="step-num">09</span>
+    </a>
+
+    <div class="sidebar-section-title">Konsep Bootstrap</div>
+    <a class="nav-item" onclick="goTo(9)" href="#">
+      <span class="icon">📐</span> Grid System <span class="step-num">10</span>
+    </a>
+    <a class="nav-item" onclick="goTo(10)" href="#">
+      <span class="icon">🧩</span> Utility Classes <span class="step-num">11</span>
+    </a>
+
+    <div class="sidebar-section-title">Penutup</div>
+    <a class="nav-item" onclick="goTo(11)" href="#">
+      <span class="icon">🏆</span> Ringkasan & Quiz <span class="step-num">12</span>
+    </a>
+    <div class="navb-buttons" style="padding: 10px 10px 10px 15px;">
+      <a href="index.html">
+        <button class="navb-btn navb-btn-next" onclick="">Liat Refrensi Lainnya →</button>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="mainContent">
+
+    <!-- ═══════ SLIDE 0 — WELCOME ═══════ -->
+    <section class="slide active" id="slide-0">
+      <div class="slide-header">
+        <span class="slide-tag tag-intro">🚀 Intro</span>
+        <h1 class="slide-title">Belajar Membuat Portfolio<br>dengan Bootstrap 5</h1>
+        <p class="slide-subtitle">Tutorial interaktif lengkap untuk memahami setiap baris kode dalam project portfolio sederhana ini — dari HTML, CSS, hingga komponen Bootstrap.</p>
+      </div>
+
+      <div class="preview-box" style="margin-bottom:2rem;">
+        <div style="font-size:.82rem;font-weight:600;color:var(--gray-500);margin-bottom:1rem;">Tampilan akhir portfolio yang akan dipelajari:</div>
+        <div class="navbar-demo">
+          <span class="brand">Azera</span>
+          <div class="links"><span>Home</span><span>About me</span><span>Project</span><span>Contact Me</span></div>
+        </div>
+        <div style="background:#e2edff;padding:1.5rem;border-radius:10px;text-align:center;margin-bottom:.5rem;">
+          <div style="font-size:2.5rem;">👤</div>
+          <div style="font-weight:800;font-size:1.1rem;">Haikal Faturrahman Faizera</div>
+          <div style="color:#475569;font-size:.85rem;">Web Developer | Designer</div>
+        </div>
+        <div style="background:#fff;padding:1rem;text-align:center;font-size:.8rem;color:#64748b;">About Me | My Projects | Contact Me | Footer</div>
+      </div>
+
+      <div class="two-col">
+        <div class="info-card">
+          <h3>📦 Yang Akan Dipelajari</h3>
+          <ul>
+            <li>Struktur HTML semantik</li>
+            <li>Bootstrap 5 — Navbar, Grid, Cards</li>
+            <li>SVG Wave dividers</li>
+            <li>Custom CSS overrides</li>
+            <li>Form kontak Bootstrap</li>
+            <li>Responsive design</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>🛠 Tools yang Digunakan</h3>
+          <ul>
+            <li><strong>Bootstrap 5.3</strong> — Framework CSS</li>
+            <li><strong>Bootstrap Icons</strong> — Icon set</li>
+            <li><strong>HTML5</strong> — Struktur halaman</li>
+            <li><strong>CSS3</strong> — Kustomisasi style</li>
+            <li><strong>SVG</strong> — Dekorasi wave</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-card hc-blue">
+        <span class="hi-icon">💡</span>
+        <div class="hi-text">
+          <strong>Cara Menggunakan WebPoint Ini</strong>
+          Klik tombol <strong>Selanjutnya →</strong> di bawah untuk belajar tahap demi tahap. Kamu juga bisa langsung melompat ke topik tertentu melalui menu di sisi kiri. Setiap slide berisi penjelasan, kode, dan kuis interaktif!
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" disabled>← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 1 — FILE STRUCTURE ═══════ -->
+    <section class="slide" id="slide-1">
+      <div class="slide-header">
+        <span class="slide-tag tag-html">📁 Struktur</span>
+        <h1 class="slide-title">Struktur File Project</h1>
+        <p class="slide-subtitle">Sebelum mulai koding, kenali dulu file-file yang ada di dalam project portfolio ini.</p>
+      </div>
+
+      <div class="file-grid">
+        <div class="file-card">
+          <div class="file-icon">📄</div>
+          <div class="file-name">index.html</div>
+          <div class="file-desc">File utama — berisi seluruh struktur & konten halaman HTML</div>
+        </div>
+        <div class="file-card">
+          <div class="file-icon">🎨</div>
+          <div class="file-name">style.css</div>
+          <div class="file-desc">File CSS kustom — menimpa style Bootstrap dengan tampilan sendiri</div>
+        </div>
+        <div class="file-card">
+          <div class="file-icon">📂</div>
+          <div class="file-name">img/</div>
+          <div class="file-desc">Folder gambar — berisi foto profil dan screenshot project</div>
+        </div>
+        <div class="file-card" style="border:2px dashed var(--blue-200);background:var(--blue-50);">
+          <div class="file-icon">🌐</div>
+          <div class="file-name">CDN Bootstrap</div>
+          <div class="file-desc">Library Bootstrap 5 dimuat via internet (tidak perlu download)</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>🌳 Pohon Direktori</h3>
+        <div class="tree-wrap">
+          <div><span class="tn">portfolio/</span> <span class="td">← folder utama project</span></div>
+          <div><span class="tl">├── </span><span class="tn">index.html</span> <span class="td">← halaman utama</span></div>
+          <div><span class="tl">├── </span><span class="tn">style.css</span> <span class="td">← style kustom</span></div>
+          <div><span class="tl">└── </span><span class="tn">img/</span></div>
+          <div><span class="tl">&nbsp;&nbsp;&nbsp;&nbsp;├── </span><span class="tn">bayu.jpg</span> <span class="td">← foto profil</span></div>
+          <div><span class="tl">&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span class="tn">projects/</span></div>
+          <div><span class="tl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── </span><span class="tn">1.jpeg</span></div>
+          <div><span class="tl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── </span><span class="tn">2.jpeg</span></div>
+          <div><span class="tl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span class="tn">... dst</span></div>
+        </div>
+      </div>
+
+      <div class="highlight-card hc-amber">
+        <span class="hi-icon">⚡</span>
+        <div class="hi-text">
+          <strong>Kenapa Pakai CDN?</strong>
+          CDN (Content Delivery Network) memungkinkan kita memakai Bootstrap <em>tanpa</em> mengunduh file-nya. Cukup tambahkan link dari internet. Kelemahannya: butuh koneksi internet saat development. Kelebihannya: lebih cepat karena file sudah di-cache browser.
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 2 — HEAD & META ═══════ -->
+    <section class="slide" id="slide-2">
+      <div class="slide-header">
+        <span class="slide-tag tag-html">🧱 HTML</span>
+        <h1 class="slide-title">Bagian &lt;head&gt; — Setup Halaman</h1>
+        <p class="slide-subtitle">Bagian <code>&lt;head&gt;</code> berisi "pengaturan tersembunyi" yang tidak tampil di layar, tapi sangat penting untuk meta informasi, stylesheet, dan title halaman.</p>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+          <span>index.html — bagian &lt;head&gt;</span>
+          <button class="copy-btn" onclick="copyCode(this, `head-code`)">Salin</button>
+        </div>
+        <pre id="head-code"><span class="k">&lt;head&gt;</span>
+  <span class="c">&lt;!-- 1. Encoding karakter —— wajib ada! --&gt;</span>
+  <span class="k">&lt;meta</span> <span class="a">charset</span>=<span class="v">"utf-8"</span> <span class="k">/&gt;</span>
+
+  <span class="c">&lt;!-- 2. Agar tampilan responsif di HP --&gt;</span>
+  <span class="k">&lt;meta</span> <span class="a">name</span>=<span class="v">"viewport"</span> <span class="a">content</span>=<span class="v">"width=device-width, initial-scale=1"</span> <span class="k">/&gt;</span>
+
+  <span class="c">&lt;!-- 3. Judul tab browser --&gt;</span>
+  <span class="k">&lt;title&gt;</span>My Portfolio | Haikal Faturrahman Faizera<span class="k">&lt;/title&gt;</span>
+
+  <span class="c">&lt;!-- 4. Bootstrap CSS dari CDN --&gt;</span>
+  <span class="k">&lt;link</span> <span class="a">href</span>=<span class="v">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"</span>
+        <span class="a">rel</span>=<span class="v">"stylesheet"</span> <span class="k">/&gt;</span>
+
+  <span class="c">&lt;!-- 5. Bootstrap Icons (library ikon) --&gt;</span>
+  <span class="k">&lt;link</span> <span class="a">rel</span>=<span class="v">"stylesheet"</span>
+        <span class="a">href</span>=<span class="v">"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"</span> <span class="k">/&gt;</span>
+
+  <span class="c">&lt;!-- 6. CSS kustom kita sendiri --&gt;</span>
+  <span class="k">&lt;link</span> <span class="a">rel</span>=<span class="v">"stylesheet"</span> <span class="a">href</span>=<span class="v">"style.css"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;/head&gt;</span></pre>
+      </div>
+
+      <div class="step-flow">
+        <div class="step-item">
+          <div class="step-num-circle">1</div>
+          <div class="step-body">
+            <h4>charset="utf-8"</h4>
+            <p>Memberitahu browser bahwa halaman ini menggunakan <strong>UTF-8</strong> — format encoding yang mendukung hampir semua bahasa, termasuk huruf Indonesia & emoji. Tanpa ini, karakter bisa kacau.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num-circle">2</div>
+          <div class="step-body">
+            <h4>viewport meta</h4>
+            <p><strong>width=device-width</strong> artinya lebar halaman sama dengan lebar layar perangkat. <strong>initial-scale=1</strong> artinya tidak ada zoom awal. Ini <em>wajib</em> agar Bootstrap responsive bekerja.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num-circle">3</div>
+          <div class="step-body">
+            <h4>Bootstrap + Icons dari CDN</h4>
+            <p>Bootstrap dimuat dari <strong>cdn.jsdelivr.net</strong> — server CDN yang sangat cepat. Perhatikan urutan: Bootstrap dulu, baru <strong>style.css</strong> kita. Ini penting agar CSS kita bisa "menimpa" style Bootstrap.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-amber">
+        <strong>⚠️ Urutan Link CSS Sangat Penting!</strong><br>
+        <code>style.css</code> kita <em>harus</em> ditempatkan <strong>setelah</strong> Bootstrap. Jika dibalik, style kustom kita akan tertimpa Bootstrap dan tidak berpengaruh.
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 3 — NAVBAR ═══════ -->
+    <section class="slide" id="slide-3">
+      <div class="slide-header">
+        <span class="slide-tag tag-bootstrap">🔝 Bootstrap</span>
+        <h1 class="slide-title">Navbar — Menu Navigasi</h1>
+        <p class="slide-subtitle">Navbar adalah komponen Bootstrap yang siap pakai untuk membuat menu navigasi yang responsif dan bisa collapse di layar kecil.</p>
+      </div>
+
+      <div class="preview-box">
+        <div class="navbar-demo">
+          <span class="brand">Azera</span>
+          <div class="links"><span>Home</span><span>About me</span><span>Project</span><span>Contact Me</span></div>
+        </div>
+        <div style="font-size:.8rem;color:var(--gray-500);text-align:center;">↑ Tampilan aktual Navbar di browser</div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+          <span>Navbar Bootstrap</span>
+          <button class="copy-btn" onclick="copyCode(this, `nav-code`)">Salin</button>
+        </div>
+        <pre id="nav-code"><span class="k">&lt;nav</span> <span class="a">class</span>=<span class="v">"navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top"</span><span class="k">&gt;</span>
+  <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"container"</span><span class="k">&gt;</span>
+
+    <span class="c">&lt;!-- Logo / Brand --&gt;</span>
+    <span class="k">&lt;a</span> <span class="a">class</span>=<span class="v">"navbar-brand"</span> <span class="a">href</span>=<span class="v">"#"</span><span class="k">&gt;</span>Azera<span class="k">&lt;/a&gt;</span>
+
+    <span class="c">&lt;!-- Tombol hamburger (muncul di layar kecil) --&gt;</span>
+    <span class="k">&lt;button</span> <span class="a">class</span>=<span class="v">"navbar-toggler"</span> <span class="a">data-bs-toggle</span>=<span class="v">"collapse"</span>
+            <span class="a">data-bs-target</span>=<span class="v">"#navbarNav"</span><span class="k">&gt;</span>
+      <span class="k">&lt;span</span> <span class="a">class</span>=<span class="v">"navbar-toggler-icon"</span><span class="k">&gt;&lt;/span&gt;</span>
+    <span class="k">&lt;/button&gt;</span>
+
+    <span class="c">&lt;!-- Menu links --&gt;</span>
+    <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"collapse navbar-collapse"</span> <span class="a">id</span>=<span class="v">"navbarNav"</span><span class="k">&gt;</span>
+      <span class="k">&lt;ul</span> <span class="a">class</span>=<span class="v">"navbar-nav ms-auto"</span><span class="k">&gt;</span>
+        <span class="k">&lt;li</span> <span class="a">class</span>=<span class="v">"nav-item"</span><span class="k">&gt;</span>
+          <span class="k">&lt;a</span> <span class="a">class</span>=<span class="v">"nav-link active"</span> <span class="a">href</span>=<span class="v">"#home"</span><span class="k">&gt;</span>Home<span class="k">&lt;/a&gt;</span>
+        <span class="k">&lt;/li&gt;</span>
+        <span class="c">&lt;!-- item lainnya ... --&gt;</span>
+      <span class="k">&lt;/ul&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/nav&gt;</span></pre>
+      </div>
+
+      <div class="info-card">
+        <h3>🔍 Bedah Class Bootstrap pada Navbar</h3>
+        <table>
+          <tr><th>Class</th><th>Fungsi</th></tr>
+          <tr><td><code>navbar</code></td><td>Class dasar untuk komponen navbar</td></tr>
+          <tr><td><code>navbar-expand-lg</code></td><td>Menu full di ≥lg (≥992px), hamburger di bawahnya</td></tr>
+          <tr><td><code>navbar-dark</code></td><td>Teks & ikon berwarna terang (untuk background gelap)</td></tr>
+          <tr><td><code>bg-primary</code></td><td>Background biru (#0d6efd) — warna primary Bootstrap</td></tr>
+          <tr><td><code>shadow-sm</code></td><td>Bayangan kecil di bawah navbar</td></tr>
+          <tr><td><code>fixed-top</code></td><td>Navbar menempel di atas layar saat scroll</td></tr>
+          <tr><td><code>ms-auto</code></td><td>Margin start: auto → mendorong menu ke kanan</td></tr>
+          <tr><td><code>collapse navbar-collapse</code></td><td>Area yang disembunyikan di layar kecil</td></tr>
+        </table>
+      </div>
+
+      <div class="highlight-card hc-green">
+        <span class="hi-icon">✅</span>
+        <div class="hi-text">
+          <strong>Cara Kerja Hamburger Menu</strong>
+          <code>data-bs-toggle="collapse"</code> dan <code>data-bs-target="#navbarNav"</code> menghubungkan tombol dengan area menu. Saat tombol diklik, Bootstrap secara otomatis menampilkan/menyembunyikan menu. Ini <em>tanpa JavaScript tambahan</em>!
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 4 — JUMBOTRON ═══════ -->
+    <section class="slide" id="slide-4">
+      <div class="slide-header">
+        <span class="slide-tag tag-section">🎯 Section</span>
+        <h1 class="slide-title">Jumbotron — Hero Section</h1>
+        <p class="slide-subtitle">Jumbotron adalah bagian pembuka halaman yang menampilkan foto profil, nama, dan jabatan. Diperindah dengan SVG wave di bagian bawahnya.</p>
+      </div>
+
+      <div class="preview-box">
+        <div style="background:#e2edff;padding:2rem;text-align:center;border-radius:10px;margin-bottom:.5rem;">
+          <div style="font-size:3rem;margin-bottom:.5rem;">👤</div>
+          <div style="font-weight:800;font-size:1.2rem;margin-bottom:.3rem;">Haikal Faturrahman Faizera</div>
+          <div style="color:#475569;font-size:.9rem;margin-bottom:1rem;">Web Developer | Designer</div>
+          <div class="wave-demo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80"><path fill="#ffffff" d="M0,24L48,28C96,32,192,40,288,40C384,40,480,32,576,34.7C672,37,768,51,864,56C960,61,1056,59,1152,58.7C1248,59,1344,61,1392,62.7L1440,64L1440,80L0,80Z"/></svg></div>
+        </div>
+        <div style="font-size:.8rem;color:var(--gray-500);text-align:center;">↑ Preview Jumbotron dengan wave SVG</div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+          <span>Jumbotron Section</span>
+          <button class="copy-btn" onclick="copyCode(this, `jumbotron-code`)">Salin</button>
+        </div>
+        <pre id="jumbotron-code"><span class="k">&lt;section</span> <span class="a">class</span>=<span class="v">"jumbotron text-center"</span><span class="k">&gt;</span>
+
+  <span class="c">&lt;!-- Foto profil dengan bentuk lingkaran --&gt;</span>
+  <span class="k">&lt;img</span> <span class="a">src</span>=<span class="v">"img/bayu.jpg"</span> <span class="a">alt</span>=<span class="v">"Bayu"</span>
+       <span class="a">width</span>=<span class="v">"200"</span>
+       <span class="a">class</span>=<span class="v">"rounded-circle img-thumbnail"</span> <span class="k">/&gt;</span>
+
+  <span class="c">&lt;!-- Nama besar --&gt;</span>
+  <span class="k">&lt;h1</span> <span class="a">class</span>=<span class="v">"display-4"</span><span class="k">&gt;</span>Haikal Faturrahman Faizera<span class="k">&lt;/h1&gt;</span>
+
+  <span class="c">&lt;!-- Subtitle jabatan --&gt;</span>
+  <span class="k">&lt;p</span> <span class="a">class</span>=<span class="v">"lead"</span><span class="k">&gt;</span>Web Developer | Designer<span class="k">&lt;/p&gt;</span>
+
+  <span class="c">&lt;!-- Wave SVG dekoratif --&gt;</span>
+  <span class="k">&lt;svg</span> <span class="a">xmlns</span>=<span class="v">"http://www.w3.org/2000/svg"</span> <span class="a">viewBox</span>=<span class="v">"0 0 1440 320"</span><span class="k">&gt;</span>
+    <span class="k">&lt;path</span> <span class="a">fill</span>=<span class="v">"#ffffff"</span> <span class="a">fill-opacity</span>=<span class="v">"1"</span>
+          <span class="a">d</span>=<span class="v">"M0,96L48,112C96,128,192,160,288,160..."</span><span class="k">&gt;&lt;/path&gt;</span>
+  <span class="k">&lt;/svg&gt;</span>
+
+<span class="k">&lt;/section&gt;</span></pre>
+      </div>
+
+      <div class="two-col">
+        <div class="info-card">
+          <h3>🖼 Class pada Gambar Profil</h3>
+          <ul>
+            <li><code>rounded-circle</code> — membuat gambar berbentuk lingkaran penuh</li>
+            <li><code>img-thumbnail</code> — menambahkan border putih dan padding di sekeliling gambar</li>
+            <li><code>width="200"</code> — ukuran 200px (bisa juga pakai CSS)</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>✍️ Class Typography</h3>
+          <ul>
+            <li><code>display-4</code> — heading sangat besar (Bootstrap display heading)</li>
+            <li><code>lead</code> — teks intro yang sedikit lebih besar dari normal</li>
+            <li><code>text-center</code> — rata tengah semua konten di dalam section</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-card hc-purple">
+        <span class="hi-icon">🌊</span>
+        <div class="hi-text">
+          <strong>Apa itu SVG Wave?</strong>
+          SVG (Scalable Vector Graphics) adalah format gambar berbasis kode yang bisa di-scale tanpa pecah. Wave di sini berfungsi sebagai <em>transisi visual</em> antara section berwarna dan section putih. Warna <code>fill="#ffffff"</code> harus sesuai dengan warna background section berikutnya.
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 5 — ABOUT ═══════ -->
+    <section class="slide" id="slide-5">
+      <div class="slide-header">
+        <span class="slide-tag tag-section">👤 Section</span>
+        <h1 class="slide-title">About Section — Tentang Saya</h1>
+        <p class="slide-subtitle">Section About menggunakan Grid System Bootstrap untuk membuat dua kolom teks yang sejajar dan responsif.</p>
+      </div>
+
+      <div class="preview-box">
+        <div style="text-align:center;margin-bottom:1rem;"><strong>About Me</strong></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div style="background:#fff;border-radius:8px;padding:1rem;font-size:.8rem;color:#64748b;line-height:1.6;">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Totam doloremque culpa praesentium itaque inventore omnis dolores vitae cum expedita dolorum?</div>
+          <div style="background:#fff;border-radius:8px;padding:1rem;font-size:.8rem;color:#64748b;line-height:1.6;">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex ipsam labore porro nulla voluptatem asperiores quidem quod nostrum, repellat expedita id eos.</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+          <span>About Section</span>
+          <button class="copy-btn" onclick="copyCode(this, `about-code`)">Salin</button>
+        </div>
+        <pre id="about-code"><span class="k">&lt;section</span> <span class="a">id</span>=<span class="v">"about"</span><span class="k">&gt;</span>
+  <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"container"</span><span class="k">&gt;</span>
+
+    <span class="c">&lt;!-- Judul section --&gt;</span>
+    <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"row text-center mb-3"</span><span class="k">&gt;</span>
+      <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"col"</span><span class="k">&gt;</span>
+        <span class="k">&lt;h2&gt;</span>About Me<span class="k">&lt;/h2&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+    <span class="c">&lt;!-- Dua kolom teks --&gt;</span>
+    <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"row justify-content-center fs-5 text-center"</span><span class="k">&gt;</span>
+      <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"col-md-4"</span><span class="k">&gt;</span>
+        <span class="k">&lt;p&gt;</span>Lorem ipsum paragraf pertama...<span class="k">&lt;/p&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+      <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"col-md-4"</span><span class="k">&gt;</span>
+        <span class="k">&lt;p&gt;</span>Lorem ipsum paragraf kedua...<span class="k">&lt;/p&gt;</span>
+      <span class="k">&lt;/div&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Wave SVG ke section berikutnya --&gt;</span>
+  <span class="k">&lt;svg</span> <span class="a">viewBox</span>=<span class="v">"0 0 1440 320"</span><span class="k">&gt;</span>
+    <span class="k">&lt;path</span> <span class="a">fill</span>=<span class="v">"#e2edff"</span> <span class="a">d</span>=<span class="v">"..."</span><span class="k">&gt;&lt;/path&gt;</span>
+  <span class="k">&lt;/svg&gt;</span>
+<span class="k">&lt;/section&gt;</span></pre>
+      </div>
+
+      <div class="info-card">
+        <h3>📐 Penjelasan Grid System</h3>
+        <div class="grid-demo">
+          <div style="text-align:center;font-size:.75rem;color:var(--blue-700);font-weight:700;margin-bottom:.5rem;">Total = 12 kolom (Bootstrap)</div>
+          <div class="grid-row">
+            <div class="grid-col gc-blue" style="flex:2">col-md-4<br><small>(4/12)</small></div>
+            <div class="grid-col gc-teal" style="flex:.5;background:transparent;border:1px dashed #94a3b8;color:#94a3b8;">gap</div>
+            <div class="grid-col gc-purple" style="flex:2">col-md-4<br><small>(4/12)</small></div>
+          </div>
+        </div>
+        <ul>
+          <li><code>row</code> — container baris (row harus di dalam container)</li>
+          <li><code>col-md-4</code> — kolom dengan lebar 4/12 pada layar ≥768px (md). Di bawah md, otomatis full width</li>
+          <li><code>justify-content-center</code> — memusatkan kolom-kolom ke tengah baris</li>
+        </ul>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 6 — PROJECT CARDS ═══════ -->
+    <section class="slide" id="slide-6">
+      <div class="slide-header">
+        <span class="slide-tag tag-bootstrap">💼 Bootstrap</span>
+        <h1 class="slide-title">Project Section — Card Grid</h1>
+        <p class="slide-subtitle">Section Project menampilkan 5 kartu proyek menggunakan komponen Card Bootstrap dalam layout Grid yang responsif.</p>
+      </div>
+
+      <div class="preview-box">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:.3rem;">
+          <div style="background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;">
+            <div style="height:70px;background:linear-gradient(135deg,#bfdbfe,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#1e40af;">🖼 gambar</div>
+            <div style="padding:.5rem;font-size:.72rem;color:#64748b;">Deskripsi project...</div>
+          </div>
+          <div style="background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;">
+            <div style="height:70px;background:linear-gradient(135deg,#bfdbfe,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#1e40af;">🖼 gambar</div>
+            <div style="padding:.5rem;font-size:.72rem;color:#64748b;">Deskripsi project...</div>
+          </div>
+          <div style="background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;">
+            <div style="height:70px;background:linear-gradient(135deg,#bfdbfe,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#1e40af;">🖼 gambar</div>
+            <div style="padding:.5rem;font-size:.72rem;color:#64748b;">Deskripsi project...</div>
+          </div>
+        </div>
+        <div style="font-size:.8rem;color:var(--gray-500);text-align:center;">↑ Preview 3 dari 5 card project (layout 3 kolom)</div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+          <span>Satu Card Project</span>
+          <button class="copy-btn" onclick="copyCode(this, `card-code`)">Salin</button>
+        </div>
+        <pre id="card-code"><span class="c">&lt;!-- Setiap project = 1 card di dalam 1 col --&gt;</span>
+<span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"col-md-4 mb-3"</span><span class="k">&gt;</span>
+  <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"card"</span><span class="k">&gt;</span>
+
+    <span class="c">&lt;!-- Gambar di atas card --&gt;</span>
+    <span class="k">&lt;img</span> <span class="a">src</span>=<span class="v">"img/projects/1.jpeg"</span>
+         <span class="a">class</span>=<span class="v">"card-img-top"</span>
+         <span class="a">alt</span>=<span class="v">"Project 1"</span> <span class="k">/&gt;</span>
+
+    <span class="c">&lt;!-- Area teks dalam card --&gt;</span>
+    <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"card-body"</span><span class="k">&gt;</span>
+      <span class="k">&lt;p</span> <span class="a">class</span>=<span class="v">"card-text"</span><span class="k">&gt;</span>
+        Deskripsi singkat project...
+      <span class="k">&lt;/p&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+
+  <span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="info-card">
+        <h3>🃏 Anatomi Bootstrap Card</h3>
+        <table>
+          <tr><th>Class</th><th>Elemen</th><th>Fungsi</th></tr>
+          <tr><td><code>card</code></td><td>div</td><td>Container utama card (border, shadow, radius)</td></tr>
+          <tr><td><code>card-img-top</code></td><td>img</td><td>Gambar di bagian atas card, full width</td></tr>
+          <tr><td><code>card-body</code></td><td>div</td><td>Area padding untuk konten teks</td></tr>
+          <tr><td><code>card-text</code></td><td>p</td><td>Paragraf teks dalam card body</td></tr>
+          <tr><td><code>mb-3</code></td><td>col</td><td>Margin bottom 3 (jarak antar baris card)</td></tr>
+        </table>
+      </div>
+
+      <div class="highlight-card hc-blue">
+        <span class="hi-icon">💡</span>
+        <div class="hi-text">
+          <strong>Mengapa Ada 5 Card tapi Hanya 3 per Baris?</strong>
+          Setiap card pakai <code>col-md-4</code> = 4 kolom. Satu baris Bootstrap = 12 kolom, jadi 12÷4 = 3 card per baris. Card ke-4 dan ke-5 otomatis pindah ke baris berikutnya. Bootstrap mengatur ini secara otomatis!
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 7 — CONTACT FORM ═══════ -->
+    <section class="slide" id="slide-7">
+      <div class="slide-header">
+        <span class="slide-tag tag-section">📬 Section</span>
+        <h1 class="slide-title">Contact Section — Form Kontak</h1>
+        <p class="slide-subtitle">Section Contact berisi form sederhana dengan input field dan textarea menggunakan class form Bootstrap untuk tampilan yang rapi dan konsisten.</p>
+      </div>
+
+      <div class="preview-box">
+        <div style="max-width:400px;margin:0 auto;">
+          <div style="font-size:.75rem;font-weight:600;color:#334155;margin-bottom:.3rem;">Name</div>
+          <div style="border:1px solid #cbd5e1;border-radius:6px;padding:.5rem .8rem;margin-bottom:.8rem;background:#fff;font-size:.8rem;color:#94a3b8;">Masukkan nama...</div>
+          <div style="font-size:.75rem;font-weight:600;color:#334155;margin-bottom:.3rem;">Email</div>
+          <div style="border:1px solid #cbd5e1;border-radius:6px;padding:.5rem .8rem;margin-bottom:.8rem;background:#fff;font-size:.8rem;color:#94a3b8;">email@contoh.com</div>
+          <div style="font-size:.75rem;font-weight:600;color:#334155;margin-bottom:.3rem;">Pesan</div>
+          <div style="border:1px solid #cbd5e1;border-radius:6px;padding:.5rem .8rem;height:60px;margin-bottom:.8rem;background:#fff;"></div>
+          <div style="background:#0d6efd;color:#fff;padding:.4rem 1rem;border-radius:6px;display:inline-block;font-size:.8rem;font-weight:600;">Kirim</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+          <span>Form Kontak Bootstrap</span>
+          <button class="copy-btn" onclick="copyCode(this, `form-code`)">Salin</button>
+        </div>
+        <pre id="form-code"><span class="k">&lt;form&gt;</span>
+  <span class="c">&lt;!-- Input Nama --&gt;</span>
+  <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"mb-3"</span><span class="k">&gt;</span>
+    <span class="k">&lt;label</span> <span class="a">for</span>=<span class="v">"name"</span> <span class="a">class</span>=<span class="v">"form-label"</span><span class="k">&gt;</span>Name<span class="k">&lt;/label&gt;</span>
+    <span class="k">&lt;input</span> <span class="a">type</span>=<span class="v">"text"</span>
+           <span class="a">class</span>=<span class="v">"form-control"</span>
+           <span class="a">id</span>=<span class="v">"name"</span> <span class="k">/&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Input Email --&gt;</span>
+  <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"mb-3"</span><span class="k">&gt;</span>
+    <span class="k">&lt;label</span> <span class="a">for</span>=<span class="v">"email"</span> <span class="a">class</span>=<span class="v">"form-label"</span><span class="k">&gt;</span>Email<span class="k">&lt;/label&gt;</span>
+    <span class="k">&lt;input</span> <span class="a">type</span>=<span class="v">"email"</span>
+           <span class="a">class</span>=<span class="v">"form-control"</span>
+           <span class="a">id</span>=<span class="v">"email"</span> <span class="k">/&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Textarea Pesan --&gt;</span>
+  <span class="k">&lt;div</span> <span class="a">class</span>=<span class="v">"mb-3"</span><span class="k">&gt;</span>
+    <span class="k">&lt;label</span> <span class="a">for</span>=<span class="v">"pesan"</span> <span class="a">class</span>=<span class="v">"form-label"</span><span class="k">&gt;</span>Pesan<span class="k">&lt;/label&gt;</span>
+    <span class="k">&lt;textarea</span> <span class="a">class</span>=<span class="v">"form-control"</span>
+              <span class="a">id</span>=<span class="v">"pesan"</span> <span class="a">rows</span>=<span class="v">"3"</span><span class="k">&gt;&lt;/textarea&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Tombol Submit --&gt;</span>
+  <span class="k">&lt;button</span> <span class="a">type</span>=<span class="v">"submit"</span>
+          <span class="a">class</span>=<span class="v">"btn btn-primary"</span><span class="k">&gt;</span>Kirim<span class="k">&lt;/button&gt;</span>
+<span class="k">&lt;/form&gt;</span></pre>
+      </div>
+
+      <div class="two-col">
+        <div class="info-card">
+          <h3>📋 Class Form Bootstrap</h3>
+          <ul>
+            <li><code>form-label</code> — style label yang rapi di atas input</li>
+            <li><code>form-control</code> — style input/textarea: border, padding, focus ring</li>
+            <li><code>mb-3</code> — margin bawah untuk jarak antar field</li>
+            <li><code>btn btn-primary</code> — tombol biru standar Bootstrap</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>🔗 Pentingnya for & id</h3>
+          <p>Attribute <code>for</code> pada label harus sama dengan <code>id</code> pada input. Ini membuat klik pada label langsung fokus ke input-nya — meningkatkan aksesibilitas dan UX.</p>
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 8 — CUSTOM CSS ═══════ -->
+    <section class="slide" id="slide-8">
+      <div class="slide-header">
+        <span class="slide-tag tag-css">🎨 CSS</span>
+        <h1 class="slide-title">style.css — Kustomisasi Bootstrap</h1>
+        <p class="slide-subtitle">File <code>style.css</code> berisi CSS kustom yang "menimpa" (override) style default Bootstrap untuk menyesuaikan tampilan portfolio.</p>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+          <span>style.css — isi lengkap</span>
+          <button class="copy-btn" onclick="copyCode(this, `css-code`)">Salin</button>
+        </div>
+        <pre id="css-code"><span class="c">/* Jumbotron — Hero Section */</span>
+<span class="n">.jumbotron</span> {
+  <span class="p">padding-top</span>: <span class="s">6rem</span>;         <span class="c">/* beri ruang untuk navbar fixed */</span>
+  <span class="p">background-color</span>: <span class="s">#e2edff</span>; <span class="c">/* biru muda cerah */</span>
+}
+
+<span class="c">/* Project Section */</span>
+<span class="n">#project</span> {
+  <span class="p">background-color</span>: <span class="s">#e2edff</span>; <span class="c">/* sama dengan jumbotron */</span>
+}
+
+<span class="c">/* Semua section — padding atas */</span>
+<span class="n">section</span> {
+  <span class="p">padding-top</span>: <span class="s">6rem</span>; <span class="c">/* agar konten tidak tertutup navbar */</span>
+}</pre>
+      </div>
+
+      <div class="info-card">
+        <h3>🤔 Mengapa padding-top: 6rem?</h3>
+        <p>Navbar menggunakan <code>fixed-top</code>, artinya navbar "mengambang" di atas konten. Tanpa padding-top, konten pertama setiap section akan <strong>tertutup di balik navbar</strong>. Padding <code>6rem</code> (≈96px) memberi ruang agar konten tidak tersembunyi.</p>
+      </div>
+
+      <div class="compare-wrap">
+        <div class="compare-box bad">
+          <div class="compare-label">❌ Tanpa padding-top</div>
+          <pre style="font-size:.8rem;padding:.8rem;">section {
+  /* tidak ada padding */
+}
+/* Akibat: judul section
+   tersembunyi di balik navbar! */</pre>
+        </div>
+        <div class="compare-box good">
+          <div class="compare-label">✅ Dengan padding-top</div>
+          <pre style="font-size:.8rem;padding:.8rem;">section {
+  padding-top: 6rem;
+}
+/* Akibat: konten terlihat
+   jelas di bawah navbar */</pre>
+        </div>
+      </div>
+
+      <div class="highlight-card hc-green">
+        <span class="hi-icon">🎯</span>
+        <div class="hi-text">
+          <strong>CSS Override — Cara Bootstrap Dikustomisasi</strong>
+          Bootstrap adalah framework — ia punya style defaultnya sendiri. Kita bisa menimpa style tersebut dengan membuat CSS kustom. Karena <code>style.css</code> dimuat <em>setelah</em> Bootstrap di <code>&lt;head&gt;</code>, rule kita akan menang (spesifisitas sama, yang belakangan yang berlaku).
+        </div>
+      </div>
+
+      <div class="callout callout-blue">
+        <strong>💡 Kembangkan style.css kamu!</strong><br>
+        Kamu bisa menambahkan: animasi hover pada card, font Google Fonts, warna brand sendiri, efek scroll, dan lain-lain. Style CSS kustom inilah yang membuat portfoliomu unik dan berbeda dari yang lain.
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 9 — GRID SYSTEM ═══════ -->
+    <section class="slide" id="slide-9">
+      <div class="slide-header">
+        <span class="slide-tag tag-bootstrap">📐 Bootstrap</span>
+        <h1 class="slide-title">Grid System Bootstrap</h1>
+        <p class="slide-subtitle">Grid System adalah jantung dari Bootstrap. Pahami ini, dan kamu bisa membuat layout apapun yang responsif dengan mudah.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>📏 Konsep 12 Kolom</h3>
+        <p>Bootstrap membagi baris menjadi <strong>12 kolom</strong>. Kamu bebas menentukan tiap elemen mengambil berapa kolom. Total harus ≤12 per baris.</p>
+        <div class="grid-demo" style="margin-top:1rem;">
+          <div class="grid-row">
+            <div class="grid-col gc-blue" style="flex:12">col-12 (penuh)</div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-col gc-blue" style="flex:6">col-6</div>
+            <div class="grid-col gc-teal" style="flex:6">col-6</div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-col gc-blue" style="flex:4">col-4</div>
+            <div class="grid-col gc-teal" style="flex:4">col-4</div>
+            <div class="grid-col gc-purple" style="flex:4">col-4</div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-col gc-blue" style="flex:3">col-3</div>
+            <div class="grid-col gc-teal" style="flex:3">col-3</div>
+            <div class="grid-col gc-purple" style="flex:3">col-3</div>
+            <div class="grid-col gc-rose" style="flex:3">col-3</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>📱 Breakpoints Responsif</h3>
+        <table>
+          <tr><th>Prefix</th><th>Nama</th><th>Lebar Layar</th><th>Contoh Device</th></tr>
+          <tr><td><code>col-</code></td><td>xs (default)</td><td>< 576px</td><td>HP kecil</td></tr>
+          <tr><td><code>col-sm-</code></td><td>Small</td><td>≥ 576px</td><td>HP besar</td></tr>
+          <tr><td><code>col-md-</code></td><td>Medium</td><td>≥ 768px</td><td>Tablet</td></tr>
+          <tr><td><code>col-lg-</code></td><td>Large</td><td>≥ 992px</td><td>Laptop</td></tr>
+          <tr><td><code>col-xl-</code></td><td>Extra Large</td><td>≥ 1200px</td><td>Monitor</td></tr>
+        </table>
+        <p style="font-size:.85rem;color:var(--gray-600);">Di project ini dipakai <code>col-md-4</code>: artinya 4 kolom pada layar ≥768px. Di bawah 768px → otomatis jadi col-12 (full width, 1 kolom per baris).</p>
+      </div>
+
+      <div class="callout callout-green">
+        <strong>✅ Struktur Wajib Grid:</strong><br>
+        <code>.container</code> → <code>.row</code> → <code>.col-*</code><br>
+        Jangan pernah skip satu level! Row harus di dalam container, dan col harus langsung di dalam row.
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 10 — UTILITY CLASSES ═══════ -->
+    <section class="slide" id="slide-10">
+      <div class="slide-header">
+        <span class="slide-tag tag-bootstrap">🧩 Bootstrap</span>
+        <h1 class="slide-title">Utility Classes — Kelas Serba Guna</h1>
+        <p class="slide-subtitle">Bootstrap menyediakan ratusan "utility class" — class pendek yang melakukan satu hal spesifik. Ini membuat koding CSS jadi jauh lebih cepat!</p>
+      </div>
+
+      <div class="two-col">
+        <div class="info-card">
+          <h3>📦 Spacing (Jarak)</h3>
+          <table>
+            <tr><th>Class</th><th>Arti</th></tr>
+            <tr><td><code>m-3</code></td><td>margin semua sisi = 1rem</td></tr>
+            <tr><td><code>mt-3</code></td><td>margin-top</td></tr>
+            <tr><td><code>mb-3</code></td><td>margin-bottom</td></tr>
+            <tr><td><code>ms-auto</code></td><td>margin-start auto (dorong ke kanan)</td></tr>
+            <tr><td><code>p-3</code></td><td>padding semua sisi</td></tr>
+            <tr><td><code>py-3</code></td><td>padding atas & bawah</td></tr>
+            <tr><td><code>pb-5</code></td><td>padding-bottom = 3rem</td></tr>
+          </table>
+        </div>
+        <div class="info-card">
+          <h3>✍️ Typography & Warna</h3>
+          <table>
+            <tr><th>Class</th><th>Arti</th></tr>
+            <tr><td><code>text-center</code></td><td>rata tengah</td></tr>
+            <tr><td><code>text-white</code></td><td>warna teks putih</td></tr>
+            <tr><td><code>fw-bold</code></td><td>font-weight bold</td></tr>
+            <tr><td><code>display-4</code></td><td>heading display besar</td></tr>
+            <tr><td><code>lead</code></td><td>teks paragraf intro</td></tr>
+            <tr><td><code>fs-5</code></td><td>font-size level 5</td></tr>
+            <tr><td><code>bg-primary</code></td><td>background biru</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>🎨 Warna-Warna Bootstrap</h3>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+          <div style="background:#0d6efd;color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;">primary</div>
+          <div style="background:#6c757d;color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;">secondary</div>
+          <div style="background:#198754;color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;">success</div>
+          <div style="background:#dc3545;color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;">danger</div>
+          <div style="background:#ffc107;color:#000;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;">warning</div>
+          <div style="background:#0dcaf0;color:#000;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;">info</div>
+          <div style="background:#f8f9fa;color:#333;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;border:1px solid #dee2e6;">light</div>
+          <div style="background:#212529;color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:700;">dark</div>
+        </div>
+        <p style="margin-top:.8rem;font-size:.85rem;color:var(--gray-600);">Gunakan dengan prefix: <code>bg-primary</code>, <code>text-danger</code>, <code>btn-success</code>, dll.</p>
+      </div>
+
+      <div class="highlight-card hc-rose">
+        <span class="hi-icon">💡</span>
+        <div class="hi-text">
+          <strong>Di Project Ini: Contoh Utility pada Footer</strong>
+          <code>&lt;footer class="bg-primary text-white text-center pb-5"&gt;</code><br>
+          Artinya: background biru + teks putih + rata tengah + padding bawah besar. <em>Tanpa tulis CSS sama sekali!</em>
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="nextSlide()">Selanjutnya →</button>
+      </div>
+    </section>
+
+    <!-- ═══════ SLIDE 11 — SUMMARY & QUIZ ═══════ -->
+    <section class="slide" id="slide-11">
+      <div class="slide-header">
+        <span class="slide-tag tag-advanced">🏆 Penutup</span>
+        <h1 class="slide-title">Ringkasan & Kuis</h1>
+        <p class="slide-subtitle">Uji pemahamanmu! Selesaikan kuis di bawah, lalu lihat checklist lengkap semua yang sudah dipelajari.</p>
+      </div>
+
+      <!-- QUIZ 1 -->
+      <div class="quiz-card">
+        <h3>🎯 Kuis 1</h3>
+        <p>Apa fungsi class <code>fixed-top</code> pada Navbar?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q1')">Membuat navbar berwarna gelap</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, true, 'q1')">Navbar menempel di atas saat halaman di-scroll</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q1')">Menempatkan link menu di kanan</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q1')">Membuat navbar responsif di HP</button>
+        </div>
+        <div class="quiz-result" id="q1-result"></div>
+      </div>
+
+      <!-- QUIZ 2 -->
+      <div class="quiz-card">
+        <h3>🎯 Kuis 2</h3>
+        <p>Jika kamu pakai <code>col-md-4</code>, berapa card yang muat dalam 1 baris di layar desktop?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q2')">2 card</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, true, 'q2')">3 card</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q2')">4 card</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q2')">6 card</button>
+        </div>
+        <div class="quiz-result" id="q2-result"></div>
+      </div>
+
+      <!-- QUIZ 3 -->
+      <div class="quiz-card">
+        <h3>🎯 Kuis 3</h3>
+        <p>Mengapa <code>style.css</code> kustom harus ditempatkan SETELAH Bootstrap di tag <code>&lt;head&gt;</code>?</p>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q3')">Supaya halaman loading lebih cepat</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q3')">Karena Bootstrap membutuhkan style.css</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, true, 'q3')">Agar CSS kita bisa menimpa (override) style Bootstrap</button>
+          <button class="quiz-opt" onclick="checkQuiz(this, false, 'q3')">Tidak ada alasan khusus, boleh dibalik</button>
+        </div>
+        <div class="quiz-result" id="q3-result"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="info-card">
+        <h3>✅ Checklist — Semua yang Sudah Dipelajari</h3>
+        <ul class="checklist">
+          <li><span class="chk">✓</span>Struktur file project Bootstrap portfolio</li>
+          <li><span class="chk">✓</span>Setup <code>&lt;head&gt;</code>: charset, viewport, CDN Bootstrap & Icons</li>
+          <li><span class="chk">✓</span>Komponen Navbar Bootstrap dengan hamburger menu responsif</li>
+          <li><span class="chk">✓</span>Jumbotron / Hero section dengan foto profil dan SVG wave</li>
+          <li><span class="chk">✓</span>Grid System 12 kolom & breakpoint responsif Bootstrap</li>
+          <li><span class="chk">✓</span>About section dengan dua kolom teks</li>
+          <li><span class="chk">✓</span>Project section dengan komponen Card Bootstrap</li>
+          <li><span class="chk">✓</span>Form kontak dengan class form Bootstrap</li>
+          <li><span class="chk">✓</span>Footer dengan utility classes Bootstrap</li>
+          <li><span class="chk">✓</span>Custom CSS untuk override style Bootstrap</li>
+          <li><span class="chk">✓</span>Utility classes: spacing, typography, warna</li>
+          <li><span class="chk">✓</span>SVG Wave sebagai dekorasi transisi antar section</li>
+        </ul>
+      </div>
+
+      <div class="final-hero">
+        <span class="emoji-big">🎉</span>
+        <h2>Selamat! Kamu Sudah Mempelajari Seluruh Kode Portfolio Bootstrap Ini!</h2>
+        <p>Sekarang saatnya praktik. Buka file <code>index.html</code> dan <code>style.css</code>, ganti nama, foto, deskripsi, dan warna dengan milikmu sendiri. Jadikan portfolio ini benar-benar punyamu!</p>
+      </div>
+
+      <div class="highlight-card hc-amber">
+        <span class="hi-icon">🚀</span>
+        <div class="hi-text">
+          <strong>Langkah Selanjutnya</strong>
+          Coba tambahkan: animasi CSS pada card saat hover, Google Fonts untuk tipografi unik, section Skills dengan progress bar Bootstrap, atau deploy ke GitHub Pages agar portfoliomu bisa diakses publik secara gratis!
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-outline" onclick="prevSlide()">← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="goTo(0)">🏠 Mulai Ulang</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-nav">
+  <button class="btn btn-outline" id="mBtnPrev" onclick="prevSlide()">← Prev</button>
+  <span id="mCounter" style="font-size:.8rem;font-weight:700;color:var(--gray-500);">1 / 12</span>
+  <button class="btn btn-primary" id="mBtnNext" onclick="nextSlide()">Next →</button>
+</div>
+
+<script>
+  const TOTAL = 12;
+  let current = 0;
+
+  const slides = document.querySelectorAll('.slide');
+  const navItems = document.querySelectorAll('.nav-item');
+  const progressFill = document.getElementById('progressFill');
+  const slideCounter = document.getElementById('slideCounter');
+  const mCounter = document.getElementById('mCounter');
+  const mBtnPrev = document.getElementById('mBtnPrev');
+  const mBtnNext = document.getElementById('mBtnNext');
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    navItems[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    navItems[current].classList.add('active');
+    updateUI();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('mainContent').scrollTo({ top: 0 });
+  }
+
+  function nextSlide() { if (current < TOTAL - 1) goTo(current + 1); }
+  function prevSlide() { if (current > 0) goTo(current - 1); }
+
+  function updateUI() {
+    const pct = Math.round(((current + 1) / TOTAL) * 100);
+    progressFill.style.width = pct + '%';
+    slideCounter.textContent = (current + 1) + ' / ' + TOTAL;
+    mCounter.textContent = (current + 1) + ' / ' + TOTAL;
+    mBtnPrev.disabled = current === 0;
+    mBtnNext.disabled = current === TOTAL - 1;
+  }
+
+  function copyCode(btn, id) {
+    const code = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Tersalin!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Salin'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  const quizAnswered = {};
+  function checkQuiz(btn, correct, qid) {
+    if (quizAnswered[qid]) return;
+    quizAnswered[qid] = true;
+    const opts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+    opts.forEach(o => o.disabled = true);
+    if (correct) {
+      btn.classList.add('correct');
+      document.getElementById(qid + '-result').innerHTML = '🎉 <strong>Benar!</strong> Jawaban yang tepat!';
+      document.getElementById(qid + '-result').style.color = '#4ade80';
+    } else {
+      btn.classList.add('wrong');
+      // highlight correct
+      opts.forEach(o => { if (o.getAttribute('onclick').includes('true')) o.classList.add('correct'); });
+      document.getElementById(qid + '-result').innerHTML = '❌ <strong>Belum tepat.</strong> Lihat jawaban yang benar di atas.';
+      document.getElementById(qid + '-result').style.color = '#fca5a5';
+    }
+  }
+
+  updateUI();
+</script>
+</body>
+</html>
