@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio - Alhabib</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:     #fdf8f2;
+      --warm-bg:   #fff9f2;
+      --rose:      #e8705a;
+      --rose-soft: #f2a28e;
+      --teal:      #3d8c8c;
+      --teal-soft: #6ab4b4;
+      --gold:      #d4943a;
+      --text:      #2d2417;
+      --muted:     #8c7b6b;
+      --card-bg:   #ffffff;
+      --border:    #f0e4d6;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--warm-bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: rgba(253,248,242,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      transition: box-shadow .3s;
+    }
+    .navbar.scrolled { box-shadow: 0 4px 24px rgba(232,112,90,.08); }
+    .navbar-brand {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      color: var(--rose) !important;
+      letter-spacing: -1px;
+    }
+    .nav-link {
+      color: var(--muted) !important;
+      font-weight: 600;
+      font-size: .88rem;
+      letter-spacing: .04em;
+      position: relative;
+      transition: color .25s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 50%; right: 50%;
+      height: 2px;
+      background: var(--rose);
+      border-radius: 2px;
+      transition: left .3s, right .3s;
+    }
+    .nav-link:hover { color: var(--rose) !important; }
+    .nav-link:hover::after { left: 0; right: 0; }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background:
+        radial-gradient(ellipse at 85% 30%, rgba(232,112,90,.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 80%, rgba(61,140,140,.10) 0%, transparent 50%),
+        var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Decorative circles */
+    #home::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(232,112,90,.18);
+      top: -100px; right: -150px;
+    }
+    #home::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(61,140,140,.18);
+      bottom: 60px; left: -80px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(232,112,90,.1);
+      border: 1px solid rgba(232,112,90,.3);
+      border-radius: 100px;
+      padding: .35rem 1rem;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--rose);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      animation: fadeUp .7s .1s both;
+    }
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      animation: fadeUp .7s .25s both;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--rose);
+    }
+    .hero-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      max-width: 440px;
+      animation: fadeUp .7s .4s both;
+    }
+    .btn-rose {
+      background: var(--rose);
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      padding: .8rem 2rem;
+      font-weight: 700;
+      font-size: .9rem;
+      transition: transform .25s, box-shadow .25s, background .25s;
+    }
+    .btn-rose:hover {
+      background: #d45e48;
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(232,112,90,.35);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: .8rem 2rem;
+      font-weight: 700;
+      font-size: .9rem;
+      transition: all .25s;
+    }
+    .btn-ghost:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: rgba(232,112,90,.05);
+    }
+    .hero-photo-wrap {
+      position: relative;
+      animation: fadeRight .9s .3s both;
+    }
+    .hero-photo-wrap img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 40% 60% 55% 45% / 45% 40% 60% 55%;
+      border: 4px solid #fff;
+      box-shadow: 0 30px 80px rgba(45,36,23,.12);
+      object-fit: cover;
+      aspect-ratio: 1;
+    }
+    .hero-blob-deco {
+      position: absolute;
+      inset: -16px;
+      border-radius: 42% 58% 56% 44% / 47% 42% 58% 53%;
+      background: linear-gradient(135deg, rgba(232,112,90,.15), rgba(61,140,140,.12));
+      z-index: -1;
+    }
+    .floating-chip {
+      position: absolute;
+      background: #fff;
+      border-radius: 14px;
+      padding: .7rem 1.1rem;
+      font-size: .78rem;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(45,36,23,.12);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      white-space: nowrap;
+    }
+    .chip-1 { top: 8%; right: -5%; animation: float 3.5s ease-in-out infinite; }
+    .chip-2 { bottom: 12%; left: -8%; animation: float 3.5s 1.8s ease-in-out infinite; }
+
+    /* ── WAVE ── */
+    .wave-wrap { line-height: 0; }
+    .wave-wrap svg { display: block; }
+
+    /* ── SECTION COMMON ── */
+    .section-label {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.2;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: #fff7ef;
+      padding: 100px 0;
+    }
+    .about-img {
+      border-radius: 24px;
+      width: 100%;
+      object-fit: cover;
+      max-height: 480px;
+      box-shadow: 0 20px 60px rgba(45,36,23,.1);
+      border: 3px solid #fff;
+    }
+    .skill-pill {
+      display: inline-block;
+      background: rgba(232,112,90,.1);
+      border: 1px solid rgba(232,112,90,.25);
+      color: var(--rose);
+      border-radius: 100px;
+      padding: .28rem .85rem;
+      font-size: .78rem;
+      font-weight: 700;
+      margin: .2rem;
+    }
+    .skill-pill.teal {
+      background: rgba(61,140,140,.1);
+      border-color: rgba(61,140,140,.25);
+      color: var(--teal);
+    }
+    .skill-pill.gold {
+      background: rgba(212,148,58,.1);
+      border-color: rgba(212,148,58,.25);
+      color: var(--gold);
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.4rem;
+      text-align: center;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(45,36,23,.08); }
+    .stat-number {
+      font-family: 'Fraunces', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--rose);
+      line-height: 1;
+    }
+    .stat-label { color: var(--muted); font-size: .78rem; font-weight: 600; margin-top: .25rem; }
+
+    /* ── PROJECTS ── */
+    #projects {
+      background: var(--warm-bg);
+      padding: 100px 0;
+    }
+    .project-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+      height: 100%;
+    }
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 60px rgba(45,36,23,.1);
+    }
+    .project-card .img-wrap {
+      overflow: hidden;
+      height: auto;
+    }
+    .project-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .4s;
+    }
+    .project-card:hover img { transform: scale(1.07); }
+    .project-card .body { padding: 1.5rem; }
+    .p-tag {
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: rgba(232,112,90,.1);
+      color: var(--rose);
+      border-radius: 6px;
+      padding: .22rem .65rem;
+      margin-right: .3rem;
+    }
+    .p-tag.t { background: rgba(61,140,140,.1); color: var(--teal); }
+    .p-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: .6rem 0 .4rem;
+    }
+    .p-desc { color: var(--muted); font-size: .85rem; line-height: 1.65; }
+    .p-link {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .p-link:hover { color: var(--rose); }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: #fff7ef;
+      padding: 100px 0;
+    }
+    .contact-wrap {
+      background: #fff;
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .contact-left {
+      background: linear-gradient(145deg, var(--rose), #c45842);
+      padding: 3rem;
+      color: #fff;
+    }
+    .contact-left h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.7rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+    .contact-left p { opacity: .85; font-size: .9rem; line-height: 1.7; }
+    .c-info {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      margin-bottom: 1rem;
+    }
+    .c-icon {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+    .c-info p { margin: 0; font-size: .88rem; }
+    .soc-btn {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      transition: background .2s, transform .2s;
+    }
+    .soc-btn:hover { background: rgba(255,255,255,.35); color: #fff; transform: translateY(-2px); }
+    .contact-right { padding: 3rem; }
+    .contact-right h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .form-control {
+      background: var(--warm-bg);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: .75rem 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .88rem;
+      transition: border-color .25s, box-shadow .25s;
+    }
+    .form-control:focus {
+      background: #fff;
+      border-color: var(--rose);
+      box-shadow: 0 0 0 3px rgba(232,112,90,.12);
+      color: var(--text);
+    }
+    .form-control::placeholder { color: #bfb0a0; }
+    .form-label { font-size: .8rem; font-weight: 700; color: var(--muted); margin-bottom: .4rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,.5);
+      padding: 2rem 0;
+      font-size: .82rem;
+      text-align: center;
+    }
+    footer strong { color: var(--rose); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--rose-soft); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="#home">Alhabib.</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <i class="bi bi-list" style="font-size:1.5rem; color:var(--rose)"></i>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav gap-lg-3 gap-2 mt-3 mt-lg-0">
+        <li class="nav-item"><a class="nav-link" href="#home">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+        <li class="nav-item"><a class="nav-link" href="#projects">Karya</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="home">
+  <div class="container">
+    <div class="row align-items-center min-vh-100 py-5 g-5">
+      <div class="col-lg-6 order-2 order-lg-1">
+        <span class="hero-eyebrow">
+          <span style="width:7px;height:7px;background:var(--rose);border-radius:50%;display:inline-block;"></span>
+          Tersedia untuk Kolaborasi
+        </span>
+        <h1 class="hero-title mt-3">
+          Halo, Saya<br/>
+          <em>Muhammad Alhabib</em><br/>
+          Photographer ✦
+        </h1>
+        <p class="hero-desc mt-3">
+          Bagi saya Fotografi bukan sekedar menangkap gambar tapi mengabadikan sebuah moment.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4" style="animation: fadeUp .7s .55s both; opacity:0; animation-fill-mode:both;">
+          <a href="#projects" class="btn btn-rose"><i class="bi bi-grid me-2"></i>Lihat Karya Saya</a>
+          <a href="#contact" class="btn btn-ghost"><i class="bi bi-send me-2"></i>Hubungi Saya</a>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 order-1 order-lg-2 d-flex justify-content-center">
+        <div class="hero-photo-wrap">
+          <div class="hero-blob-deco"></div>
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80" alt="Alhabib"/>
+          <div class="floating-chip chip-1">
+            <span style="font-size:1.2rem;">📷</span> Photographer
+          </div>
+          <div class="floating-chip chip-2">
+            <span style="font-size:1.2rem;">💻</span> 20+ Projects
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WAVE 1 ══ -->
+<div class="wave-wrap" style="background:var(--cream)">
+  <svg viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#fff7ef" d="M0,60L80,54C160,48,320,36,480,40C640,44,800,64,960,68C1120,72,1280,60,1360,54L1440,48L1440,90L1360,90C1280,90,1120,90,960,90C800,90,640,90,480,90C320,90,160,90,80,90L0,90Z"/>
+  </svg>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5">
+        <img class="about-img" src="https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&q=80" alt="About Sari"/>
+      </div>
+      <div class="col-lg-7">
+        <p class="section-label">— Tentang Saya</p>
+        <h2 class="section-title">Kreatif, Tekun,<br/>& Penuh Semangat</h2>
+        <p style="color:var(--muted);line-height:1.85;font-size:.95rem;margin-top:1rem;">
+          Saya adalah mahasiswa Sistem Informasi yang jatuh cinta dengan dunia Fotografi. Saya percaya bahwa sebuah Foto bukan hanya tentang sebuah klik — tetapi tentang cerita, emosi, dan koneksi yang tercipta antara karya dan penikmatnya.
+        </p>
+        <p style="color:var(--muted);line-height:1.85;font-size:.95rem;">
+          Ketika tidak sedang motret, saya senang Menyayi, membaca buku, dan sesekali mempelajari konten edukatif tentang teknologi atau hal-hal yang membuat saya tertarik.
+        </p>
+        <div class="mt-3">
+          <p style="font-size:.75rem;font-weight:800;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem">Keahlian Saya</p>
+          <div>
+            <span class="skill-pill">HTML5</span>
+            <span class="skill-pill">CSS3</span>
+            <span class="skill-pill teal">Bootstrap 5</span>
+            <span class="skill-pill teal">Photoshop</span>
+            <span class="skill-pill gold">Adobe Illustrator</span>
+            <span class="skill-pill">Adobe Lightroom</span>
+            <span class="skill-pill">PHP</span>
+            <span class="skill-pill teal">MySQL</span>
+            <span class="skill-pill gold">Canva</span>
+          </div>
+        </div>
+        <div class="row g-3 mt-4">
+          <div class="col-4"><div class="stat-card"><div class="stat-number">3+</div><div class="stat-label">Tahun Belajar</div></div></div>
+          <div class="col-4"><div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Proyek Selesai</div></div></div>
+          <div class="col-4"><div class="stat-card"><div class="stat-number">10+</div><div class="stat-label">Klien Puas</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WAVE 2 ══ -->
+<div class="wave-wrap" style="background:#fff7ef">
+  <svg viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#fdf8f2" d="M0,30L80,40C160,50,320,70,480,72C640,74,800,58,960,46C1120,34,1280,26,1360,22L1440,18L1440,90L1360,90C1280,90,1120,90,960,90C800,90,640,90,480,90C320,90,160,90,80,90L0,90Z"/>
+  </svg>
+</div>
+
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-label">— Portofolio</p>
+      <h2 class="section-title">Karya Pilihan Saya</h2>
+      <p style="color:var(--muted);max-width:440px;margin:0 auto;font-size:.93rem;margin-top:.75rem;">
+        Setiap project adalah perjalanan belajar yang menyenangkan. Berikut beberapa yang paling berkesan.
+      </p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="project-card">
+          <div class="img-wrap"><img src="https://images.unsplash.com/photo-1776721977064-d4e5389db6b9?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt=""/></div>
+          <div class="body">
+            <div><span class="p-tag">Old Building</span><span class="p-tag t">B&W</span></div>
+            <p class="p-title">Bangunan Tua Kala Itu</p>
+            <p class="p-desc">Foto hitam-putih ini menampilkan bangunan klasik dengan menara kecil di bagian bawah, dipadu dengan potongan bangunan modern di kiri dan kanan atas. Ruang langit yang luas menciptakan kesan minimalis, sementara kontras antara arsitektur lama dan modern memberi nuansa artistik dan dramatis.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="project-card">
+          <div class="img-wrap"><img src="https://images.unsplash.com/photo-1616578492900-ea5a8fc6c341?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt=""/></div>
+          <div class="body">
+            <div><span class="p-tag">Panorama</span><span class="p-tag t">Pemandangan</span></div>
+            <p class="p-title">Pemandangan Sunyi Danau Toba</p>
+            <p class="p-desc">Foto ini menampilkan pemandangan danau luas yang dikelilingi perbukitan hijau, dengan langit dramatis penuh awan tebal di atasnya. Suasana terasa tenang namun megah, dengan perpaduan warna biru air dan hijau alam yang menenangkan.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="project-card">
+          <div class="img-wrap"><img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?w=600&q=80" alt=""/></div>
+          <div class="body">
+            <div><span class="p-tag">Food</span><span class="p-tag t">Concept</span></div>
+            <p class="p-title">Ramen Fotografi</p>
+            <p class="p-desc">Foto ini menampilkan semangkuk ramen pedas dengan topping daging, sayuran, dan telur, disajikan bersama makanan pendamping dan minuman es teh..</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WAVE 3 ══ -->
+<div class="wave-wrap" style="background:var(--warm-bg)">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#fff7ef" d="M0,40L120,48C240,56,480,72,720,72C960,72,1200,56,1320,48L1440,40L1440,80L1320,80C1200,80,960,80,720,80C480,80,240,80,120,80L0,80Z"/>
+  </svg>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-label">— Hubungi Saya</p>
+      <h2 class="section-title">Yuk Berkolaborasi! ✉️</h2>
+      <p style="color:var(--muted);max-width:420px;margin:.75rem auto 0;font-size:.93rem;">
+        Ada project seru, pertanyaan, atau sekadar ingin say hello? Saya selalu senang mendengar dari kamu!
+      </p>
+    </div>
+    <div class="contact-wrap row g-0 mx-auto" style="max-width:900px;">
+      <div class="col-lg-5">
+        <div class="contact-left h-100">
+          <h4>Tetap Terhubung 👌</h4>
+          <p>Saya biasanya membalas dalam 1–2 hari kerja. Jangan ragu untuk menghubungi!</p>
+          <div class="mt-4">
+            <div class="c-info"><div class="c-icon"><i class="bi bi-instagram"></i></div><p>@bibib_17</p></div>
+            <div class="c-info"><div class="c-icon"><i class="bi bi-telephone-fill"></i></div><p>+62 851 3393 3560</p></div>
+            <div class="c-info"><div class="c-icon"><i class="bi bi-geo-alt-fill"></i></div><p>Medan, Sumatera Utara</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="contact-right">
+          <h4>Kirim Pesan</h4>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label">Nama Lengkap</label>
+              <input class="form-control" placeholder="Nama kamu..."/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Email</label>
+              <input class="form-control" placeholder="email@kamu.com"/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Subjek</label>
+              <input class="form-control" placeholder="Topik pesan..."/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Pesan</label>
+              <textarea class="form-control" rows="4" placeholder="Halo Sari, saya ingin..."></textarea>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-rose w-100" onclick="kirim(this)">
+                <i class="bi bi-send me-2"></i>Kirim Pesan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <p>© 2024 <strong>Alhabib</strong> — Dibuat dengan ❤️ menggunakan <strong>Bootstrap 5</strong></p>
+    <p style="margin-top:.3rem;font-size:.75rem;">#janganlupaabadikan ✦</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Smooth scroll + close mobile nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) window.scrollTo({ top: t.offsetTop - 78, behavior: 'smooth' });
+      const nav = document.querySelector('.navbar-collapse');
+      if (nav.classList.contains('show')) bootstrap.Collapse.getInstance(nav)?.hide();
+    });
+  });
+
+  // Active nav link
+  const secs = [...document.querySelectorAll('section[id]')];
+  const links = [...document.querySelectorAll('.nav-link')];
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    links.forEach(l => { l.style.color = l.getAttribute('href') === '#' + cur ? 'var(--rose)' : ''; });
+  });
+
+  // Send button
+  function kirim(btn) {
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Pesan Berhasil Dikirim! 🎉';
+      btn.style.background = '#3d8c8c';
+    }, 1500);
+  }
+</script>
+</body>
+</html>
